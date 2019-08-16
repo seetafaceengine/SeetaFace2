@@ -47,10 +47,25 @@ Android版本的编译方法：
 &emsp;&emsp;|-- SeetaNet（前向计算框架模块）<br>
 
 ## 4. 模型下载
-- 人脸检测模块FaceDetector模型下载链接：https://pan.baidu.com/s/1Dt0M6LXeSe4a0Pjyz5ifkg 提取码：fs8r
--  面部特征5点定位模块FaceLandmarker模型下载链接：https://pan.baidu.com/s/1MqofXbmTv8MIxnZTDt3h5A 提取码：7861 
--  面部特征81点定位模块FaceLandmarker模型下载链接：https://pan.baidu.com/s/1CCfTGaSg_JSY3cN-R1Myaw 提取码：p8mc
-- 人脸特征提取和比对模块FaceRecognizer模型下载链接：https://pan.baidu.com/s/1y2vh_BHtYftR24V4xwAVWg 提取码：pim2 
+- 人脸检测模块 FaceDetector 模型下载链接：  
+MD5     ：E88669E5F1301CA56162DE8AEF1FD5D5  
+百度网盘：https://pan.baidu.com/s/1Dt0M6LXeSe4a0Pjyz5ifkg 提取码：fs8r  
+Dropbox : https://www.dropbox.com/s/cemt9fl48t5igfh/fd_2_00.dat?dl=0
+
+-  面部特征5点定位模块 FaceLandmarker 模型下载链接：  
+MD5     ：877A44AA6F07CB3064AD2828F50F261A  
+百度网盘：https://pan.baidu.com/s/1MqofXbmTv8MIxnZTDt3h5A 提取码：7861  
+Dropbox : https://www.dropbox.com/s/noy8tien1gmw165/pd_2_00_pts5.dat?dl=0
+
+-  面部特征81点定位模块 FaceLandmarker 模型下载链接：  
+MD5     ：F3F812F01121B5A80384AF3C35211BDD  
+百度网盘：https://pan.baidu.com/s/1CCfTGaSg_JSY3cN-R1Myaw 提取码：p8mc  
+Dropbox : https://www.dropbox.com/s/v41lmclaxpwow1d/pd_2_00_pts81.dat?dl=0
+
+- 人脸特征提取和比对模块 FaceRecognizer 模型下载链接：  
+MD5     ：2D637AAD8B1B7AE62154A877EC291C99  
+百度网盘：https://pan.baidu.com/s/1y2vh_BHtYftR24V4xwAVWg 提取码：pim2  
+Dropbox : https://www.dropbox.com/s/6aslqcokpljha5j/fr_2_10.dat?dl=0
 
 ## 5. example说明
 example/search/example.cpp 示例展示了一套简单且完整的人脸识别的流程，包括1. 预注册图像中的人脸到人脸识别底库中（example中默认注册了"1.jpg"中的人脸）；2. 打开摄像头，检测摄像头画面中的人脸；3.对检测到人脸进行识别，确定所属人脸的身份。 <br/>
