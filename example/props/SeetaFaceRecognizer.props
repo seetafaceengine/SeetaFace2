@@ -1,0 +1,63 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets" />
+  <PropertyGroup Label="UserMacros">
+    <FaceRecognizerHome>../../craft/windows</FaceRecognizerHome>
+    <FaceRecognizerName>SeetaFaceRecognizer</FaceRecognizerName>
+    <FaceRecognizerVersion>2</FaceRecognizerVersion>
+    <FaceRecognizerDebugFuffix>d</FaceRecognizerDebugFuffix>
+    <FaceRecognizerLink>true</FaceRecognizerLink>
+    <FaceRecognizerCopy>true</FaceRecognizerCopy>
+  </PropertyGroup>
+  <ItemGroup>
+    <BuildMacro Include="FaceRecognizerHome">
+      <Value>$(FaceRecognizerHome)</Value>
+    </BuildMacro>
+    <BuildMacro Include="FaceRecognizerName">
+      <Value>$(FaceRecognizerName)</Value>
+    </BuildMacro>
+    <BuildMacro Include="FaceRecognizerVersion">
+      <Value>$(FaceRecognizerVersion)</Value>
+    </BuildMacro>
+    <BuildMacro Include="FaceRecognizerDebugFuffix">
+      <Value>$(FaceRecognizerDebugFuffix)</Value>
+    </BuildMacro>
+    <BuildMacro Include="FaceRecognizerLink">
+      <Value>$(FaceRecognizerLink)</Value>
+    </BuildMacro>
+    <BuildMacro Include="FaceRecognizerCopy">
+      <Value>$(FaceRecognizerCopy)</Value>
+    </BuildMacro>
+  </ItemGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(FaceRecognizerHome)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(FaceRecognizerLink)'=='true' AND '$(Configuration)'=='Debug'">
+    <Link>
+      <AdditionalLibraryDirectories>$(FaceRecognizerHome)\lib\$(PlatformTarget);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>$(FaceRecognizerName)$(FaceRecognizerVersion)$(FaceRecognizerDebugFuffix).lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(FaceRecognizerLink)'=='true' AND '$(Configuration)'=='Release'">
+    <Link>
+      <AdditionalLibraryDirectories>$(FaceRecognizerHome)\lib\$(PlatformTarget);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>$(FaceRecognizerName)$(FaceRecognizerVersion).lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(FaceRecognizerCopy)'=='true' AND '$(Configuration)'=='Debug'">
+    <PostBuildEvent>
+      <Command>%(Command)
+copy /Y "$(FaceRecognizerHome)\lib\$(PlatformTarget)\$(FaceRecognizerName)$(FaceRecognizerVersion)$(FaceRecognizerDebugFuffix).dll" "$(OutDir)"
+      </Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(FaceRecognizerCopy)'=='true' AND '$(Configuration)'=='Release'">
+    <PostBuildEvent>
+      <Command>%(Command)
+copy /Y "$(FaceRecognizerHome)\lib\$(PlatformTarget)\$(FaceRecognizerName)$(FaceRecognizerVersion).dll" "$(OutDir)"
+      </Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+</Project>

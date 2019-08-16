@@ -1,0 +1,77 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets" />
+  <PropertyGroup Label="UserMacros">
+    <SeetaNetHome>../../craft/windows</SeetaNetHome>
+    <SeetaNetLink>false</SeetaNetLink>
+    <SeetaNetCopy>true</SeetaNetCopy>
+  </PropertyGroup>
+  <ItemGroup>
+    <BuildMacro Include="SeetaNetHome">
+      <Value>$(SeetaNetHome)</Value>
+    </BuildMacro>
+    <BuildMacro Include="SeetaNetLink">
+      <Value>$(SeetaNetLink)</Value>
+    </BuildMacro>
+    <BuildMacro Include="SeetaNetCopy">
+      <Value>$(SeetaNetCopy)</Value>
+    </BuildMacro>
+  </ItemGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(SeetaNetHome)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32' AND '$(SeetaNetLink)'=='true'">
+    <Link>
+      <AdditionalLibraryDirectories>$(SeetaNetHome)\lib\$(PlatformTarget);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>seetanet2d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64' AND '$(SeetaNetLink)'=='true'">
+    <Link>
+      <AdditionalLibraryDirectories>$(SeetaNetHome)\lib\$(PlatformTarget);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>seetanet2d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32' AND '$(SeetaNetLink)'=='true'">
+    <Link>
+      <AdditionalLibraryDirectories>$(SeetaNetHome)\lib\$(PlatformTarget);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>seetanet2.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64' AND '$(SeetaNetLink)'=='true'">
+    <Link>
+      <AdditionalLibraryDirectories>$(SeetaNetHome)\lib\$(PlatformTarget);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>seetanet2.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32' AND '$(SeetaNetCopy)'=='true'">
+    <PostBuildEvent>
+      <Command>%(Command)
+copy /Y "$(SeetaNetHome)\lib\$(PlatformTarget)\seetanet2d.dll" "$(OutDir)"
+      </Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64' AND '$(SeetaNetCopy)'=='true'">
+    <PostBuildEvent>
+      <Command>%(Command)
+copy /Y "$(SeetaNetHome)\lib\$(PlatformTarget)\seetanet2d.dll" "$(OutDir)"
+      </Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32' AND '$(SeetaNetCopy)'=='true'">
+    <PostBuildEvent>
+      <Command>%(Command)
+copy /Y "$(SeetaNetHome)\lib\$(PlatformTarget)\seetanet2.dll" "$(OutDir)"
+      </Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64' AND '$(SeetaNetCopy)'=='true'">
+    <PostBuildEvent>
+      <Command>%(Command)
+copy /Y "$(SeetaNetHome)\lib\$(PlatformTarget)\seetanet2.dll" "$(OutDir)"
+      </Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+</Project>
