@@ -5,20 +5,25 @@
 ## 1. 简介
 `SeetaFace2` 人脸识别引擎包括了搭建一套全自动人脸识别系统所需的三个核心模块，即：人脸检测模块 `FaceDetector`、面部关键点定位模块 `FaceLandmarker` 以及人脸特征提取与比对模块 `FaceRecognizer`。还将陆续开源人脸跟踪、闭眼检测等辅助模块。
 
-![QR](./asserts/pipeline.png)
+<div align=center>
+<img src="./asserts/pipeline.png" width="580" height="230" />
+</div>
 
 `SeetaFace2` 采用标准 C++ 开发，全部模块均不依赖任何第三方库，支持 x86 架构（Windows、Linux）和 ARM 架构（Android）。SeetaFace2 支持的上层应用包括但不限于人脸门禁、无感考勤、人脸比对等。
 
-![QR](./asserts/grid.png)
+<div align=center>
+<img src="./asserts/grid.png" width="630" height="370" />
+</div>
 
-SeetaFace2是面向于人脸识别商业落地的里程碑版本，其中人脸检测模块在FDDB上的100个误检条件下可达到超过92%的召回率，面部关键点定位支持5点和81点定位，1比N模块支持数千人规模底库的人脸识别应用。
+
+SeetaFace2 是面向于人脸识别商业落地的里程碑版本，其中人脸检测模块在 FDDB 上的 100 个误检条件下可达到超过 92% 的召回率，面部关键点定位支持 5 点和 81 点定位，1 比 N 模块支持数千人规模底库的人脸识别应用。
 
 
 模块 | 方法概述 | 基础技术指标 | 典型平台速度
 -----|---------|-------------|------------
-**人脸检测** | Cascaded CNN | FDDB上召回率达到92%（100个误检情况下）。 | 40最小人脸<br>I7: 70FPS(1920x1080)<br>RK3399: 25FPS(640x480)
-**面部关建点定位(81点和5点)** | FEC-CNN | 平均定位误差（根据两眼中心距离归一化）300-W Challenge Set上达到0.069。 | I7: 450FPS和500FPS<br>RK3399: 110FPS和220FPS
-人脸特征提取与比对 | ResNet50 | 识别：通用1：N+1场景下，错误接受率1%时，<br>1000人底库，首选识别率超过98%，<br>5000人底库，首选识别率超过95%。 | I7: 8FPS<br>RK3399: 2.5FPS
+**人脸检测** | Cascaded CNN | FDDB 上召回率达到92%（100个误检情况下）。 | 40 最小人脸<br>I7: 70FPS(1920x1080)<br>RK3399: 25FPS(640x480)
+**面部关建点定位(81点和5点)** | FEC-CNN | 平均定位误差（根据两眼中心距离归一化）<br>300-W Challenge Set 上达到 0.069。 | I7: 450FPS 和 500FPS<br>RK3399: 110FPS 和 220FPS
+**人脸特征提取与比对** | ResNet50 | 识别：通用1：N+1场景下，错误接受率1%时，<br>1000人底库，首选识别率超过98%，<br>5000人底库，首选识别率超过95%。 | I7: 8FPS<br>RK3399: 2.5FPS
 
 与 2016 年开源的 `SeetaFace 1.0` 相比，`SeetaFace2` 在速度和精度两个层面上均有数量级的提升。
 
@@ -67,7 +72,7 @@ SeetaFace2是面向于人脸识别商业落地的里程碑版本，其中人脸�
     </tr>
 </table>
 
-知人识面辩万物，开源赋能共发展。SeetaFace2致力于AI赋能发展，和行业伙伴一起共同推进人脸识别技术的落地。
+知人识面辩万物，开源赋能共发展。`SeetaFace2` 致力于 AI 赋能发展，和行业伙伴一起共同推进人脸识别技术的落地。
 
 
 ## 2. 编译
@@ -132,13 +137,19 @@ MD5     ：2D637AAD8B1B7AE62154A877EC291C99
 百度网盘：https://pan.baidu.com/s/1y2vh_BHtYftR24V4xwAVWg 提取码：pim2  
 Dropbox : https://www.dropbox.com/s/6aslqcokpljha5j/fr_2_10.dat?dl=0
 
-## 5. example说明
-`example/search/example.cpp` 示例展示了一套简单且完整的人脸识别的流程，包括：1. 预注册图像中的人脸到人脸识别底库中（example 中默认注册了"1.jpg"中的人脸）；2. 打开摄像头，检测摄像头画面中的人脸；3.对检测到人脸进行识别，确定所属人脸的身份。 <br/>
+## 5. example 说明
+`example/search/example.cpp` 示例展示了一套简单且完整的人脸识别的流程，包括：1. 预注册图像中的人脸到人脸识别底库中（example 中默认注册了"1.jpg"中的人脸）；2. 打开摄像头，检测摄像头画面中的人脸；3.对检测到人脸进行识别，确定所属人脸的身份。
+
 测试者如果想在底库中成功识别出自己的人脸，需要在example.cpp的底库注册列表部分添加以自己名称命名的图片(名称 + .jpg)，并把自己名称命名的图片文件拷贝到程序的运行目录下，重新编译 example 并运行程序，测试识别效果即可。
 
 ## 6. 开发者社区
-欢迎开发者加入SeetaFace开发者社区，请先加SeetaFace小助手微信，经过审核后邀请入群。
+欢迎开发者加入 SeetaFace 开发者社区，请先加 SeetaFace 小助手微信，经过审核后邀请入群。
+
 ![QR](./asserts/QR.png)
 
 ## 7. 商业合作
 想要购买 `SeetaFace` 商业版引擎以获得精度更高、速度更快的人脸识别算法或活体验证、表情识别、心率估计、姿态估计、视线追踪等更多人脸分析模块支持，请联系商务邮件 bd@seetatech.com。
+
+## 8. 开源协议
+
+`SeetaFace2` 依照 [BSD 2-Clause license](LICENSE) 开源.
