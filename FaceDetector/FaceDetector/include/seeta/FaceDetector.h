@@ -20,7 +20,8 @@ namespace seeta
                 PROPERTY_MIN_FACE_SIZE,
                 PROPERTY_THRESHOLD1,
                 PROPERTY_THRESHOLD2,
-                PROPERTY_THRESHOLD3
+                PROPERTY_THRESHOLD3,
+                PROPERTY_VIDEO_STABLE,
             };
             /**
              * \brief load model

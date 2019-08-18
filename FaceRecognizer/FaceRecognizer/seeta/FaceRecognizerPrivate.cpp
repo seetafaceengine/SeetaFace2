@@ -319,6 +319,7 @@ bool FaceRecognizerPrivate::LoadModel( const char *modelBuffer, size_t bufferLen
 
     // read header
     size_t header_size = recognizer->header.read_ex( modelBuffer, bufferLength );
+    std::cout << "[INFO] FaceRecognizer: " << "Feature size: " << recognizer->header.feature_size << std::endl;
 
     // convert the model
     if( SeetaReadModelFromBuffer( modelBuffer + header_size, bufferLength - header_size, &recognizer->model ) )

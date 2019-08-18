@@ -60,6 +60,9 @@ namespace seeta
                 case FaceDetector::PROPERTY_MIN_FACE_SIZE:
                     ptr->SetMinFaceSize( int32_t( value ) );
                     break;
+                case FaceDetector::PROPERTY_VIDEO_STABLE:
+                    ptr->SetVideoStable( value != 0 );
+                    break;
             }
 
         }
@@ -81,6 +84,9 @@ namespace seeta
 
                 case FaceDetector::PROPERTY_MIN_FACE_SIZE:
                     return ptr->GetMinFaceSize();
+
+                case FaceDetector::PROPERTY_VIDEO_STABLE:
+                    return ptr->GetVideoStable() ? 1 : 0;
             }
 
         }
