@@ -94,13 +94,16 @@ void FaceLandmarkerPrivate::LoadModel( const char *buffer, int len, SeetaDevice 
     memcpy( &expand_size_, buffer + offset, sizeof( float ) );
     offset += sizeof( float );
 
-    std::cout << "input_channels_:" << input_channels_ << std::endl;
-    std::cout << "input_height_:" << input_height_ << std::endl;
-    std::cout << "input_width_:" << input_width_ << std::endl;
-    std::cout << "landmark_num_:" << landmark_num_ << std::endl;
-    std::cout << "x_move_:" << x_move_ << std::endl;
-    std::cout << "y_move_:" << y_move_ << std::endl;
-    std::cout << "expand_size_:" << expand_size_ << std::endl;
+    // std::cout << "input_channels_:" << input_channels_ << std::endl;
+    // std::cout << "input_height_:" << input_height_ << std::endl;
+    // std::cout << "input_width_:" << input_width_ << std::endl;
+    // std::cout << "landmark_num_:" << landmark_num_ << std::endl;
+    // std::cout << "x_move_:" << x_move_ << std::endl;
+    // std::cout << "y_move_:" << y_move_ << std::endl;
+    // std::cout << "expand_size_:" << expand_size_ << std::endl;
+
+    std::cout << "[INFO] FaceLandmarker: " << "Landmarker number: " << landmark_num_ << std::endl;
+
     const char *ptr = buffer + offset;
     if( SeetaReadModelFromBuffer( ptr, len - offset, &model_ ) )
     {

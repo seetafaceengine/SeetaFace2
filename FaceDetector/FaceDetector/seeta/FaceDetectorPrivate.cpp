@@ -149,7 +149,7 @@ std::vector<Rect> Impl::SlidingWindow( const SeetaImageData &img, const SeetaIma
     img_resized.width = int( img.width / cur_scale );
     img_resized.height =  int( img.height / cur_scale );
     img_resized.channels =  img.channels;
-    img_resized.data = new uint8_t[img_resized.height * img_resized.width * img_resized.channels];  // 只申请一次内存，之后的图像全部是缩小
+    img_resized.data = new uint8_t[img_resized.height * img_resized.width * img_resized.channels];  // 鍙敵璇蜂竴娆″唴瀛橈紝涔嬪悗鐨勫浘鍍忓叏閮ㄦ槸缂╁皬
     int count_scale = 0;
     while( std::min( img_resized.width, img_resized.height ) >= net_size )
     {
@@ -694,7 +694,7 @@ FaceDetectorPrivate::FaceDetectorPrivate( const char *model_path, const CoreSize
     SetScoreThresh( p->thresh1_, p->thresh2_, p->thresh3_ );
     SetImagePyramidScaleFactor( 1.414f );
 
-    std::cout << "Core size: " << p->width_limit_ << "x" << p->height_limit_ << std::endl;
+    std::cout << "[INFO] FaceDetector: " << "Core size: " << p->width_limit_ << "x" << p->height_limit_ << std::endl;
 }
 
 

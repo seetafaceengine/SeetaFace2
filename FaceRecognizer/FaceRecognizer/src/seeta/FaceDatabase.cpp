@@ -28,7 +28,7 @@ namespace seeta
                     std::cout << "FaceDatabase Must input 1 model." << std::endl;
                     exit( -1 );
                 }
-                std::cout << "FaceDatabase Loading models..." << std::endl;
+                // std::cout << "FaceDatabase Loading models..." << std::endl;
 
                 std::string model_filename = models[0];
                 m_cores.resize( 1 );

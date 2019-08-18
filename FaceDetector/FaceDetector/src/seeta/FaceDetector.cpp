@@ -37,7 +37,7 @@ namespace seeta
         void FaceDetector::set( FaceDetector::Property property, double value )
         {
             FaceDetectorPrivate *ptr = ( FaceDetectorPrivate * )m_impl;
-            std::cout << "property:" << property << ", value:" << value << std::endl;
+            // std::cout << "property: " << property << ", value: " << value << std::endl;
             switch( property )
             {
                 default:
