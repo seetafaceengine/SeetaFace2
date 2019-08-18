@@ -17,16 +17,6 @@ namespace seeta
         }
         ~FaceEngine() = default;
 
-        static void SetLogLevel( int level ) {
-            //seeta::FaceDetector::SetLogLevel(level);
-            //seeta::FaceDatabase::SetLogLevel(level);
-        }
-
-        static void SetSingleCalculationThreads( int num ) {
-            //seeta::FaceDetector::SetSingleCalculationThreads(num);
-            //seeta::FaceDatabase::SetSingleCalculationThreads(num);
-        }
-
         std::vector<SeetaFaceInfo> DetectFaces( const SeetaImageData &image ) const {
             auto faces = FD.detect( image );
             return std::vector<SeetaFaceInfo>( faces.data, faces.data + faces.size );
@@ -115,25 +105,6 @@ namespace seeta
             return FDB.QueryTop( image, points.data(), N, index, similarity );
         }
 
-        /*
-        void RegisterParallel(const SeetaImageData &image, int64_t *index)
-        {
-            auto faces = this->DetectFaces(image);
-            if (faces.empty()) return;
-            this->RegisterParallel(image, faces[0], index);
-        }
-
-        void RegisterParallel(const SeetaImageData &image, const SeetaFaceInfo &face, int64_t *index)
-        {
-            this->RegisterParallel(image, face.pos, index);
-        }
-
-        void RegisterParallel(const SeetaImageData &image, const SeetaRect &face, int64_t *index)
-        {
-            auto points = this->DetectPoints(image, face);
-            FDB.RegisterParallel(image, points.data(), index);
-        }
-        */
         float Compare(
             const SeetaImageData &image1, const SeetaPointF *points1,
             const SeetaImageData &image2, const SeetaPointF *points2 ) const {
@@ -164,17 +135,6 @@ namespace seeta
             return FDB.QueryTop( image, points, N, index, similarity );
         }
 
-        /*
-        void RegisterParallel(const SeetaImageData &image, const SeetaPointF *points, int64_t *index)
-        {
-            FDB.RegisterParallel(image, points, index);
-        }
-
-        void Join() const
-        {
-            FDB.Join();
-        }
-        */
         bool Save( const char *path ) const {
             return FDB.Save( path );
         }

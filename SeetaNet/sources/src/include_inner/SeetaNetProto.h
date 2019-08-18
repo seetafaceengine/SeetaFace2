@@ -852,6 +852,15 @@ namespace seeta
     public:
     };
 
+    class SeetaNet_SplitParameter: public SeetaNet_BaseMsg {
+    public:
+        SeetaNet_SplitParameter();
+        ~SeetaNet_SplitParameter();
+        virtual int read( const char *buf, int len );
+        virtual int write( char *buf, int len );
+    public:
+    };
+
     class SeetaNet_SpaceToBatchNDLayer: public SeetaNet_BaseMsg {
     public:
         SeetaNet_SpaceToBatchNDLayer();

@@ -16,7 +16,7 @@ int main()
     seeta::ModelSetting::Device device = seeta::ModelSetting::CPU;
     int id = 0;
     seeta::ModelSetting FD_model( "./model/fd_2_00.dat", device, id );
-    seeta::ModelSetting PD_model( "./model/pd_2_00_pt5.dat", device, id );
+    seeta::ModelSetting PD_model( "./model/pd_2_00_pts5.dat", device, id );
     seeta::ModelSetting FR_model( "./model/fr_2_10.dat", device, id );
     seeta::FaceEngine engine( FD_model, PD_model, FR_model, 2, 16 );
 
@@ -33,9 +33,10 @@ int main()
         //register face into facedatabase
         std::string &filename = GalleryImageFilename[i];
         int64_t &index = GalleryIndex[i];
+		std::cerr << "Registering... " << filename << std::endl;
         seeta::cv::ImageData image = cv::imread( filename );
-
-        engine.Register( image );
+        auto id = engine.Register( image );
+		std::cerr << "Registered id = " << id << std::endl;
     }
     std::map<int64_t, std::string> GalleryIndexMap;
     for( size_t i = 0; i < GalleryIndex.size(); ++i )
@@ -67,10 +68,20 @@ int main()
             // Query top 1
             int64_t index = -1;
             float similarity = 0;
+
+			auto points = engine.DetectPoints(image, face);
              
-            engine.QueryTop( image, face, 1, &index, &similarity );
+            auto queried = engine.QueryTop( image, points.data(), 1, &index, &similarity );
 
             cv::rectangle( frame, cv::Rect( face.pos.x, face.pos.y, face.pos.width, face.pos.height ), CV_RGB( 128, 128, 255 ), 3 );
+			for (int i = 0; i < 5; ++i)
+			{
+				auto &point = points[i];
+				cv::circle(frame, cv::Point(point.x, point.y), 2, CV_RGB(128, 255, 128), -1);
+			}
+
+			// no face queried from database
+			if (queried < 1) continue;
 
             // similarity greater than threshold, means recognized
             if( similarity > threshold )

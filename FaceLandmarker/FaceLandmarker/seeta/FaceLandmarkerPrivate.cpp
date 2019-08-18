@@ -46,7 +46,8 @@ void FaceLandmarkerPrivate::LoadModel( const char *model_path, SeetaDevice devic
     std::ifstream inf( model_path, std::ios::binary );
     if( !inf.is_open() )
     {
-        throw std::logic_error( "open model file failed!" ) ;
+		std::cerr << "Error: Can not access \"" << model_path << "\"" << std::endl;
+        throw std::logic_error( "open model file failed!" );
     }
 
     inf.seekg( 0, std::ios::end );

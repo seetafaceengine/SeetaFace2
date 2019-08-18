@@ -5,6 +5,7 @@
 #include<iostream>
 
 #include <exception>
+#include <sstream>
 
 #define READ_FIELD(tag, id, nret, buf, len, offset, field, fieldname)  \
     if(tag & id) { \
@@ -1105,6 +1106,25 @@ namespace seeta
         return 0;
     }
 
+    ////////////////////////////////////////////
+    SeetaNet_SplitParameter::SeetaNet_SplitParameter()
+    {
+    }
+
+    SeetaNet_SplitParameter::~SeetaNet_SplitParameter()
+    {
+    }
+
+    int SeetaNet_SplitParameter::read( const char *buf, int len )
+    {
+        return 0;
+    }
+
+    int SeetaNet_SplitParameter::write( char *buf, int len )
+    {
+        return 0;
+    }
+
     //////////////////////////////////////////////////////////
     SeetaNet_SpaceToBatchNDLayer::SeetaNet_SpaceToBatchNDLayer()
     {
@@ -1370,8 +1390,9 @@ namespace seeta
             case seeta::Enum_ScaleLayer:
                 msg.reset( new SeetaNet_ScaleParameter() );
                 break;
-            //case seeta::Enum_SplitLayer:
-
+            case seeta::Enum_SplitLayer:
+                msg.reset( new SeetaNet_SplitParameter() );
+                break;
             case seeta::Enum_PreReLULayer:
                 msg.reset( new SeetaNet_PreluParameter() );
                 break;
@@ -1402,7 +1423,12 @@ namespace seeta
                 msg.reset( new SeetaNet_ShapeIndexPatchLayer() );
                 break;
             default:
-                std::cout << "new layer type:" << type << std::endl;
+                {
+                    std::ostringstream oss;
+                    oss << "Unsupported layer type = " << type;
+                    std::cerr << oss.str() << std::endl;
+                    throw std::logic_error(oss.str());
+                }
                 //exit(-1);
                 break;
         }
