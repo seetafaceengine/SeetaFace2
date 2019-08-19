@@ -36,6 +36,7 @@ int main()
 		std::cerr << "Registering... " << filename << std::endl;
         seeta::cv::ImageData image = cv::imread( filename );
         auto id = engine.Register( image );
+		index = id;
 		std::cerr << "Registered id = " << id << std::endl;
     }
     std::map<int64_t, std::string> GalleryIndexMap;
