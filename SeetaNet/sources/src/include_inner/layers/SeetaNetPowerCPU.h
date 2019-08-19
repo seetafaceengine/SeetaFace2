@@ -124,25 +124,25 @@ int SeetaNetPowerCPU<T>::Process( std::vector<SeetaNetFeatureMap<T>*> input_data
         case 4: // m_scale == 1, m_scale_out == 0, m_power != 1
             power_each_do<T>( output_data_map[0]->m_cpu.dataMemoryPtr(), output_data_map[0]->count(), [&]( T & val )
             {
-                val = std::pow<T>( val, m_power );
+                val = std::pow( val, m_power );
             } );
             break;
         case 5: // m_scale != 1, m_scale_out == 0, m_power != 1
             power_each_do<T>( output_data_map[0]->m_cpu.dataMemoryPtr(), output_data_map[0]->count(), [&]( T & val )
             {
-                val = std::pow<T>( val * m_scale, m_power );
+                val = std::pow( val * m_scale, m_power );
             } );
             break;
         case 6: // m_scale == 1, m_scale_out != 0, m_power != 1
             power_each_do<T>( output_data_map[0]->m_cpu.dataMemoryPtr(), output_data_map[0]->count(), [&]( T & val )
             {
-                val = std::pow<T>( val + m_shift, m_power );
+                val = std::pow( val + m_shift, m_power );
             } );
             break;
         case 7: // m_scale != 1, m_scale_out != 0, m_power != 1
             power_each_do<T>( output_data_map[0]->m_cpu.dataMemoryPtr(), output_data_map[0]->count(), [&]( T & val )
             {
-                val = std::pow<T>( val * m_scale + m_shift, m_power );
+                val = std::pow( val * m_scale + m_shift, m_power );
             } );
             break;
     }

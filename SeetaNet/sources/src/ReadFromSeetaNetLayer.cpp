@@ -5,8 +5,7 @@
 #include <vector>
 #include <fstream>
 #include <exception>
-#include "orz/tools/memory_stream.h"
-
+#include <iostream>
 #include "SeetaNetParseProto.h"
 
 
