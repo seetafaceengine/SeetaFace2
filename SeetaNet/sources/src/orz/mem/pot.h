@@ -7,6 +7,7 @@
 
 #include <mutex>
 #include <memory>
+#include <functional>
 
 namespace seeta
 {
