@@ -1,15 +1,14 @@
 LOCAL_PATH := $(call my-dir)
 
-
 include $(CLEAR_VARS)
 LOCAL_MODULE := seetanet-prebuilt
-LOCAL_SRC_FILES := $(LOCAL_PATH)/../../../SeetaNet/sources/libs/$(TARGET_ARCH_ABI)/libseetanet2.so
-LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH)/../../../SeetaNet/sources/include/
+LOCAL_SRC_FILES := $(LOCAL_PATH)/../../SeetaNet/libs/$(TARGET_ARCH_ABI)/libseetanet2.so
+LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH)/../../SeetaNet/include/
 include $(PREBUILT_SHARED_LIBRARY)
 
 include $(CLEAR_VARS)
 
-LOCAL_MODULE := SeetaFaceLandmarker2
+LOCAL_MODULE := SeetaFaceRecognizer2
 
 MY_CPP_LIST += $(wildcard $(LOCAL_PATH)/../seeta/*.cpp)
 MY_CPP_LIST += $(wildcard $(LOCAL_PATH)/../src/seeta/*.cpp)
