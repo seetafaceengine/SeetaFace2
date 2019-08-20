@@ -206,6 +206,9 @@ Dropbox : https://www.dropbox.com/s/6aslqcokpljha5j/fr_2_10.dat?dl=0
 
 ![QR](./asserts/QR.png)
 
+## 6.1 代码贡献
+欢迎开发者贡献优质代码，所有开发者代码需提交在`develop`分支。
+
 ## 7. 商业合作
 想要购买 `SeetaFace` 商业版引擎以获得精度更高、速度更快的人脸识别算法或活体验证、表情识别、心率估计、姿态估计、视线追踪等更多人脸分析模块支持，请联系商务邮件 bd@seetatech.com。
 
