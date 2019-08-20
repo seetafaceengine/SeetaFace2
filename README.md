@@ -90,7 +90,7 @@ SeetaFace2 是面向于人脸识别商业落地的里程碑版本，其中人脸
   - CMAKE_INSTALL_PREFIX: 安装前缀
 
 2. linux
-  - 信赖
+  - 依赖
     + opencv。仅编译例子时需要
 
         sudo apt-get install libopencv-dev 
@@ -110,48 +110,48 @@ SeetaFace2 是面向于人脸识别商业落地的里程碑版本，其中人脸
   - 运行例子
     + 把生成库的目录加入到变量 LD_LIBRARY_PATH 中
  
-        export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:`pwd`/lib
+            export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:`pwd`/lib
 
     + 拷贝模型文件到程序执行目录的 model 目录下
-
-        cd SeetaFace2
-        cd build
-        cd bin
-        mkdir model
-        cp fd_2_00.dat pd_2_00_pts5.dat pd_2_00_pts81.dat .
-
-    + 执行 bin 目录下的程序
-      - point81
-      - search
-
-3. windows
-  - 信赖
-    + opencv。仅编译例子时需要
-  - 使用 cmake-gui.exe 。打开 cmake-gui.exe
-  - 命令行编译
-    + 把 cmake 命令所在目录加入到环境变量 PATH 中
-    + 从开始菜单打开 “VS2015开发人员命令提示”，进入命令行
-
-      - 编译
-
-        cd SeetaFace2
-        mkdir build
-        cd build
-        cmake .. -DCMAKE_INSTALL_PREFIX=install
-        cmake --build .
-
-      - 安装
-
-        cmake --build . --target install
-
-      - 运行例子
-        + 拷贝模型文件到程序执行目录的 model 目录下
 
             cd SeetaFace2
             cd build
             cd bin
             mkdir model
             cp fd_2_00.dat pd_2_00_pts5.dat pd_2_00_pts81.dat .
+
+    + 执行 bin 目录下的程序
+      - point81
+      - search
+
+3. windows
+  - 依赖
+    + opencv。仅编译例子时需要
+  - 使用 cmake-gui.exe 工具编译。打开 cmake-gui.exe
+  - 命令行编译
+    + 把 cmake 命令所在目录加入到环境变量 PATH 中
+    + 从开始菜单打开 “VS2015开发人员命令提示”，进入命令行
+
+      - 编译
+
+            cd SeetaFace2
+            mkdir build
+            cd build
+            cmake .. -DCMAKE_INSTALL_PREFIX=install
+            cmake --build .
+
+      - 安装
+
+            cmake --build . --target install
+
+      - 运行例子
+        + 拷贝模型文件到程序执行目录的 model 目录下
+
+                cd SeetaFace2
+                cd build
+                cd bin
+                mkdir model
+                cp fd_2_00.dat pd_2_00_pts5.dat pd_2_00_pts81.dat .
 
         + 执行 bin 目录下的程序
           - point81
