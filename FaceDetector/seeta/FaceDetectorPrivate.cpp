@@ -862,7 +862,7 @@ float FaceDetectorPrivate::GetScoreThresh2() const
 float FaceDetectorPrivate::GetScoreThresh3() const
 {
     Impl *p = ( Impl * )impl_;
-    return p->class_threshold_[3];
+    return p->class_threshold_[2];
 }
 void FaceDetectorPrivate::SetScoreThresh1( float thresh1 )
 {
