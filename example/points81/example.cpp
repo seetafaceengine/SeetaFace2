@@ -8,7 +8,6 @@
 
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
-#include <opencv2/videoio/videoio.hpp>
 #include <array>
 #include <map>
 #include <iostream>
@@ -67,8 +66,8 @@ int main()
 		return test_image(FD, FL);
 	}
 
-	auto video_width = capture.get(cv::CAP_PROP_FRAME_WIDTH);
-	auto video_height = capture.get(cv::CAP_PROP_FRAME_HEIGHT);
+	// auto video_width = capture.get(cv::CAP_PROP_FRAME_WIDTH);
+	// auto video_height = capture.get(cv::CAP_PROP_FRAME_HEIGHT);
 
 	std::cout << "Open camera(" << camera_id << ")" << std::endl;
 
