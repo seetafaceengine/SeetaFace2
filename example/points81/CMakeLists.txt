@@ -5,7 +5,7 @@
 
 cmake_minimum_required(VERSION 2.8)
 
-project("point81")
+project(point81)
 
 if(UNIX)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC")
@@ -28,8 +28,11 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
-    seetanet2 SeetaFaceDetector2 SeetaFaceLandmarker2)
+    SeetaNet SeetaFaceDetector SeetaFaceLandmarker)
 target_link_libraries(${PROJECT_NAME} PRIVATE ${OpenCV_LIBS})
+
+set_target_properties(${PROJECT_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+set_target_properties(${PROJECT_NAME} PROPERTIES VERSION ${BUILD_VERSION})
 
 INSTALL(TARGETS ${PROJECT_NAME}
     RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"

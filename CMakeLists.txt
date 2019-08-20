@@ -5,7 +5,7 @@
 
 cmake_minimum_required(VERSION 2.8)
 
-project(Seeta2)
+project(Seeta)
 
 # Create uninstall files
 CONFIGURE_FILE(

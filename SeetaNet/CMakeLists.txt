@@ -4,7 +4,7 @@
 #
 
 cmake_minimum_required(VERSION 2.8)
-project(seetanet2)
+project(SeetaNet)
 
 # option for install
 #set(CMAKE_INSTALL_PREFIX ${PROJECT_BINARY_DIR}/install CACHE STRING "set install prefix" FORCE)
@@ -58,6 +58,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     ${PROJECT_SOURCE_DIR}/src
     )
 
+set_target_properties(${PROJECT_NAME} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set_target_properties(${PROJECT_NAME} PROPERTIES VERSION ${BUILD_VERSION})
 # Be will to install header files
 set_property(
@@ -79,3 +80,10 @@ INSTALL(TARGETS ${PROJECT_NAME}
     LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
     PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/seeta
     )
+
+# Install cmake configure files
+write_basic_package_version_file(
+    "${CMAKE_BINARY_DIR}/SeetaNetConfigVersion.cmake"
+    VERSION ${BUILD_VERSION}
+    COMPATIBILITY AnyNewerVersion)
+install(FILES ${CMAKE_BINARY_DIR}/SeetaNetConfigVersion.cmake DESTINATION .)
