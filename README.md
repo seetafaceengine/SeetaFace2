@@ -82,21 +82,80 @@ SeetaFace2 是面向于人脸识别商业落地的里程碑版本，其中人脸
 - CMake<br>
 
 ### 2.2 linux和windows平台编译说明
-linux 和 windows 上的 SDK 编译脚本见目录 `craft`，其中 `craft/linux` 下为 linux 版本的编译脚本，`craft/windows` 下为 windows 版本的编译脚本，默认编译的库为64位 Release 版本。
+1. 编译参数
+  - BUILD_DETECOTOR: 是否编译人脸检测模块。ON：打开；OFF：关闭
+  - BUILD_LANDMARKER: 是否编译面部关键点定位模块。ON：打开；OFF：关闭
+  - BUILD_RECOGNIZER: 是否编译人脸特征提取与比对模块。ON：打开；OFF：关闭
+  - BUILD_EXAMPLE: 是否编译例子。ON：打开；OFF：关闭
+  - CMAKE_INSTALL_PREFIX: 安装前缀
 
-linux 和 windows上的SDK编译方法：
-1. 打开终端（windows上为VS2015 x64 Native Tools Command Prompt 工具，linux 上为bash），`cd` 到编译脚本所在目录；<br>
-2. 执行对应平台的编译脚本。<br>
+2. linux
+  - 信赖
+    + opencv。仅编译例子时需要
 
-linux 上 example 的编译运行方法：
-1. `cd` 到 `example/search` 目录下，执行 `make` 指令；
-2. 拷贝模型文件到程序指定的目录下；
-3. 执行脚本 `run.sh`。
+        sudo apt-get install libopencv-dev 
 
-windows 上 example 的编译运行方法：
-1. 使用 vs2015 打开 `SeetaExample.sln` 构建工程，修改 `Opencv3.props` 属性表中变量 `OpenCV3Home` 的值为本机上的 OpenCV3 的安装目录；
-2. 执行 vs2015 中的编译命令；
-3. 拷贝模型文件到程序指定的目录下，运行程序。
+  - 编译
+
+        cd SeetaFace2
+        mkdir build
+        cd build
+        cmake .. -DCMAKE_INSTALL_PREFIX=`pwd`/install
+        cmake --build .
+
+  - 安装
+
+        cmake --build . --target install
+
+  - 运行例子
+    + 把生成库的目录加入到变量 LD_LIBRARY_PATH 中
+ 
+        export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:`pwd`/lib
+
+    + 拷贝模型文件到程序执行目录的 model 目录下
+
+        cd SeetaFace2
+        cd build
+        cd bin
+        mkdir model
+        cp fd_2_00.dat pd_2_00_pts5.dat pd_2_00_pts81.dat .
+
+    + 执行 bin 目录下的程序
+      - point81
+      - search
+
+3. windows
+  - 信赖
+    + opencv。仅编译例子时需要
+  - 使用 cmake-gui.exe 。打开 cmake-gui.exe
+  - 命令行编译
+    + 把 cmake 命令所在目录加入到环境变量 PATH 中
+    + 从开始菜单打开 “VS2015开发人员命令提示”，进入命令行
+
+      - 编译
+
+        cd SeetaFace2
+        mkdir build
+        cd build
+        cmake .. -DCMAKE_INSTALL_PREFIX=install
+        cmake --build .
+
+      - 安装
+
+        cmake --build . --target install
+
+      - 运行例子
+        + 拷贝模型文件到程序执行目录的 model 目录下
+
+            cd SeetaFace2
+            cd build
+            cd bin
+            mkdir model
+            cp fd_2_00.dat pd_2_00_pts5.dat pd_2_00_pts81.dat .
+
+        + 执行 bin 目录下的程序
+          - point81
+          - search
 
 ### 2.3 Android平台编译说明
 Android 版本的编译方法： 
