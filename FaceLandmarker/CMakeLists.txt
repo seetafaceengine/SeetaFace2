@@ -48,6 +48,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_SOURCE_DIR}/SeetaNet/include
     )
 target_link_libraries(${PROJECT_NAME} PUBLIC seetanet2)
+set_target_properties(${PROJECT_NAME} PROPERTIES VERSION ${BUILD_VERSION})
 # Be will to install header files
 set_property(
     TARGET

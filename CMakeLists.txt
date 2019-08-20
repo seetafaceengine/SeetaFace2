@@ -5,7 +5,7 @@
 
 cmake_minimum_required(VERSION 2.8)
 
-project(SeetaFaceDetector)
+project(Seeta2)
 
 # Create uninstall files
 CONFIGURE_FILE(
@@ -98,6 +98,11 @@ else()
     set(PLATFORM ${CMAKE_ANDROID_ARCH})
 endif()
 
+# For debug libs and exes, add "-d" postfix
+if(NOT DEFINED CMAKE_DEBUG_POSTFIX)
+  set(CMAKE_DEBUG_POSTFIX "-d")
+endif()
+
 add_subdirectory(SeetaNet)
 option(BUILD_DETECOTOR "Set to ON to build detector" ON)
 if(BUILD_DETECOTOR)
@@ -124,3 +129,4 @@ message("Build landmarker:${BUILD_LANDMARKER}")
 message("Build recgnizer:${BUILD_RECOGNIZER}")
 message("Build example:${BUILD_EXAMPLE}")
 message("Build shared library:${BUILD_SHARED_LIBS}")
+message("PLATFORM: ${PLATFORM}")
