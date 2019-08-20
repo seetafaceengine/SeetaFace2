@@ -273,19 +273,19 @@ inline _simd_int32x4 _simd_int32x4_load(const _simd_int32* p) {
     return _mm_loadu_si128((_simd_int32x4*)p);
 }
 
-inline _simd_int32x4 _simd_int32x4_set(_simd_int32 a, _simd_int32 b, _simd_int32 c, _simd_int32 d) {
+inline _simd_int32x4 _simd_int32x4_set(const _simd_int32 &a, const _simd_int32 &b, const _simd_int32 &c, const _simd_int32 &d) {
     return _mm_set_epi32(d, c, b, a);
 }
 
-inline void _simd_int32x4_store(_simd_int32 *p, _simd_int32x4 m) {
+inline void _simd_int32x4_store(_simd_int32 *p, const _simd_int32x4 &m) {
     _mm_store_si128((_simd_int32x4*)p, m);
 }
 
-inline _simd_int32x4 _simd_int32x4_add(_simd_int32x4 lhs, _simd_int32x4 rhs) {
+inline _simd_int32x4 _simd_int32x4_add(const _simd_int32x4 &lhs, const _simd_int32x4 &rhs) {
     return _mm_add_epi32(lhs, rhs);
 }
 
-inline _simd_int32x4 _simd_int32x4_sub(_simd_int32x4 lhs, _simd_int32x4 rhs) {
+inline _simd_int32x4 _simd_int32x4_sub(const _simd_int32x4 &lhs, const _simd_int32x4 &rhs) {
     return _mm_sub_epi32(lhs, rhs);
 }
 
@@ -304,19 +304,19 @@ inline _simd_int32x4x2 _simd_int32x4x2_set(_simd_int32 a, _simd_int32 b, _simd_i
     return res;
 }
 
-inline void _simd_int32x4x2_store(_simd_int32 *p, _simd_int32x4x2 m) {
+inline void _simd_int32x4x2_store(_simd_int32 *p, const _simd_int32x4x2 &m) {
     _mm_storeu_si128((_simd_int32x4*)p, m.val[0]);
     _mm_storeu_si128((_simd_int32x4*)(p + 4), m.val[1]);
 }
 
-inline _simd_int32x4x2 _simd_int32x4x2_add(_simd_int32x4x2 lhs, _simd_int32x4x2 rhs) {
+inline _simd_int32x4x2 _simd_int32x4x2_add(const _simd_int32x4x2 &lhs, const _simd_int32x4x2 &rhs) {
     _simd_int32x4x2 res;
     res.val[0] = _mm_add_epi32(lhs.val[0], rhs.val[0]);
     res.val[1] = _mm_add_epi32(lhs.val[1], rhs.val[1]);
     return res;
 }
 
-inline _simd_int32x4x2 _simd_int32x4x2_sub(_simd_int32x4x2 lhs, _simd_int32x4x2 rhs) {
+inline _simd_int32x4x2 _simd_int32x4x2_sub(const _simd_int32x4x2 &lhs, const _simd_int32x4x2 &rhs) {
     _simd_int32x4x2 res;
     res.val[0] = _mm_sub_epi32(lhs.val[0], rhs.val[0]);
     res.val[1] = _mm_sub_epi32(lhs.val[1], rhs.val[1]);
@@ -332,31 +332,31 @@ inline _simd_f32x4 _simd_f32x4_set(_simd_f32 a, _simd_f32 b, _simd_f32 c, _simd_
     return _mm_set_ps(d, c, b, a);
 }
 
-inline void _simd_f32x4_store(_simd_f32 *p, _simd_f32x4 m) {
+inline void _simd_f32x4_store(_simd_f32 *p, const _simd_f32x4 &m) {
     _mm_storeu_ps(p, m);
 }
 
-inline _simd_f32x4 _simd_f32x4_add(_simd_f32x4 lhs, _simd_f32x4 rhs) {
+inline _simd_f32x4 _simd_f32x4_add(const _simd_f32x4 &lhs, const _simd_f32x4 &rhs) {
     return _mm_add_ps(lhs, rhs);
 }
 
-inline _simd_f32x4 _simd_f32x4_sub(_simd_f32x4 lhs, _simd_f32x4 rhs) {
+inline _simd_f32x4 _simd_f32x4_sub(const _simd_f32x4 &lhs, const _simd_f32x4 &rhs) {
     return _mm_sub_ps(lhs, rhs);
 }
 
-inline _simd_f32x4 _simd_f32x4_mul(_simd_f32x4 lhs, _simd_f32x4 rhs) {
+inline _simd_f32x4 _simd_f32x4_mul(const _simd_f32x4 &lhs, const _simd_f32x4 &rhs) {
     return _mm_mul_ps(lhs, rhs);
 }
 
-inline _simd_f32x4 _simd_f32x4_div(_simd_f32x4 lhs, _simd_f32x4 rhs) {
+inline _simd_f32x4 _simd_f32x4_div(const _simd_f32x4 &lhs, const _simd_f32x4 &rhs) {
     return _mm_div_ps(lhs, rhs);
 }
 
-inline _simd_f32x4 _simd_f32x4_max(_simd_f32x4 lhs, _simd_f32x4 rhs) {
+inline _simd_f32x4 _simd_f32x4_max(const _simd_f32x4 &lhs, const _simd_f32x4 &rhs) {
     return _mm_max_ps(lhs, rhs);
 }
 
-inline _simd_f32x4 _simd_f32x4_min(_simd_f32x4 lhs, _simd_f32x4 rhs) {
+inline _simd_f32x4 _simd_f32x4_min(const _simd_f32x4 &lhs, const _simd_f32x4 &rhs) {
     return _mm_min_ps(lhs, rhs);
 }
 
@@ -407,40 +407,40 @@ inline _simd_f32x4x2 _simd_f32x4x2_set(_simd_f32 a, _simd_f32 b, _simd_f32 c, _s
     return res;
 }
 
-inline void _simd_f32x4x2_store(_simd_f32 *p, _simd_f32x4x2 m) {
+inline void _simd_f32x4x2_store(_simd_f32 *p, const _simd_f32x4x2 &m) {
     _mm_storeu_ps(p, m.val[0]);
     _mm_storeu_ps(p + 4, m.val[1]);
 }
 
-inline _simd_f32x4x2 _simd_f32x4x2_add(_simd_f32x4x2 lhs, _simd_f32x4x2 rhs) {
+inline _simd_f32x4x2 _simd_f32x4x2_add(const _simd_f32x4x2 &lhs, const _simd_f32x4x2 &rhs) {
     _simd_f32x4x2 res;
     res.val[0] = _mm_add_ps(lhs.val[0], rhs.val[0]);
     res.val[1] = _mm_add_ps(lhs.val[1], rhs.val[1]);
     return res;
 }
 
-inline _simd_f32x4x2 _simd_f32x4x2_sub(_simd_f32x4x2 lhs, _simd_f32x4x2 rhs) {
+inline _simd_f32x4x2 _simd_f32x4x2_sub(const _simd_f32x4x2 &lhs, const _simd_f32x4x2 &rhs) {
     _simd_f32x4x2 res;
     res.val[0] = _mm_sub_ps(lhs.val[0], rhs.val[0]);
     res.val[1] = _mm_sub_ps(lhs.val[1], rhs.val[1]);
     return res;
 }
 
-inline _simd_f32x4x2 _simd_f32x4x2_mul(_simd_f32x4x2 lhs, _simd_f32x4x2 rhs) {
+inline _simd_f32x4x2 _simd_f32x4x2_mul(const _simd_f32x4x2 &lhs, const _simd_f32x4x2 &rhs) {
     _simd_f32x4x2 res;
     res.val[0] = _mm_mul_ps(lhs.val[0], rhs.val[0]);
     res.val[1] = _mm_mul_ps(lhs.val[1], rhs.val[1]);
     return res;
 }
 
-inline _simd_f32x4x2 _simd_f32x4x2_div(_simd_f32x4x2 lhs, _simd_f32x4x2 rhs) {
+inline _simd_f32x4x2 _simd_f32x4x2_div(const _simd_f32x4x2 &lhs, const _simd_f32x4x2 &rhs) {
     _simd_f32x4x2 res;
     res.val[0] = _mm_div_ps(lhs.val[0], rhs.val[0]);
     res.val[1] = _mm_div_ps(lhs.val[1], rhs.val[1]);
     return res;
 }
 
-inline _simd_f32x4x2 _simd_f32x4x2_fmadd(_simd_f32x4x2 q0, _simd_f32x4x2 q1, _simd_f32x4x2 q2) {
+inline _simd_f32x4x2 _simd_f32x4x2_fmadd(const _simd_f32x4x2 &q0, const _simd_f32x4x2 &q1, const _simd_f32x4x2 &q2) {
     _simd_f32x4x2 res;
     res.val[0] = _mm_fmadd_ps(q0.val[0], q1.val[0], q2.val[0]);
     res.val[1] = _mm_fmadd_ps(q0.val[1], q1.val[1], q2.val[1]);
@@ -448,14 +448,14 @@ inline _simd_f32x4x2 _simd_f32x4x2_fmadd(_simd_f32x4x2 q0, _simd_f32x4x2 q1, _si
 }
 
 //cast
-inline _simd_int32x4x2 _simd_floatx4x2_to_int32x4x2(_simd_f32x4x2 src) {
+inline _simd_int32x4x2 _simd_floatx4x2_to_int32x4x2(const _simd_f32x4x2 &src) {
     _simd_int32x4x2 res;
     res.val[0] = _mm_cvtps_epi32(src.val[0]);
     res.val[1] = _mm_cvtps_epi32(src.val[1]);
     return res;
 }
 
-inline _simd_f32x4x2 _simd_intx4x2_to_float32x4x2(_simd_int32x4x2 src) {
+inline _simd_f32x4x2 _simd_intx4x2_to_float32x4x2(const _simd_int32x4x2 &src) {
     _simd_f32x4x2 res;
     res.val[0] = _mm_cvtepi32_ps(src.val[0]);
     res.val[1] = _mm_cvtepi32_ps(src.val[1]);
@@ -488,18 +488,18 @@ inline _simd_int32x4 _simd_int32x4_set(_simd_int32 a, _simd_int32 b, _simd_int32
     return{ a, b, c, d };
 }
 
-inline void _simd_int32x4_store(_simd_int32 *p, _simd_int32x4 m) {
+inline void _simd_int32x4_store(_simd_int32 *p, const _simd_int32x4 &m) {
     p[0] = m[0];
     p[1] = m[1];
     p[2] = m[2];
     p[3] = m[3];
 }
 
-inline _simd_int32x4 _simd_int32x4_add(_simd_int32x4 lhs, _simd_int32x4 rhs) {
+inline _simd_int32x4 _simd_int32x4_add(const _simd_int32x4 &lhs, const _simd_int32x4 &rhs) {
     return{ lhs[0] + rhs[0], lhs[1] + rhs[1], lhs[2] + rhs[2], lhs[3] + rhs[3] };
 }
 
-inline _simd_int32x4 _simd_int32x4_sub(_simd_int32x4 lhs, _simd_int32x4 rhs) {
+inline _simd_int32x4 _simd_int32x4_sub(const _simd_int32x4 &lhs, const _simd_int32x4 &rhs) {
     return{ lhs[0] - rhs[0], lhs[1] - rhs[1], lhs[2] - rhs[2], lhs[3] - rhs[3] };
 }
 
@@ -512,18 +512,18 @@ inline _simd_int32x4x2 _simd_int32x4x2_set(_simd_int32 a, _simd_int32 b, _simd_i
     return{ a, b, c, d, e, f, g, h };
 }
 
-inline void _simd_int32x4x2_store(_simd_int32 *p, _simd_int32x4x2 m) {
+inline void _simd_int32x4x2_store(_simd_int32 *p, const _simd_int32x4x2 &m) {
     p[0] = m[0]; p[1] = m[1];
     p[2] = m[2]; p[3] = m[3];
     p[4] = m[4]; p[5] = m[5];
     p[6] = m[6]; p[7] = m[7];
 }
 
-inline _simd_int32x4x2 _simd_int32x4x2_add(_simd_int32x4x2 lhs, _simd_int32x4x2 rhs) {
+inline _simd_int32x4x2 _simd_int32x4x2_add(const _simd_int32x4x2 &lhs, const _simd_int32x4x2 &rhs) {
     return{ lhs[0] + rhs[0], lhs[1] + rhs[1], lhs[2] + rhs[2], lhs[3] + rhs[3], lhs[4] + rhs[4], lhs[5] + rhs[5], lhs[6] + rhs[6], lhs[7] + rhs[7] };
 }
 
-inline _simd_int32x4x2 _simd_int32x4x2_sub(_simd_int32x4x2 lhs, _simd_int32x4x2 rhs) {
+inline _simd_int32x4x2 _simd_int32x4x2_sub(const _simd_int32x4x2 &lhs, const _simd_int32x4x2 &rhs) {
     return{ lhs[0] - rhs[0], lhs[1] - rhs[1], lhs[2] - rhs[2], lhs[3] - rhs[3], lhs[4] - rhs[4], lhs[5] - rhs[5], lhs[6] - rhs[6], lhs[7] - rhs[7] };
 }
 
@@ -536,34 +536,34 @@ inline _simd_f32x4 _simd_f32x4_set(_simd_f32 a, _simd_f32 b, _simd_f32 c, _simd_
     return{ a, b, c, d };
 }
 
-inline void _simd_f32x4_store(_simd_f32 *p, _simd_f32x4 m) {
+inline void _simd_f32x4_store(_simd_f32 *p, const _simd_f32x4 &m) {
     p[0] = m[0];
     p[1] = m[1];
     p[2] = m[2];
     p[3] = m[3];
 }
 
-inline _simd_f32x4 _simd_f32x4_add(_simd_f32x4 lhs, _simd_f32x4 rhs) {
+inline _simd_f32x4 _simd_f32x4_add(const _simd_f32x4 &lhs, const _simd_f32x4 &rhs) {
     return{ lhs[0] + rhs[0], lhs[1] + rhs[1], lhs[2] + rhs[2], lhs[3] + rhs[3] };
 }
 
-inline _simd_f32x4 _simd_f32x4_sub(_simd_f32x4 lhs, _simd_f32x4 rhs) {
+inline _simd_f32x4 _simd_f32x4_sub(const _simd_f32x4 &lhs, const _simd_f32x4 &rhs) {
     return{ lhs[0] - rhs[0], lhs[1] - rhs[1], lhs[2] - rhs[2], lhs[3] - rhs[3] };
 }
 
-inline _simd_f32x4 _simd_f32x4_mul(_simd_f32x4 lhs, _simd_f32x4 rhs) {
+inline _simd_f32x4 _simd_f32x4_mul(const _simd_f32x4 &lhs, const _simd_f32x4 &rhs) {
     return{ lhs[0] * rhs[0], lhs[1] * rhs[1], lhs[2] * rhs[2], lhs[3] * rhs[3] };
 }
 
-inline _simd_f32x4 _simd_f32x4_div(_simd_f32x4 lhs, _simd_f32x4 rhs) {
+inline _simd_f32x4 _simd_f32x4_div(const _simd_f32x4 &lhs, const _simd_f32x4 &rhs) {
     return{ lhs[0] / rhs[0], lhs[1] / rhs[1], lhs[2] / rhs[2], lhs[3] / rhs[3] };
 }
 
-inline _simd_f32x4 _simd_f32x4_max(_simd_f32x4 lhs, _simd_f32x4 rhs) {
+inline _simd_f32x4 _simd_f32x4_max(const _simd_f32x4 &lhs, const _simd_f32x4 &rhs) {
     return{ std::max(lhs[0],rhs[0]), std::max(lhs[1],rhs[1]), std::max(lhs[2],rhs[2]), std::max(lhs[3],rhs[3]) };
 }
 
-inline _simd_f32x4 _simd_f32x4_min(_simd_f32x4 lhs, _simd_f32x4 rhs) {
+inline _simd_f32x4 _simd_f32x4_min(const _simd_f32x4 &lhs, const _simd_f32x4 &rhs) {
     return{ std::min(lhs[0],rhs[0]), std::min(lhs[1],rhs[1]), std::min(lhs[2],rhs[2]), std::min(lhs[3],rhs[3]) };
 }
 
@@ -606,39 +606,39 @@ inline _simd_f32x4x2 _simd_f32x4x2_set(_simd_f32 a, _simd_f32 b, _simd_f32 c, _s
     return{ a, b, c, d, e, f, g, h };
 }
 
-inline void _simd_f32x4x2_store(_simd_f32 *p, _simd_f32x4x2 m) {
+inline void _simd_f32x4x2_store(_simd_f32 *p, const _simd_f32x4x2 &m) {
     p[0] = m[0]; p[1] = m[1];
     p[2] = m[2]; p[3] = m[3];
     p[4] = m[4]; p[5] = m[5];
     p[6] = m[6]; p[7] = m[7];
 }
 
-inline _simd_f32x4x2 _simd_f32x4x2_add(_simd_f32x4x2 lhs, _simd_f32x4x2 rhs) {
+inline _simd_f32x4x2 _simd_f32x4x2_add(const _simd_f32x4x2 &lhs, const _simd_f32x4x2 &rhs) {
     return{ lhs[0] + rhs[0], lhs[1] + rhs[1], lhs[2] + rhs[2], lhs[3] + rhs[3], lhs[4] + rhs[4], lhs[5] + rhs[5], lhs[6] + rhs[6], lhs[7] + rhs[7] };
 }
 
-inline _simd_f32x4x2 _simd_f32x4x2_sub(_simd_f32x4x2 lhs, _simd_f32x4x2 rhs) {
+inline _simd_f32x4x2 _simd_f32x4x2_sub(const _simd_f32x4x2 &lhs, const _simd_f32x4x2 &rhs) {
     return{ lhs[0] - rhs[0], lhs[1] - rhs[1], lhs[2] - rhs[2], lhs[3] - rhs[3], lhs[4] - rhs[4], lhs[5] - rhs[5], lhs[6] - rhs[6], lhs[7] - rhs[7] };
 }
 
-inline _simd_f32x4x2 _simd_f32x4x2_mul(_simd_f32x4x2 lhs, _simd_f32x4x2 rhs) {
+inline _simd_f32x4x2 _simd_f32x4x2_mul(const _simd_f32x4x2 &lhs, const _simd_f32x4x2 &rhs) {
     return{ lhs[0] * rhs[0], lhs[1] * rhs[1], lhs[2] * rhs[2], lhs[3] * rhs[3], lhs[4] * rhs[4], lhs[5] * rhs[5], lhs[6] * rhs[6], lhs[7] * rhs[7] };
 }
 
-inline _simd_f32x4x2 _simd_f32x4x2_div(_simd_f32x4x2 lhs, _simd_f32x4x2 rhs) {
+inline _simd_f32x4x2 _simd_f32x4x2_div(const _simd_f32x4x2 &lhs, const _simd_f32x4x2 &rhs) {
     return{ lhs[0] / rhs[0], lhs[1] / rhs[1], lhs[2] / rhs[2], lhs[3] / rhs[3], lhs[4] / rhs[4], lhs[5] / rhs[5], lhs[6] / rhs[6], lhs[7] / rhs[7] };
 }
 
-inline _simd_f32x4x2 _simd_f32x4x2_fmadd(_simd_f32x4x2 q0, _simd_f32x4x2 q1, _simd_f32x4x2 q2) {
+inline _simd_f32x4x2 _simd_f32x4x2_fmadd(const _simd_f32x4x2 &q0, const _simd_f32x4x2 &q1, const _simd_f32x4x2 &q2) {
     return{ q0[0] * q1[0] + q2[0], q0[1] * q1[1] + q2[1], q0[2] * q1[2] + q2[2], q0[3] * q1[3] + q2[3], q0[4] * q1[4] + q2[4], q0[5] * q1[5] + q2[5], q0[6] * q1[6] + q2[6], q0[7] * q1[7] + q2[7] };
 }
 
 //cast
-inline _simd_int32x4x2 _simd_floatx4x2_to_int32x4x2(_simd_f32x4x2 src) {
+inline _simd_int32x4x2 _simd_floatx4x2_to_int32x4x2(const _simd_f32x4x2 &src) {
     return{ (int32_t)round(src[0]), (int32_t)round(src[1]), (int32_t)round(src[2]), (int32_t)round(src[3]),(int32_t)round(src[4]), (int32_t)round(src[5]), (int32_t)round(src[6]), (int32_t)round(src[7]) };
 }
 
-inline _simd_f32x4x2 _simd_intx4x2_to_float32x4x2(_simd_int32x4x2 src) {
+inline _simd_f32x4x2 _simd_intx4x2_to_float32x4x2(const _simd_int32x4x2 &src) {
     return{ (float)src[0], (float)src[1], (float)src[2], (float)src[3],(float)src[4], (float)src[5], (float)src[6], (float)src[7] };
 }
 
