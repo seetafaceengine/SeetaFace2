@@ -11,8 +11,8 @@ project(SeetaNet)
 
 # set flags
 if(UNIX)
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -W -fPIC -Wsign-compare -Wunused-parameter")
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -W -fPIC -fpermissive -std=c++11 -Wsign-compare -Wunused-parameter")
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC -Wno-sign-compare -Wno-unused-parameter")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -fpermissive -std=c++11 -Wno-sign-compare -Wno-unused-parameter")
     if ("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
         set(CMAKE_C_FLAGS "-O0 -g -ggdb ${CMAKE_C_FLAGS}")
         set(CMAKE_CXX_FLAGS "-O0 -g -ggdb ${CMAKE_CXX_FLAGS}")

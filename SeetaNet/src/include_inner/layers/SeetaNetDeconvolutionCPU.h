@@ -340,4 +340,5 @@ int SeetaNetDeconvolutionCPU<T>::Init( seeta::SeetaNet_LayerParameter &inputpara
 }
 
 
-#endif;
+#endif
+

@@ -205,4 +205,5 @@ void SeetaNetCropCPU<Dtype>::crop_copy( const std::vector<SeetaNetFeatureMap<Dty
     }
 }
 
-#endif;
+#endif
+
