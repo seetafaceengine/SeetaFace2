@@ -121,7 +121,7 @@ SeetaFace2 是面向于人脸识别商业落地的里程碑版本，其中人脸
             cp fd_2_00.dat pd_2_00_pts5.dat pd_2_00_pts81.dat .
 
     + 执行 bin 目录下的程序
-      - point81
+      - points81
       - search
 
 3. windows
