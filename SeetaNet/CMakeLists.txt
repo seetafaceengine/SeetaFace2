@@ -4,7 +4,7 @@
 #
 
 cmake_minimum_required(VERSION 2.8)
-project(seetanet2)
+project(SeetaNet)
 
 # option for install
 #set(CMAKE_INSTALL_PREFIX ${PROJECT_BINARY_DIR}/install CACHE STRING "set install prefix" FORCE)
@@ -58,6 +58,8 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     ${PROJECT_SOURCE_DIR}/src
     )
 
+set_target_properties(${PROJECT_NAME} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set_target_properties(${PROJECT_NAME} PROPERTIES VERSION ${BUILD_VERSION})
 # Be will to install header files
 set_property(
     TARGET
@@ -72,9 +74,23 @@ if (UNIX)
 endif()
 
 INSTALL(TARGETS ${PROJECT_NAME}
-    EXPORT ${PROJECT_NAME}
+    EXPORT ${PROJECT_NAME}Config
     RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
     ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
     LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
     PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/seeta
     )
+export(TARGETS ${PROJECT_NAME}
+       APPEND FILE ${CMAKE_BINARY_DIR}/${PROJECT_NAME}Config.cmake
+)
+# Install cmake configure files
+install(
+        EXPORT ${PROJECT_NAME}Config
+        DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake"
+)
+write_basic_package_version_file(
+    "${CMAKE_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
+    VERSION ${BUILD_VERSION}
+    COMPATIBILITY AnyNewerVersion)
+install(FILES "${CMAKE_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake" DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake")
+

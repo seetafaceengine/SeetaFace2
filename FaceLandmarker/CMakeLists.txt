@@ -5,7 +5,7 @@
 
 cmake_minimum_required(VERSION 2.8)
 
-project("SeetaFaceLandmarker2")
+project(SeetaFaceLandmarker)
 
 if(UNIX)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC")
@@ -47,7 +47,10 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_SOURCE_DIR}/SeetaNet/include
     )
-target_link_libraries(${PROJECT_NAME} PUBLIC seetanet2)
+target_link_libraries(${PROJECT_NAME} PUBLIC SeetaNet)
+
+set_target_properties(${PROJECT_NAME} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set_target_properties(${PROJECT_NAME} PROPERTIES VERSION ${BUILD_VERSION})
 # Be will to install header files
 set_property(
     TARGET
@@ -57,9 +60,22 @@ set_property(
 )
 
 INSTALL(TARGETS ${PROJECT_NAME}
-    EXPORT ${PROJECT_NAME}
+    EXPORT ${PROJECT_NAME}Config
     RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
     ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
     LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
     PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/seeta
     )
+export(TARGETS ${PROJECT_NAME}
+       APPEND FILE ${CMAKE_BINARY_DIR}/${PROJECT_NAME}Config.cmake
+)
+# Install cmake configure files
+install(
+        EXPORT ${PROJECT_NAME}Config
+        DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake"
+)
+write_basic_package_version_file(
+    "${CMAKE_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
+    VERSION ${BUILD_VERSION}
+    COMPATIBILITY AnyNewerVersion)
+install(FILES "${CMAKE_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake" DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake")
