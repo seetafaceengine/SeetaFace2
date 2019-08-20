@@ -14,7 +14,6 @@ endif()
 
 find_package(OpenCV REQUIRED)
 
-set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
 # add library
 add_executable(${PROJECT_NAME} example.cpp)
 target_include_directories(${PROJECT_NAME} PRIVATE
