@@ -5,7 +5,7 @@
 
 cmake_minimum_required(VERSION 2.8)
 
-project("point81")
+project("points81")
 
 if(UNIX)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC")
@@ -35,3 +35,19 @@ INSTALL(TARGETS ${PROJECT_NAME}
     RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
     LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
     )
+
+# Find user and system name
+# SET(SYSTEM_NAME $ENV{USERDOMAIN} CACHE STRING SystemName)
+# SET(USER_NAME $ENV{USERNAME} CACHE STRING UserName)
+
+if (MSVC_IDE)
+    # Configure the template file
+    SET(_CMAKE_LocalDebuggerEnvironment "PATH=${CMAKE_BINARY_DIR}/bin/$(Configuration);${CMAKE_BINARY_DIR}/lib/$(Configuration);${OpenCV_LIB_PATH}/../bin;%PATH%")
+    SET(USER_FILE ${PROJECT_NAME}.vcxproj.user)
+    SET(OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR}/${USER_FILE})
+    CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/UserTemplate.xml ${USER_FILE} @ONLY)
+
+    UNSET(USER_FILE)
+    UNSET(OUTPUT_PATH)
+    UNSET(_CMAKE_LocalDebuggerEnvironment)
+endif()
