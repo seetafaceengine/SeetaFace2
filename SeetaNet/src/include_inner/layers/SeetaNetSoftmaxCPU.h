@@ -53,7 +53,7 @@ int SeetaNetSoftMaxCPU<T>::count_out_permute_dim( int start_axis, int end_axis, 
 template <class T>
 int SeetaNetSoftMaxCPU<T>::Init( seeta::SeetaNet_LayerParameter &inputparam, SeetaNetResource<T> *pNetResource )
 {
-    int bottom_length = inputparam.bottom_index.size();
+	size_t bottom_length = inputparam.bottom_index.size();
     this->bottom_data_size.resize( bottom_length );
     for( size_t i = 0; i < bottom_length; i++ )
     {
@@ -96,10 +96,10 @@ template <class T>
 int SeetaNetSoftMaxCPU<T>::Process( std::vector<SeetaNetFeatureMap<T>*> input_data_map, std::vector<SeetaNetFeatureMap<T>*> &output_data_map )
 {
     input_data_map[0]->TransFormDataIn();
-    int softmax_axis_ = axis;
+    int softmax_axis_ = int(axis);
 
     int outer_num_ = count_out_permute_dim( 0, softmax_axis_, input_data_map[0]->data_shape );
-    int inner_num_ = count_out_permute_dim( softmax_axis_ + 1, input_data_map[0]->data_shape.size(), input_data_map[0]->data_shape );
+    int inner_num_ = count_out_permute_dim( softmax_axis_ + 1, int(input_data_map[0]->data_shape.size()), input_data_map[0]->data_shape );
 
     std::vector<int> scale_dims = input_data_map[0]->data_shape;
     scale_dims[softmax_axis_] = 1;
@@ -116,7 +116,7 @@ int SeetaNetSoftMaxCPU<T>::Process( std::vector<SeetaNetFeatureMap<T>*> input_da
     T *bottom_data = input_data_map[0]->m_cpu.dataMemoryPtr();
 
     int channels = input_data_map[0]->data_shape[softmax_axis_];
-    int bottom_counts = count_out_permute_dim( 0, input_data_map[0]->data_shape.size(), input_data_map[0]->data_shape );
+    int bottom_counts = count_out_permute_dim( 0, int(input_data_map[0]->data_shape.size()), input_data_map[0]->data_shape );
 
     int dim = bottom_counts / outer_num_;
     seeta_copy( bottom_counts, bottom_data, top_data );
@@ -136,7 +136,7 @@ int SeetaNetSoftMaxCPU<T>::Process( std::vector<SeetaNetFeatureMap<T>*> input_da
             }
         }
         // subtraction
-        memset( buffer, ( T )( 0 ), sizeof( T ) * inner_num_ );
+        memset( buffer, 0, sizeof( T ) * inner_num_ );
         for( int j = 0; j < channels; j++ )
         {
             for( int k = 0; k < inner_num_; k++ )

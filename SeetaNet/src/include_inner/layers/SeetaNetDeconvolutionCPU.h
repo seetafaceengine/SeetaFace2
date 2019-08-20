@@ -151,7 +151,7 @@ int SeetaNetDeconvolutionCPU<T>::Process( std::vector<SeetaNetFeatureMap<T>*> in
     for( int i = 0; i < input_data_map.size(); ++i )
     {
         std::vector<int> bottom_shape = input_data_map[i]->data_shape;
-        bottom_dim_ = count_out_dim( channel_axis_, bottom_shape.size(), bottom_shape );
+        bottom_dim_ = count_out_dim( channel_axis_, int(bottom_shape.size()), bottom_shape );
 
         int output_h;
         int output_w;
@@ -168,7 +168,7 @@ int SeetaNetDeconvolutionCPU<T>::Process( std::vector<SeetaNetFeatureMap<T>*> in
         output_data_map[i]->data_shape[2] = output_h;
         output_data_map[i]->data_shape[3] = output_w;
 
-        top_dim_ = count_out_dim( channel_axis_, output_data_map[i]->data_shape.size(), output_data_map[i]->data_shape );
+        top_dim_ = count_out_dim( channel_axis_, int(output_data_map[i]->data_shape.size()), output_data_map[i]->data_shape );
 
         const T *bottom_data = input_data_map[i]->m_cpu.dataMemoryPtr();
         T *top_data = output_data_map[i]->m_cpu.dataMemoryPtr();
@@ -261,9 +261,9 @@ int SeetaNetDeconvolutionCPU<T>::Init( seeta::SeetaNet_LayerParameter &inputpara
 
     if( msg->bias_param.data.size() > 0 )
     {
-        int temp_biasnum = msg->bias_param.data.size();
+		size_t temp_biasnum = msg->bias_param.data.size();
 
-        for( int i = 0; i < temp_biasnum; i++ )
+        for(size_t i = 0; i < temp_biasnum; i++ )
         {
             float temp_biasvalue = msg->bias_param.data[i];
             if( temp_biasvalue < FLT_EPSILON && -temp_biasvalue < FLT_EPSILON ) temp_biasvalue = 0;
@@ -301,7 +301,7 @@ int SeetaNetDeconvolutionCPU<T>::Init( seeta::SeetaNet_LayerParameter &inputpara
         output_shape_.push_back( output_dim );
     }
     std::vector<int> kernel_shape = m_p_kernel_blob->shape();
-    kernel_dim_ = count_out_dim( 1, kernel_shape.size(), kernel_shape );
+    kernel_dim_ = count_out_dim( 1, int(kernel_shape.size()), kernel_shape );
 
     col_buffer_shape_.push_back( kernel_dim_ * m_group_ );
     for( int i = 0; i < num_spatial_axes_; ++i )

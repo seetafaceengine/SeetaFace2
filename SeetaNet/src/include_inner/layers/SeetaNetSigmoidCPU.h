@@ -45,7 +45,7 @@ int SeetaNetSigmoidCPU<T>::Init( seeta::SeetaNet_LayerParameter &inputparam, See
 template <typename Dtype>
 inline Dtype sigmoid_funtion( Dtype x )
 {
-    return 1. / ( 1. + exp( -x ) );
+    return Dtype(1) / ( Dtype(1) + Dtype(exp( -x )) );
 }
 
 template<typename T>

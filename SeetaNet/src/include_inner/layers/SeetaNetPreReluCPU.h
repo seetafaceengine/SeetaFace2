@@ -37,13 +37,13 @@ int SeetaNetPreReluCPU<T>::Init( seeta::SeetaNet_LayerParameter &inputparam, See
 {
     seeta::SeetaNet_PreluParameter *msg = ( seeta::SeetaNet_PreluParameter * )inputparam.msg.get();
     m_slope_value.clear();
-    int length_slope = msg->param.data.size();
-    for( int i = 0; i < length_slope; i++ )
+	size_t length_slope = msg->param.data.size();
+    for( size_t i = 0; i < length_slope; i++ )
     {
         m_slope_value.push_back( msg->param.data[i] );
     }
 
-    int bottom_length = inputparam.bottom_index.size();
+	size_t bottom_length = inputparam.bottom_index.size();
     this->bottom_data_size.resize( bottom_length );
     for( size_t i = 0; i < bottom_length; i++ )
     {

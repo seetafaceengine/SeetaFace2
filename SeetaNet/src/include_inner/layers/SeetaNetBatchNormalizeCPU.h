@@ -99,16 +99,16 @@ int SeetaNetBatchNormalizeCPU<T>::Init( seeta::SeetaNet_LayerParameter &inputpar
 {
     m_meanvalue.clear();
     seeta::SeetaNet_BatchNormliseParameter *msg = ( seeta::SeetaNet_BatchNormliseParameter * )inputparam.msg.get();
-    int length_mean = msg->mean_param.data.size();
-    for( int i = 0; i < length_mean; i++ )
+    auto length_mean = msg->mean_param.data.size();
+    for( size_t i = 0; i < length_mean; i++ )
     {
         auto tmp_mean_value = msg->mean_param.data[i];
         if( tmp_mean_value < FLT_EPSILON && -tmp_mean_value < FLT_EPSILON ) tmp_mean_value = 0;
         m_meanvalue.push_back( tmp_mean_value );
     }
     m_varines_value.clear();
-    int length_covariance = msg->covariance_param.data.size();
-    for( int i = 0; i < length_covariance; i++ )
+	size_t length_covariance = msg->covariance_param.data.size();
+    for( size_t i = 0; i < length_covariance; i++ )
     {
         auto tmp_varines_value = msg->covariance_param.data[i];
         if( tmp_varines_value < FLT_EPSILON && -tmp_varines_value < FLT_EPSILON ) tmp_varines_value = 0;

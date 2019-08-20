@@ -81,7 +81,7 @@ int CreateNetSharedParam( void *model, int max_batchsize, SeetaNet_DEVICE_TYPE p
     SeetaNet_LayerParameter *first_data_param = ptmp_model->all_layer_params[0];
     seeta::SeetaNet_MemoryDataParameterProcess *memoryparameter = ( seeta::SeetaNet_MemoryDataParameterProcess * )first_data_param->msg.get();
 
-    int blob_length = ptmp_model->vector_blob_names.size();
+    auto blob_length = ptmp_model->vector_blob_names.size();
     output_net.tmp_NetResource->feature_vector_size.resize( blob_length );
     output_net.tmp_NetResource->feature_vector_size[0].data_dim.resize( 4 );
     output_net.tmp_NetResource->feature_vector_size[0].data_dim[0] = max_batchsize;
@@ -112,15 +112,15 @@ int CreateNetSharedParam( void *model, int max_batchsize, SeetaNet_DEVICE_TYPE p
 
     int return_pfun3 = 0;
 
-    int layer_length = ptmp_model->all_layer_params.size();
+    auto layer_length = ptmp_model->all_layer_params.size();
     output_net.Layer_vector.resize( layer_length, nullptr );
 
-    for( int i = 0; i < ptmp_model->vector_blob_names.size(); i++ )
+    for( size_t i = 0; i < ptmp_model->vector_blob_names.size(); i++ )
     {
-        output_net.tmp_NetResource->blob_name_map[ptmp_model->vector_blob_names[i]] = i;
+        output_net.tmp_NetResource->blob_name_map[ptmp_model->vector_blob_names[i]] = int(i);
     }
 
-    for( int i = 0; i < layer_length; i++ )
+    for(size_t i = 0; i < layer_length; i++ )
     {
 
         CreateLayerMapCPU<NetF>::CREATE_NET_PARSEFUNCTION *pfun = nullptr;
@@ -175,7 +175,7 @@ int CreateNetSharedParam( void *model, int max_batchsize, SeetaNet_DEVICE_TYPE p
         output_net.Layer_vector[i] = tmp_layer;
     }
     output_net.feature_vector_cpu.resize( ptmp_model->vector_blob_names.size(), nullptr );
-    for( int i = 0; i < output_net.feature_vector_cpu.size(); i++ )
+    for( size_t i = 0; i < output_net.feature_vector_cpu.size(); i++ )
     {
         SeetaNetFeatureMap<NetF> *tmp_feature_map = new SeetaNetFeatureMap<NetF>();
         tmp_feature_map->pNetResource = output_net.tmp_NetResource;
@@ -183,7 +183,7 @@ int CreateNetSharedParam( void *model, int max_batchsize, SeetaNet_DEVICE_TYPE p
 
     }
 
-    for( int i = 0; i < layer_length; i++ )
+    for( size_t i = 0; i < layer_length; i++ )
     {
         if( SEETANET_CPU_DEVICE == output_net.tmp_NetResource->process_device_type
                 || ptmp_model->all_layer_params[i]->type == seeta::Enum_SoftmaxLayer
@@ -194,7 +194,7 @@ int CreateNetSharedParam( void *model, int max_batchsize, SeetaNet_DEVICE_TYPE p
             //init blob as output
             for( int j = 0; j < output_net.Layer_vector[i]->top_index.size(); j++ )
             {
-                int index_blob = output_net.Layer_vector[i]->top_index[j];
+                auto index_blob = output_net.Layer_vector[i]->top_index[j];
                 std::vector<int> shape_vector;
 
                 shape_vector = output_net.tmp_NetResource->feature_vector_size[index_blob].data_dim;
@@ -209,9 +209,9 @@ int CreateNetSharedParam( void *model, int max_batchsize, SeetaNet_DEVICE_TYPE p
                 output_net.blob_top_refs[index_blob]++;
             }
             //init blob as input
-            for( int j = 0; j < output_net.Layer_vector[i]->bottom_index.size(); j++ )
+            for( size_t j = 0; j < output_net.Layer_vector[i]->bottom_index.size(); j++ )
             {
-                int index_blob = output_net.Layer_vector[i]->bottom_index[j];
+                auto index_blob = output_net.Layer_vector[i]->bottom_index[j];
                 std::vector<int> shape_vector;
                 shape_vector = output_net.tmp_NetResource->feature_vector_size[index_blob].data_dim;
 
@@ -230,11 +230,11 @@ int CreateNetSharedParam( void *model, int max_batchsize, SeetaNet_DEVICE_TYPE p
 
     // mark output blob
     output_net.output_blob_indexs.clear();
-    for( int i = 0; i < blob_length; ++i )
+    for( size_t i = 0; i < blob_length; ++i )
     {
         if( output_net.blob_top_refs[i] > output_net.blob_bottom_refs[i] )
         {
-            output_net.output_blob_indexs.emplace_back( i );
+            output_net.output_blob_indexs.emplace_back( int(i) );
         }
     }
 
@@ -411,8 +411,8 @@ int RunNetTemplate( SeetaNet *output_net, int counts, SeetaNet_InputOutputData *
     std::vector<SeetaNetFeatureMap<NetF>*> tmp_data_vector;
     tmp_data_vector.push_back( &( output_net->input_data_blob ) );
 
-    int run_length = output_net->Layer_vector.size();
-    for( int i = 0; i < run_length; i++ )
+    auto run_length = output_net->Layer_vector.size();
+    for( size_t i = 0; i < run_length; i++ )
     {
         std::vector<int64_t> tmp_bottom_index =
             output_net->Layer_vector[i]->bottom_index;
@@ -572,9 +572,9 @@ int SeetaNetGetFeatureMap( const char *buffer_name, void *pNetIn, SeetaNet_Input
 int SeetaNetGetAllFeatureMap( void *pNetIn, int *number, SeetaNet_InputOutputData **outputData )
 {
     SeetaNet *pNet = ( SeetaNet * )pNetIn;
-    int all_size = pNet->tmp_NetResource->blob_name_map.size();
+    auto all_size = pNet->tmp_NetResource->blob_name_map.size();
     SeetaNet_InputOutputData *outputDatatmp = new SeetaNet_InputOutputData[all_size];
-    *number = all_size;
+    *number = int(all_size);
     for( auto tmp_iter = pNet->tmp_NetResource->blob_name_map.begin(); tmp_iter != pNet->tmp_NetResource->blob_name_map.end(); tmp_iter++ )
     {
         int index = pNet->tmp_NetResource->blob_name_map[tmp_iter->first];
@@ -679,8 +679,8 @@ void SeetaNetKeepAllBlob( struct SeetaNet_Net *net )
 {
     SeetaNet *inner_net = ( SeetaNet * )net;
     inner_net->keep_blob_indexs.clear();
-    int blob_length = inner_net->feature_vector_cpu.size();
-    for( int i = 0; i < blob_length; ++i ) inner_net->keep_blob_indexs.push_back( i );
+    auto blob_length = inner_net->feature_vector_cpu.size();
+    for( size_t i = 0; i < blob_length; ++i ) inner_net->keep_blob_indexs.push_back( int(i) );
 }
 
 int SeetaNetHasKeptBlob( struct SeetaNet_Net *net, const char *blob_name )

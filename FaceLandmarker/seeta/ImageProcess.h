@@ -8,8 +8,8 @@ namespace seeta
 {
     enum SAMPLING_METHOD
     {
-        BY_LINEAR,
-        BY_BICUBIC
+        BY_LINEAR,  ///< 
+        BY_BICUBIC  ///< Cubic 
     };
 
     const Image color( const Image &img );

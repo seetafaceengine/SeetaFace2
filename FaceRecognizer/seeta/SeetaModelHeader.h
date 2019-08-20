@@ -60,11 +60,11 @@ namespace seeta
                 exit( -1 );
             }
             int offset = 0;
-            offset += ::read( buffer + offset, size - offset, feature_size );
-            offset += ::read( buffer + offset, size - offset, channels );
-            offset += ::read( buffer + offset, size - offset, width );
-            offset += ::read( buffer + offset, size - offset, height );
-            offset += ::read( buffer + offset, size - offset, blob_name );
+            offset += ::read( buffer + offset, int(size - offset), feature_size );
+            offset += ::read( buffer + offset, int(size - offset), channels );
+            offset += ::read( buffer + offset, int(size - offset), width );
+            offset += ::read( buffer + offset, int(size - offset), height );
+            offset += ::read( buffer + offset, int(size - offset), blob_name );
             return offset;
         }
 
@@ -91,7 +91,7 @@ namespace seeta
             memcpy( buffer + offset, &height, sizeof( int32_t ) );
             offset += sizeof( int32_t );
 
-            int32_t blob_name_size = blob_name.length();
+            auto blob_name_size = int(blob_name.length());
             memcpy( buffer + offset, &blob_name_size, sizeof( int32_t ) );
             offset += sizeof( int32_t );
 
@@ -109,11 +109,11 @@ namespace seeta
             }
 
             int offset = 0;
-            offset += ::write( buffer + offset, size - offset, feature_size );
-            offset += ::write( buffer + offset, size - offset, channels );
-            offset += ::write( buffer + offset, size - offset, width );
-            offset += ::write( buffer + offset, size - offset, height );
-            offset += ::write( buffer + offset, size - offset, blob_name );
+            offset += ::write( buffer + offset, int(size - offset), feature_size );
+            offset += ::write( buffer + offset, int(size - offset), channels );
+            offset += ::write( buffer + offset, int(size - offset), width );
+            offset += ::write( buffer + offset, int(size - offset), height );
+            offset += ::write( buffer + offset, int(size - offset), blob_name );
             return offset;
         }
     };

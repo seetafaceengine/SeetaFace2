@@ -51,7 +51,7 @@ void FaceLandmarkerPrivate::LoadModel( const char *model_path, SeetaDevice devic
     }
 
     inf.seekg( 0, std::ios::end );
-    int len = inf.tellg();
+    auto len = int(inf.tellg());
     char *buffer = new char[len];
     std::shared_ptr<char> sta_buffer;
     sta_buffer.reset( buffer, std::default_delete<char[]>() );

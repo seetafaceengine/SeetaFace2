@@ -3,45 +3,45 @@
 #include <cstdint>
 
 /**
- * \brief 进行缩放时采样的算法
+ * \brief sample type
  */
 enum SAMPLING_TYPE
 {
-    LINEAR, ///< 线性采样
-    BICUBIC ///< Cubic 采样
+    LINEAR, ///< 
+    BICUBIC ///< 
 };
 
 /**
- * \brief 处于边缘时的边缘填充算法
+ * \brief type of padding value if sample out of image
  */
 enum PADDING_TYPE
 {
-    ZERO_PADDING,           ///< 0 填充
-    NEAREST_PADDING,        ///< 复制填充
+    ZERO_PADDING,           ///< 0 padding
+    NEAREST_PADDING,        ///< padding with value of nearest pixel
 };
 
 /**
- * \brief 通用人脸裁剪接口
- * \param image_data 输入图像， 以 height * width * channels 的次序存放字节表示的灰度值（0 到 255）
- * \param image_width 图片宽度
- * \param image_height 图片高度
- * \param image_channels 图片通道数，彩色图片一般为 3，灰度图片一般为 1
- * \param crop_data 输出图像（Crop 好的数据），[crop_width + pad_left + pad_right, crop_height + pad_top + pad_bottom, image_channels] 大小的数据
- * \param crop_width 输出宽度，对于标准人脸最后获取的宽度，\b 并不绝对是输出图像的宽度，受pad参数影响
- * \param crop_height 输出高度，对于标准人脸最后获取的高度，\b 并不绝对是输出图像的高度，受pad参数影响
- * \param points 定位的特征点，以 {(x1, y1), (x2, y2), ...} 的格式存放
- * \param points_num 特征点数量
- * \param mean_shape 平局人脸模型，以 {(x1, y1), (x2, y2), ...} 的格式存放
- * \param mean_shape_width 平均人脸模型的宽度
- * \param mean_shape_height 平均人脸模型的高度
- * \param pad_top 向上扩展，可以为负（表示向内缩）
- * \param pad_bottom 向下扩展，可以为负（表示向内缩）
- * \param pad_left 向左扩展，可以为负（表示向内缩）
- * \param pad_right 向右扩展，可以为负（表示向内缩）
- * \param final_points 人脸裁剪后对应特征点的坐标，以 {(x1, y1), (x2, y2), ...} 的格式存放
- * \param type 缩放时插值使用的方法
- * \return 人脸裁剪是否成功
- * \note 最后裁剪出来的人脸大小为 [crop_width + pad_left + pad_right, crop_height + pad_top + pad_bottom] 的大小
+ * \brief Crop face
+ * \param [in] image_data input image, format like height * width * channels
+ * \param [in] image_width image width
+ * \param [in] image_height image height
+ * \param [in] image_channels image channels
+ * \param [in] crop_data output [crop_width + pad_left + pad_right, crop_height + pad_top + pad_bottom, image_channels]
+ * \param [in] crop_width output crop face width, based on meanshape, \b not output image size, infected by pad value
+ * \param [in] crop_height output crop face height, based on meanshape, \b not output image size, infected by pad value
+ * \param [in] points face landmark, format {(x1, y1), (x2, y2), ...}
+ * \param [in] points_num number of landmark
+ * \param [in] mean_shape meanshape, fomat {(x1, y1), (x2, y2), ...}
+ * \param [in] mean_shape_width meanshape face width
+ * \param [in] mean_shape_height meanshape face height
+ * \param [in] pad_top pad on top, can be neg value
+ * \param [in] pad_bottom pad on bottom, can be neg value
+ * \param [in] pad_left pad on left, can be neg value
+ * \param [in] pad_right pad on right, can be neg value
+ * \param [out] final_points landmarks on cropped face {(x1, y1), (x2, y2), ...}, can be NULL.
+ * \param [in] type method of sample
+ * \return ture if succeed
+ * \note final face data size should be [crop_width + pad_left + pad_right, crop_height + pad_top + pad_bottom]
  */
 bool face_crop_core(
     const uint8_t *image_data, int image_width, int image_height, int image_channels,

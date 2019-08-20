@@ -306,14 +306,17 @@ void prewhiten( T *data, size_t len )
     at = data;
     for( size_t i = 0; i < len; ++i, ++at ) std_dev += ( *at - mean ) * ( *at - mean );
     std_dev = std::sqrt( std_dev / len );
-    std_dev = std::max<T>( std_dev, 1 / std::sqrt( len ) );
+    std_dev = std::max<double>( std_dev, 1 / std::sqrt( len ) );
     double std_dev_rec = 1 / std_dev;
+
+	auto fmean = float(mean);
+	auto fstd_dev = float(std_dev_rec);
 
     at = data;
     for( size_t i = 0; i < len; ++i, ++at )
     {
-        *at -= mean;
-        *at *= std_dev_rec;
+        *at -= fmean;
+        *at *= fstd_dev;
     }
 }
 
@@ -564,7 +567,7 @@ int SeetaNetMemoryDataLayerCPU<T>::Init( seeta::SeetaNet_LayerParameter &inputpa
         {
             m_channel_swaps.emplace_back( msg->channel_swaps[i] );
             if( msg->channel_swaps[i] != i ) swapped = true;
-            if( msg->channel_swaps[i] >= this->bottom_data_size[0].data_dim[1] ||
+            if( msg->channel_swaps[i] >= uint32_t(this->bottom_data_size[0].data_dim[1]) ||
                     msg->channel_swaps[i] < 0 ) swapped = false;
         }
         if( swapped )

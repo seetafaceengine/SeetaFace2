@@ -15,11 +15,11 @@ public:
     int Init( seeta::SeetaNet_LayerParameter &inputparam, SeetaNetResource<T> *pdjNetResource );
     int Process( std::vector<SeetaNetFeatureMap<T>*> input_data_map, std::vector<SeetaNetFeatureMap<T>*> &output_data_map );
 
-    int MaxPooling( int number, SeetaNetBlobCpu<T> &inputdata, SeetaNetBlobCpu<T> &outputdata, size_t kernel_h, size_t kernel_w,
-                    size_t stride_h, size_t stride_w, size_t pad_h, size_t pad_w, std::vector<int> &shape_vector_in, std::vector<int> &shape_vector_out );
+    int MaxPooling( int number, SeetaNetBlobCpu<T> &inputdata, SeetaNetBlobCpu<T> &outputdata, int kernel_h, int kernel_w,
+                    int stride_h, int stride_w, int pad_h, int pad_w, std::vector<int> &shape_vector_in, std::vector<int> &shape_vector_out );
 
-    int AveragePooling( int number, SeetaNetBlobCpu<T> &inputdata, SeetaNetBlobCpu<T> &outputdata, size_t kernel_h, size_t kernel_w,
-                        size_t stride_h, size_t stride_w, size_t pad_h, size_t pad_w, std::vector<int> &shape_vector_in, std::vector<int> &shape_vector_out );
+    int AveragePooling( int number, SeetaNetBlobCpu<T> &inputdata, SeetaNetBlobCpu<T> &outputdata, int kernel_h, int kernel_w,
+                        int stride_h, int stride_w, int pad_h, int pad_w, std::vector<int> &shape_vector_in, std::vector<int> &shape_vector_out );
 
 private:
     void CaculatePoolSize( int input_height, int input_width, int &output_height, int &output_width );
@@ -58,14 +58,14 @@ void SeetaNetPoolingCpu<T>::CaculatePoolSize( int input_height, int input_width,
 
     if( m_tf_padding == "VALID" )
     {
-        output_height = ceil( ( input_height + 2 * m_pad_h - m_kernel_h + 1 ) / ( float )m_stride_h );
-        output_width = ceil( ( input_width + 2 * m_pad_w - m_kernel_w + 1 ) / ( float )m_stride_w );
+        output_height = int(ceil( ( input_height + 2 * m_pad_h - m_kernel_h + 1 ) / ( float )m_stride_h ));
+        output_width = int(ceil( ( input_width + 2 * m_pad_w - m_kernel_w + 1 ) / ( float )m_stride_w ));
     }
     else
         if( m_tf_padding == "SAME" )
         {
-            output_height = ceil( ( input_height + 2 * m_pad_h ) / ( float )m_stride_h );
-            output_width = ceil( ( input_width + 2 * m_pad_w ) / ( float )m_stride_w );
+            output_height = int(ceil( ( input_height + 2 * m_pad_h ) / ( float )m_stride_h ));
+            output_width = int(ceil( ( input_width + 2 * m_pad_w ) / ( float )m_stride_w ));
 
             // no feak padding when pooling
             m_tf_fake_padding_h = 0;
@@ -74,13 +74,13 @@ void SeetaNetPoolingCpu<T>::CaculatePoolSize( int input_height, int input_width,
         else
             if( m_valid )
             {
-                output_height = floor( ( input_height + 2 * m_pad_h - m_kernel_h ) / ( float )m_stride_h + 1 );
-                output_width = floor( ( input_width + 2 * m_pad_w - m_kernel_w ) / ( float )m_stride_w + 1 );
+                output_height = int(floor( ( input_height + 2 * m_pad_h - m_kernel_h ) / ( float )m_stride_h + 1 ));
+                output_width = int(floor( ( input_width + 2 * m_pad_w - m_kernel_w ) / ( float )m_stride_w + 1 ));
             }
             else
             {
-                output_height = ceil( ( input_height + 2 * m_pad_h - m_kernel_h ) / ( float )m_stride_h + 1 );
-                output_width = ceil( ( input_width + 2 * m_pad_w - m_kernel_w ) / ( float )m_stride_w + 1 );
+                output_height = int(ceil( ( input_height + 2 * m_pad_h - m_kernel_h ) / ( float )m_stride_h + 1 ));
+                output_width = int(ceil( ( input_width + 2 * m_pad_w - m_kernel_w ) / ( float )m_stride_w + 1 ));
             }
 }
 
@@ -195,7 +195,7 @@ SeetaNetPoolingCpu<T>::~SeetaNetPoolingCpu()
 
 template <typename T>
 int SeetaNetPoolingCpu<T>::MaxPooling( int number, SeetaNetBlobCpu<T> &inputdata, SeetaNetBlobCpu<T> &outputdata,
-                                       size_t kernel_h, size_t kernel_w, size_t stride_h, size_t stride_w, size_t pad_h, size_t pad_w
+                                       int kernel_h, int kernel_w, int stride_h, int stride_w, int pad_h, int pad_w
                                        , std::vector<int> &shape_vector_in, std::vector<int> &shape_vector_out )
 {
     //预先计算特征输出向量的维度
@@ -204,8 +204,8 @@ int SeetaNetPoolingCpu<T>::MaxPooling( int number, SeetaNetBlobCpu<T> &inputdata
     int height_ = shape_vector_in[2];
     int width_ = shape_vector_in[3];
 
-    int input_offset = offset( shape_vector_in, 0, 1 );
-    int output_offset = offset( shape_vector_out, 0, 1 );
+    auto input_offset = offset( shape_vector_in, 0, 1 );
+	auto output_offset = offset( shape_vector_out, 0, 1 );
 
     auto gun = orz::ctx::lite::ptr<orz::Shotgun>();
     if( gun == nullptr || gun->size() <= 1 )
@@ -308,7 +308,7 @@ int SeetaNetPoolingCpu<T>::MaxPooling( int number, SeetaNetBlobCpu<T> &inputdata
 
 template <typename T>
 int SeetaNetPoolingCpu<T>::AveragePooling( int number, SeetaNetBlobCpu<T> &inputdata, SeetaNetBlobCpu<T> &outputdata,
-        size_t kernel_h, size_t kernel_w, size_t stride_h, size_t stride_w, size_t pad_h, size_t pad_w
+	int kernel_h, int kernel_w, int stride_h, int stride_w, int pad_h, int pad_w
         , std::vector<int> &shape_vector_in, std::vector<int> &shape_vector_out )
 {
     const T *bottom_data = inputdata.dataMemoryPtr();
@@ -317,8 +317,8 @@ int SeetaNetPoolingCpu<T>::AveragePooling( int number, SeetaNetBlobCpu<T> &input
     int height_ = shape_vector_in[2];
     int width_ = shape_vector_in[3];
 
-    int input_offset = offset( shape_vector_in, 0, 1 );
-    int output_offset = offset( shape_vector_out, 0, 1 );
+    auto input_offset = offset( shape_vector_in, 0, 1 );
+	auto output_offset = offset( shape_vector_out, 0, 1 );
 
     auto gun = orz::ctx::lite::ptr<orz::Shotgun>();
     if( gun == nullptr || gun->size() <= 1 )

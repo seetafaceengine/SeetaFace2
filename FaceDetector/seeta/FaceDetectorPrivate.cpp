@@ -149,7 +149,7 @@ std::vector<Rect> Impl::SlidingWindow( const SeetaImageData &img, const SeetaIma
     img_resized.width = int( img.width / cur_scale );
     img_resized.height =  int( img.height / cur_scale );
     img_resized.channels =  img.channels;
-    img_resized.data = new uint8_t[img_resized.height * img_resized.width * img_resized.channels];  // 只申请一次内存，之后的图像全部是缩小
+    img_resized.data = new uint8_t[img_resized.height * img_resized.width * img_resized.channels]; // malloc image buffer
     int count_scale = 0;
     while( std::min( img_resized.width, img_resized.height ) >= net_size )
     {
@@ -363,7 +363,7 @@ std::vector<SeetaFaceInfo> Impl::TransWindow( const SeetaImageData &img, const S
             f.pos.y = y1;
             f.pos.width = w;
             f.pos.height = h;
-            f.score = winList[i].conf;
+            f.score = float(winList[i].conf);
             ret.push_back( f );
         }
     }
@@ -830,7 +830,7 @@ SeetaFaceInfoArray FaceDetectorPrivate::Detect( const SeetaImageData &image )
     delete[] img_pad.data;
     m_pre_faces.clear();
     m_pre_faces = p->TransWindow( image, image, winList );
-    ret.size = m_pre_faces.size();
+    ret.size = int(m_pre_faces.size());
     ret.data = m_pre_faces.data();
     return ret;
 }

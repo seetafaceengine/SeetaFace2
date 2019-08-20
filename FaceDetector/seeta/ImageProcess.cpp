@@ -294,7 +294,7 @@ const seeta::Image seeta::equalize_hist( const Image &img )
     for( int c = 0; c < img.channels(); ++c )
     {
         int i = 0;
-        // 过滤掉灰度值从最低开始在图片中不存在的值
+        // 
         while( !hist[c][i] ) ++i;
         float scale = ( HIST_SIZE - 1.f ) / ( count[c] - hist[c][i] );
 

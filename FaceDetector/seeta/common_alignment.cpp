@@ -23,17 +23,17 @@ void CopyData( T *dst, const T *src, size_t _count )
 static const int TFORM_SIZE = 6;
 
 /**
- * \brief 根据提供的特征点计算转换映射
- * \param crop_width Crop 宽度
- * \param crop_height Crop 高度
- * \param points 特征点，以 {(x1, y1), (x2, y2), ...} 格式存放
- * \param points_num 特征点个数
- * \param mean_shape 平均人脸模型，对应特征点存放
- * \param mean_shape_width 平均人脸模型宽度
- * \param mean_shape_height 平均人脸模型高度
- * \param transformation 转换映射，预申请大小为 N * TFORM_SIZE
- * \param N 缺省保留，表示一次可以对 N 个人脸计算对齐
- * \return 获取转换映射是否成功
+ * \brief 
+ * \param crop_width Crop 
+ * \param crop_height Crop 
+ * \param points format {(x1, y1), (x2, y2), ...}
+ * \param points_num 
+ * \param mean_shape 
+ * \param mean_shape_width 
+ * \param mean_shape_height
+ * \param transformation size: N * TFORM_SIZE
+ * \param N always 1
+ * \return 
  */
 static bool transformation_maker(
     int crop_width, int crop_height,
@@ -118,14 +118,14 @@ static inline void Norm( std::vector<double> &weights )
 }
 
 /**
-* \brief 最近采样方法，用于边缘的复制填充
-* \param image_data 进行采样的图像数据
-* \param image_width 图像宽度
-* \param image_height 图像高度
-* \param image_channels 图像通道数
-* \param x 采样的纵坐标，待确定
-* \param y 采样的横坐标，待确定
-* \param pixel 采样的输出，为 image_channels 的个数的元素
+* \brief 
+* \param image_data 
+* \param image_width 
+* \param image_height 
+* \param image_channels 
+* \param x 
+* \param y 
+* \param pixel size[image_channels]
 */
 static void near_sampling(
     const uint8_t *image_data, int image_width, int image_height, int image_channels,
@@ -145,20 +145,20 @@ static void near_sampling(
 #define BICUBIC_KERNEL 4
 
 /**
-* \brief 下采样方法
-* \param image_data 进行采样的图像数据
-* \param image_width 图像宽度
-* \param image_height 图像高度
-* \param image_channels 图像通道数
-* \param scale 缩放尺度
-* \param x 采样的纵坐标，待确定
-* \param y 采样的横坐标，待确定
-* \param pixel 采样的输出，为 image_channels 的个数的元素
-* \param weights_x 数据缓存空间
-* \param weights_y 数据缓存空间
-* \param indices_x 数据缓存空间
-* \param indices_y 数据缓存空间
-* \param type 采样方法
+* \brief 
+* \param image_data 
+* \param image_width 
+* \param image_height 
+* \param image_channels 
+* \param scale 
+* \param x 
+* \param y 
+* \param pixel size[image_channels]
+* \param weights_x 
+* \param weights_y 
+* \param indices_x 
+* \param indices_y 
+* \param type
 */
 static void sampling(
     const uint8_t *image_data, int image_width, int image_height, int image_channels,
@@ -295,20 +295,20 @@ static void sampling(
 
 /**
  * \brief
- * \param image_data 原始图像数据
- * \param image_width 图像数据
- * \param image_height 图像高度
- * \param image_channels 图像通道数
- * \param crop_data 裁剪后的图像数据，大小受裁剪的大小和扩展的边缘影响
- * \param crop_width 裁剪后的人脸高度
- * \param crop_height 裁剪后的人脸高度
- * \param transformation 转换映射
- * \param pad_top 向上扩展，可以为负（表示向内缩）
- * \param pad_bottom 向下扩展，可以为负（表示向内缩）
- * \param pad_left 向左扩展，可以为负（表示向内缩）
- * \param pad_right 向右扩展，可以为负（表示向内缩）
- * \param type 缩放时插值使用的方法
- * \param N 缺省保留，表示一次可以对 N 个人脸计算对齐
+ * \param image_data 
+ * \param image_width 
+ * \param image_height 
+ * \param image_channels 
+ * \param crop_data 
+ * \param crop_width 
+ * \param crop_height 
+ * \param transformation 
+ * \param pad_top 
+ * \param pad_bottom 
+ * \param pad_left 
+ * \param pad_right 
+ * \param type 
+ * \param N always 1
  * \return
  */
 static bool spatial_transform(
@@ -360,14 +360,14 @@ static bool spatial_transform(
 }
 
 /**
- * \brief 逆向计算特征点的坐标
- * \param points 原先定位的特征点
- * \param points_num 特征点的数量
- * \param transformation 转换映射
- * \param pad_top 向上扩展的高度
- * \param pad_left 向左扩展的宽度
- * \param final_points 在新坐标系下的特征点位置
- * \return 返回计算新特征点坐标是否成功
+ * \brief 
+ * \param points 
+ * \param points_num 
+ * \param transformation 
+ * \param pad_top 
+ * \param pad_left 
+ * \param final_points 
+ * \return 
  */
 bool caculate_final_points(
     const float *points, int points_num,

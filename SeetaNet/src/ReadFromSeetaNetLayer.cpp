@@ -38,11 +38,13 @@ int SeetaNetReadModelFromBuffer( const char *buffer, size_t buffer_length, void 
         return NULL_PTR;
     }
 
-    int offset = read( buffer, buffer_length, ( *tmp_model )->vector_blob_names );
-    offset += read( buffer + offset, buffer_length - offset, ( *tmp_model )->vector_layer_names );
+	auto ibuffer_length = int(buffer_length);
+
+    int offset = read( buffer, ibuffer_length, ( *tmp_model )->vector_blob_names );
+    offset += read( buffer + offset, ibuffer_length - offset, ( *tmp_model )->vector_layer_names );
 
     int32_t nlayers = 0;
-    offset += read( buffer + offset, buffer_length - offset, nlayers );
+    offset += read( buffer + offset, ibuffer_length - offset, nlayers );
 
     int index_layer = 0;
     int return_result = -1;
@@ -51,7 +53,7 @@ int SeetaNetReadModelFromBuffer( const char *buffer, size_t buffer_length, void 
     {
         return_result = -1;
         seeta::SeetaNet_LayerParameter   *output_param = new seeta::SeetaNet_LayerParameter;
-        return_result = output_param->read( buffer + offset, buffer_length - offset );
+        return_result = output_param->read( buffer + offset, ibuffer_length - offset );
 
         output_param->set_layer_index( index_layer );
         index_layer++;

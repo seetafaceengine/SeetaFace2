@@ -51,7 +51,7 @@ int SeetaNetInnerProductCPU<T>::Init( seeta::SeetaNet_LayerParameter &inputparam
     this->m_layer_index = inputparam.layer_index;
     m_p_seeta_net_resource = pNetResource;
 
-    int bottom_length = inputparam.bottom_index.size();
+	auto bottom_length = inputparam.bottom_index.size();
     this->bottom_data_size.resize( bottom_length );
     for( size_t i = 0; i < bottom_length; i++ )
     {

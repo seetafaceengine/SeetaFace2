@@ -273,11 +273,11 @@ int write( char *buf, int len, const vector<float> &value )
     }
 
     int offset = 0;
-    int size = value.size();
+    int size = int(value.size());
 
     offset += write( buf + offset, len - offset, size );
     int nret = 0;
-    for( int i = 0; i < value.size(); i++ )
+    for( size_t i = 0; i < value.size(); i++ )
     {
         nret = write( buf + offset, len - offset, value[i] );
         if( nret < 0 )
@@ -299,11 +299,11 @@ int write( char *buf, int len, const vector<uint32_t> &value )
     }
 
     int offset = 0;
-    int size = value.size();
+    int size = int(value.size());
 
     offset += write( buf + offset, len - offset, size );
     int nret = 0;
-    for( int i = 0; i < value.size(); i++ )
+    for( size_t i = 0; i < value.size(); i++ )
     {
         nret = write( buf + offset, len - offset, value[i] );
         if( nret < 0 )
@@ -325,11 +325,11 @@ int write( char *buf, int len, const vector<int32_t> &value )
     }
 
     int offset = 0;
-    int size = value.size();
+    int size = int(value.size());
 
     offset += write( buf + offset, len - offset, size );
     int nret = 0;
-    for( int i = 0; i < value.size(); i++ )
+    for( size_t i = 0; i < value.size(); i++ )
     {
         nret = write( buf + offset, len - offset, value[i] );
         if( nret < 0 )
@@ -351,11 +351,11 @@ int write( char *buf, int len, const std::string &value )
     }
 
     int offset = 0;
-    int size = value.length();
+    int size = int(value.length());
 
     offset += write( buf + offset, len - offset, size );
     memcpy( buf + offset, value.c_str(), value.length() );
-    offset += value.length();
+    offset += int(value.length());
     return offset;
 }
 
@@ -368,11 +368,11 @@ int write( char *buf, int len, const vector<string> &value )
     }
 
     int offset = 0;
-    int size = value.size();
+    int size = int(value.size());
 
     offset += write( buf + offset, len - offset, size );
     int nret = 0;
-    for( int i = 0; i < value.size(); i++ )
+    for( size_t i = 0; i < value.size(); i++ )
     {
         nret = write( buf + offset, len - offset, value[i] );
         if( nret < 0 )
@@ -387,20 +387,20 @@ int write( char *buf, int len, const vector<string> &value )
 
 int WriteStringToFile( const std::string &input_string, std::fstream &outputfstream )
 {
-    int string_size = input_string.size();
+    int string_size = int(input_string.size());
     string_size = htonl( string_size );
     outputfstream.write( reinterpret_cast<char *>( &string_size ), sizeof( int ) );
     outputfstream.write( input_string.data(), sizeof( char ) * input_string.length() );
-    return sizeof( int ) + sizeof( char ) * input_string.length();
+    return int(sizeof( int ) + sizeof( char ) * input_string.length());
 }
 
 int WriteStringVectorToFile( const std::vector<std::string> &vec, std::fstream &outputfstream )
 {
-    int string_size = vec.size();
+    int string_size = int(vec.size());
     string_size = htonl( string_size );
     outputfstream.write( reinterpret_cast<char *>( &string_size ), sizeof( int ) );
     int offset = sizeof( int );
-    for( int i = 0; i < vec.size(); i++ )
+    for( size_t i = 0; i < vec.size(); i++ )
     {
         offset += WriteStringToFile( vec[i], outputfstream );
     }

@@ -141,9 +141,9 @@ int SeetaNetConvolutionCPU<T>::Init( seeta::SeetaNet_LayerParameter &inputparam,
     m_dilation_w = msg->dilation_width;
     if( msg->bias_param.data.size() > 0 )
     {
-        int temp_biasnum = msg->bias_param.data.size();
+        auto temp_biasnum = msg->bias_param.data.size();
 
-        for( int i = 0; i < temp_biasnum; i++ )
+        for( size_t i = 0; i < temp_biasnum; i++ )
         {
             float temp_biasvalue = msg->bias_param.data[i];
             if( temp_biasvalue < FLT_EPSILON && -temp_biasvalue < FLT_EPSILON ) temp_biasvalue = 0;
@@ -197,16 +197,16 @@ int SeetaNetConvolutionCPU<T>::Caculate( const int height, const int width, cons
 {
     if( m_tf_padding == "VALID" )
     {
-        output_h = ceil( ( height + 2 * pad_h -
-                           ( dilation_h * ( kernel_h - 1 ) ) ) / float( stride_h ) );
-        output_w = ceil( ( width + 2 * pad_w -
-                           ( dilation_w * ( kernel_w - 1 ) ) ) / float( stride_w ) );
+        output_h = int(ceil( ( height + 2 * pad_h -
+                           ( dilation_h * ( kernel_h - 1 ) ) ) / float( stride_h ) ));
+        output_w = int(ceil( ( width + 2 * pad_w -
+                           ( dilation_w * ( kernel_w - 1 ) ) ) / float( stride_w ) ));
     }
     else
         if( m_tf_padding == "SAME" )
         {
-            output_h = ceil( ( height + 2 * pad_h ) / float( stride_h ) );
-            output_w = ceil( ( width + 2 * pad_w ) / float( stride_w ) );
+            output_h = int(ceil( ( height + 2 * pad_h ) / float( stride_h ) ));
+            output_w = int(ceil( ( width + 2 * pad_w ) / float( stride_w ) ));
 
             int original_view_h = height + 2 * pad_h;
             int original_view_w = width + 2 * pad_w;

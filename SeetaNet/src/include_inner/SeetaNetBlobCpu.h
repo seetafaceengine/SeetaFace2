@@ -24,7 +24,7 @@ public:
         return ( ( n * shape_[1] + c ) * shape_[2] + h ) * shape_[3] + w;
     }
     inline int num_axes() const {
-        return shape_.size();
+        return int(shape_.size());
     }
     inline int CanonicalAxisIndex( int axis_index ) const {
         if( axis_index <= -num_axes() ) {

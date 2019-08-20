@@ -49,7 +49,7 @@ int SeetaNetConcatCPU<T>::Init( seeta::SeetaNet_LayerParameter &inputparam, Seet
     concat_input_dim_vector.clear();
     int return_result = 0;
 
-    int bottom_length = inputparam.bottom_index.size();
+    auto bottom_length = inputparam.bottom_index.size();
     this->bottom_data_size.resize( bottom_length );
     for( size_t i = 0; i < bottom_length; i++ )
     {
@@ -154,7 +154,7 @@ int SeetaNetConcatCPU<T>::Process( std::vector<SeetaNetFeatureMap<T>*> input_dat
 
     T *top_data = output_data_map[0]->m_cpu.dataMemoryPtr();
 
-    const int top_concat_axis = concat_axis_dims;
+    const int top_concat_axis = int(concat_axis_dims);
 
     int64_t num_concats_ = 1;
     for( int i = 0; i < concat_axis_; i++ )
@@ -163,7 +163,7 @@ int SeetaNetConcatCPU<T>::Process( std::vector<SeetaNetFeatureMap<T>*> input_dat
     }
 
     int64_t concat_input_size_ = 1;
-    for( int i = concat_axis_ + 1; i < input_data_map[0]->data_shape.size(); i++ )
+    for(int64_t i = concat_axis_ + 1; i < int64_t(input_data_map[0]->data_shape.size()); i++ )
     {
         concat_input_size_ *= input_data_map[0]->data_shape[i];
     }
@@ -175,7 +175,7 @@ int SeetaNetConcatCPU<T>::Process( std::vector<SeetaNetFeatureMap<T>*> input_dat
         const int bottom_concat_axis = input_data_map[i]->data_shape[concat_axis_];
         for( int n = 0; n < num_concats_; ++n )
         {
-            seeta_copy( bottom_concat_axis * concat_input_size_,
+            seeta_copy( int(bottom_concat_axis * concat_input_size_),
                         bottom_data + n * bottom_concat_axis * concat_input_size_,
                         top_data + ( n * top_concat_axis + offset_concat_axis )
                         * concat_input_size_ );

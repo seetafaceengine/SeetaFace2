@@ -43,7 +43,7 @@ SeetaNetEltwiseCPU<T>::~SeetaNetEltwiseCPU()
 template <class T>
 int SeetaNetEltwiseCPU<T>::Init( seeta::SeetaNet_LayerParameter &inputparam, SeetaNetResource<T> *pNetResource )
 {
-    int bottom_length = inputparam.bottom_index.size();
+    auto bottom_length = inputparam.bottom_index.size();
     this->bottom_data_size.resize( bottom_length );
     for( size_t i = 0; i < bottom_length; i++ )
     {
@@ -53,9 +53,9 @@ int SeetaNetEltwiseCPU<T>::Init( seeta::SeetaNet_LayerParameter &inputparam, See
 
     seeta::SeetaNet_EltwiseParameter *msg = ( seeta::SeetaNet_EltwiseParameter * )inputparam.msg.get();
     m_elt_type = msg->operation;
-    int coeff_length = msg->coeff.size();
+    auto coeff_length = msg->coeff.size();
     m_eltwise_coeff.clear();
-    for( int i = 0; i < coeff_length; i++ )
+    for( size_t i = 0; i < coeff_length; i++ )
     {
         m_eltwise_coeff.push_back( msg->coeff[i] );
     }
@@ -151,11 +151,11 @@ static void split_do( T *output, const std::vector<T *> &input, size_t size, FUN
 template <class T>
 int SeetaNetEltwiseCPU<T>::Process( std::vector<SeetaNetFeatureMap<T>*> input_data_map, std::vector<SeetaNetFeatureMap<T>*> &output_data_map )
 {
-    int process_length = input_data_map.size();
+    auto process_length = input_data_map.size();
     std::vector<T * > input_data_point;
     input_data_point.resize( process_length );
     T *ouput_point = output_data_map[0]->m_cpu.dataMemoryPtr();
-    for( int index_bottom = 0; index_bottom < process_length; index_bottom++ )
+    for( size_t index_bottom = 0; index_bottom < process_length; index_bottom++ )
     {
         input_data_point[index_bottom] = input_data_map[index_bottom]->m_cpu.dataMemoryPtr();
     }

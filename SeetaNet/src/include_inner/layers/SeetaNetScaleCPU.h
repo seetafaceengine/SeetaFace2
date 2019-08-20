@@ -42,16 +42,16 @@ int SeetaNetScaleCPU<T>::Init( seeta::SeetaNet_LayerParameter &inputparam, Seeta
 
     seeta::SeetaNet_ScaleParameter *msg = ( seeta::SeetaNet_ScaleParameter * )inputparam.msg.get();
     m_scale_value.clear();
-    int length_mean = msg->scale_param.data.size();
-    for( int i = 0; i < length_mean; i++ )
+	size_t length_mean = msg->scale_param.data.size();
+    for( size_t i = 0; i < length_mean; i++ )
     {
         auto tmp_scale_value = msg->scale_param.data[i];
         if( tmp_scale_value < FLT_EPSILON && -tmp_scale_value < FLT_EPSILON ) tmp_scale_value = 0;
         m_scale_value.push_back( tmp_scale_value );
     }
     m_bias_value.clear();
-    int length_covariance = msg->bias_param.data.size();
-    for( int i = 0; i < length_covariance; i++ )
+	size_t length_covariance = msg->bias_param.data.size();
+    for( size_t i = 0; i < length_covariance; i++ )
     {
         auto tmp_bias_value = msg->bias_param.data[i];
         if( tmp_bias_value < FLT_EPSILON && -tmp_bias_value < FLT_EPSILON ) tmp_bias_value = 0;

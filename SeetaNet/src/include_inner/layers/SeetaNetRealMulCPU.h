@@ -49,9 +49,9 @@ int SeetaNetRealMulCPU<T>::Init( seeta::SeetaNet_LayerParameter &inputparam, See
         m_y_shape.push_back( 1 );
     }
 
-    int length_y = blob_y.data.size();
+	size_t length_y = blob_y.data.size();
     m_y_data.reset( new T[length_y], std::default_delete<T[]>() );
-    for( int i = 0; i < length_y; i++ )
+    for( size_t i = 0; i < length_y; i++ )
     {
         auto tmp_y_value = blob_y.data[i];
         if( tmp_y_value < FLT_EPSILON && -tmp_y_value < FLT_EPSILON ) tmp_y_value = 0;

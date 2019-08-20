@@ -113,7 +113,7 @@ template <>
 inline void seeta_powx<double>( const int n, const double *a, const double b,
                                 double *y )
 {
-    vdPowx( n, a, b, y );
+    vdPowx( n, a, float(b), y );
 }
 
 

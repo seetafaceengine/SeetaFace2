@@ -38,7 +38,7 @@ SeetaNetShapeIndexPatchCPU<T>::~SeetaNetShapeIndexPatchCPU()
 template <class T>
 int SeetaNetShapeIndexPatchCPU<T>::Init( seeta::SeetaNet_LayerParameter &inputparam, SeetaNetResource<T> *pNetResource )
 {
-    int bottom_length = inputparam.bottom_index.size();
+	size_t bottom_length = inputparam.bottom_index.size();
 
     assert( bottom_length == 2 );
     this->bottom_data_size.resize( bottom_length );
@@ -76,7 +76,7 @@ int SeetaNetShapeIndexPatchCPU<T>::Init( seeta::SeetaNet_LayerParameter &inputpa
     this->top_data_size[0].data_dim[0] = this->bottom_data_size[0].data_dim[0];
     this->top_data_size[0].data_dim[1] = this->bottom_data_size[0].data_dim[1];
     this->top_data_size[0].data_dim[2] = x_patch_h;
-    this->top_data_size[0].data_dim[3] = landmarkx2 * 0.5 * x_patch_w;
+    this->top_data_size[0].data_dim[3] = int(landmarkx2 * 0.5 * x_patch_w);
 
     return 0;
 }
@@ -101,7 +101,7 @@ int SeetaNetShapeIndexPatchCPU<T>::Process( std::vector<SeetaNetFeatureMap<T>*> 
 
     const float r_h = ( feat_patch_h - 1 ) / 2.0f;
     const float r_w = ( feat_patch_w - 1 ) / 2.0f;
-    const int landmark_num = landmarkx2 * 0.5;
+    const int landmark_num = int(landmarkx2 * 0.5);
 
     HypeShape pos_offset( {input_data_map[1]->data_shape[0], input_data_map[1]->data_shape[1]} );
     HypeShape feat_offset( {input_data_map[0]->data_shape[0], input_data_map[0]->data_shape[1],
@@ -151,7 +151,7 @@ int SeetaNetShapeIndexPatchCPU<T>::Process( std::vector<SeetaNetFeatureMap<T>*> 
     output_data_map[0]->data_shape[0] = input_data_map[0]->data_shape[0];
     output_data_map[0]->data_shape[1] = input_data_map[0]->data_shape[1];
     output_data_map[0]->data_shape[2] = x_patch_h;
-    output_data_map[0]->data_shape[3] = landmarkx2 * 0.5 * x_patch_w;
+    output_data_map[0]->data_shape[3] = int(landmarkx2 * 0.5 * x_patch_w);
 
     return 0;
 }
