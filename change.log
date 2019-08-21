@@ -1,0 +1,2 @@
+[2019-8-21]
+- Support ARM linux compilation, by adding PLATFORM option like `-DPLARTORM=ARM`
