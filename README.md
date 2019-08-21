@@ -77,19 +77,23 @@ SeetaFace2 是面向于人脸识别商业落地的里程碑版本，其中人脸
 
 ## 2. 编译
 ### 2.1 编译依赖
-- GNU Make 工具<br>
-- GCC 或者 Clang 编译器<br>
-- CMake<br>
++ 编译工具
+  - GNU Make 工具
+  - GCC 或者 Clang 编译器
+  - [msvc](http://msdn.microsoft.com/zh-cn/vstudio)
+  - [CMake](http://www.cmake.org/)
++ 依赖库
+  - [opnecv](http://opencv.org/) 仅编译例子时需要
 
-### 2.2 linux和windows平台编译说明
-1. 编译参数
+### 2.2 编译参数
   - BUILD_DETECOTOR: 是否编译人脸检测模块。ON：打开；OFF：关闭
   - BUILD_LANDMARKER: 是否编译面部关键点定位模块。ON：打开；OFF：关闭
   - BUILD_RECOGNIZER: 是否编译人脸特征提取与比对模块。ON：打开；OFF：关闭
   - BUILD_EXAMPLE: 是否编译例子。ON：打开；OFF：关闭
   - CMAKE_INSTALL_PREFIX: 安装前缀
 
-2. linux
+### 2.3 各平台编译
+#### 2.3.1 linux平台编译说明
   - 依赖
     + opencv。仅编译例子时需要
 
@@ -100,7 +104,7 @@ SeetaFace2 是面向于人脸识别商业落地的里程碑版本，其中人脸
         cd SeetaFace2
         mkdir build
         cd build
-        cmake .. -DCMAKE_INSTALL_PREFIX=`pwd`/install
+        cmake .. -DCMAKE_INSTALL_PREFIX=`pwd`/install -DBUILD_EXAMPLE=OFF # 如果有opencv，则设置为ON
         cmake --build .
 
   - 安装
@@ -122,11 +126,20 @@ SeetaFace2 是面向于人脸识别商业落地的里程碑版本，其中人脸
 
     + 执行 bin 目录下的程序
       - point81
+
+            cd SeetaFace2
+            cd build
+            cd bin
+            ./point81
+
       - search
 
-3. windows
-  - 依赖
-    + opencv。仅编译例子时需要
+            cd SeetaFace2
+            cd build
+            cd bin
+            ./search
+
+#### 2.3.2 windows平台编译说明
   - 使用 cmake-gui.exe 工具编译。打开 cmake-gui.exe
   - 命令行编译
     + 把 cmake 命令所在目录加入到环境变量 PATH 中
@@ -137,7 +150,7 @@ SeetaFace2 是面向于人脸识别商业落地的里程碑版本，其中人脸
             cd SeetaFace2
             mkdir build
             cd build
-            cmake .. -DCMAKE_INSTALL_PREFIX=install
+            cmake .. -DCMAKE_INSTALL_PREFIX=install -DBUILD_EXAMPLE=OFF # 如果有opencv，则设置为ON
             cmake --build .
 
       - 安装
@@ -157,13 +170,29 @@ SeetaFace2 是面向于人脸识别商业落地的里程碑版本，其中人脸
           - point81
           - search
 
-### 2.3 Android平台编译说明
-Android 版本的编译方法： 
-1. 安装 ndk 编译工具；
-2. 环境变量中导出 ndk-build 工具；
-2. `cd` 到各模块的 `jni` 目录下（如SeetaNet 的 Android 编译脚本位置为`SeetaNet/sources/jni`， FaceDetector 的 Android 编译脚本位置为`FaceDetector/FaceDetector/jni`），执行 `ndk-build -j8` 命令进行编译。<br>
+#### 2.3.3 Android平台编译说明
++ 安装 ndk 编译工具
+  - 从  https://developer.android.com/ndk/downloads 下载 ndk，并安装到：/home/android-ndk
+  - 设置环境变量：
 
-编译依赖说明：人脸检测模块 `FaceDetector` ， 面部关键点定位模块 `FaceLandmarker` 以及人脸特征提取与比对模块 `FaceRecognizer` 均依赖前向计算框架 `SeetaNet` 模块，因此需优先编译前向计算框架 `SeetaNet` 模块。
+        export ANDROID_NDK=/home/android-ndk
+
++ 编译
+  - 主机是linux
+
+        cd SeetaFace2
+        mkdir build
+        cd build
+        cmake .. -DCMAKE_TOOLCHAIN_FILE=${ANDROID_NDK}/build/cmake/android.toolchain.cmake -DANDROID_ABI=armeabi-v7a -DANDROID_ARM_NEON=ON -DBUILD_EXAMPLE=OFF # 如果有opencv，则设置为ON
+        cmake --build .
+
+  - 主机是windows
+
+        cd SeetaFace2
+        mkdir build
+        cd build
+        cmake .. -G"Unix Makefiles"  -DCMAKE_TOOLCHAIN_FILE=${ANDROID_NDK}/build/cmake/android.toolchain.cmake  -DCMAKE_MAKE_PROGRAM=${ANDROID_NDK}\prebuilt\windows-x86_64\bin\make.exe -DANDROID_ABI=armeabi-v7a -DANDROID_ARM_NEON=ON -DBUILD_EXAMPLE=OFF # 如果有opencv，则设置为ON
+        cmake --build .
 
 ## 3. 目录结构
 |-- SeetaFace2<br>

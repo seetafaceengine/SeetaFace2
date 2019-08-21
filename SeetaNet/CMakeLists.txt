@@ -37,8 +37,6 @@ elseif(WIN32)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP")
 endif()
 
-add_definitions(-DSEETA_EXPORTS)
-
 # search files
 FILE(GLOB_RECURSE INCLUDE_FILES
         ${PROJECT_SOURCE_DIR}/include/*.h
@@ -66,6 +64,16 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     ${PROJECT_SOURCE_DIR}/src
     )
 
+GENERATE_EXPORT_HEADER(${PROJECT_NAME}
+    EXPORT_MACRO_NAME SEETA_NET_API
+    EXPORT_FILE_NAME  SeetaNetExport.h
+    )
+file(COPY ${CMAKE_CURRENT_BINARY_DIR}/SeetaNetExport.h
+    DESTINATION ${CMAKE_BINARY_DIR})
+target_include_directories(${PROJECT_NAME} PRIVATE
+    ${CMAKE_BINARY_DIR}
+    )
+
 set_target_properties(${PROJECT_NAME} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set_target_properties(${PROJECT_NAME} PROPERTIES VERSION ${BUILD_VERSION})
 # Be will to install header files
@@ -77,7 +85,7 @@ set_property(
 )
 
 # link library
-if (UNIX) 
+if (NOT ANDROID AND UNIX) 
     target_link_libraries(${PROJECT_NAME} -lpthread)   
 endif()
 

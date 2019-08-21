@@ -12,8 +12,6 @@ if(UNIX)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -fPIC")
 endif()
 
-add_definitions(-DSEETA_EXPORTS)
-
 file(GLOB_RECURSE ROOT_SRC_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/*.c
     ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cc
@@ -48,6 +46,16 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_SOURCE_DIR}/SeetaNet/include
     )
 target_link_libraries(${PROJECT_NAME} PUBLIC SeetaNet)
+
+GENERATE_EXPORT_HEADER(${PROJECT_NAME}
+    EXPORT_MACRO_NAME SEETA_RECOGNIZER_API
+    EXPORT_FILE_NAME  SeetaRecognizerExport.h
+    )
+file(COPY ${CMAKE_CURRENT_BINARY_DIR}/SeetaRecognizerExport.h
+    DESTINATION ${CMAKE_BINARY_DIR})
+target_include_directories(${PROJECT_NAME} PRIVATE
+    ${CMAKE_BINARY_DIR}
+    )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set_target_properties(${PROJECT_NAME} PROPERTIES VERSION ${BUILD_VERSION})
