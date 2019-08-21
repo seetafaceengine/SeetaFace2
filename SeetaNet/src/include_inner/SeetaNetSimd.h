@@ -372,6 +372,7 @@ inline _simd_f32x4 _simd_f32x4_fmadd(const _simd_f32x4& q0, const _simd_f32x4& q
     if (index >= 0 && index <= 3) {
         return _mm_fmadd_ps(q0, _mm_set1_ps(*((float*)&q1 + index)), q2);
     }
+	return _simd_f32x4_set(0, 0, 0, 0);
 }
 
 inline _simd_f32x4 _simd_broadcast2float32x4(const _simd_f32* src) {

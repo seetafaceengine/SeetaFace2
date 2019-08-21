@@ -80,6 +80,8 @@ SeetaFace2 是面向于人脸识别商业落地的里程碑版本，其中人脸
 - GNU Make 工具<br>
 - GCC 或者 Clang 编译器<br>
 - CMake<br>
+- CPU 支持 SSE2 和 FMA（x86）或 NENO（ARM）支持
+- [可选] OpenCV 2 或 3（调用示例中使用）。
 
 ### 2.2 linux和windows平台编译说明
 1. 编译参数
