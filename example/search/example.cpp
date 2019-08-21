@@ -21,7 +21,7 @@ int main()
     seeta::FaceEngine engine( FD_model, PD_model, FR_model, 2, 16 );
 
     // recognization threshold
-    float threshold = 0.7;
+    float threshold = 0.7f;
 
     //set face detector's min face size
     engine.FD.set( seeta::FaceDetector::PROPERTY_MIN_FACE_SIZE, 80 );
@@ -36,7 +36,8 @@ int main()
 		std::cerr << "Registering... " << filename << std::endl;
         seeta::cv::ImageData image = cv::imread( filename );
         auto id = engine.Register( image );
-		std::cerr << "Registered id = " << id << std::endl;
+        index = id;
+        std::cerr << "Registered id = " << id << std::endl;
     }
     std::map<int64_t, std::string> GalleryIndexMap;
     for( size_t i = 0; i < GalleryIndex.size(); ++i )
@@ -77,7 +78,7 @@ int main()
 			for (int i = 0; i < 5; ++i)
 			{
 				auto &point = points[i];
-				cv::circle(frame, cv::Point(point.x, point.y), 2, CV_RGB(128, 255, 128), -1);
+				cv::circle(frame, cv::Point(int(point.x), int(point.y)), 2, CV_RGB(128, 255, 128), -1);
 			}
 
 			// no face queried from database

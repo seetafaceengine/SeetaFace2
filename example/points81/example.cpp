@@ -66,10 +66,10 @@ int main()
 		return test_image(FD, FL);
 	}
 
-	auto video_width = capture.get(cv::CAP_PROP_FRAME_WIDTH);
-	auto video_height = capture.get(cv::CAP_PROP_FRAME_HEIGHT);
+	// auto video_width = capture.get(cv::CAP_PROP_FRAME_WIDTH);
+	// auto video_height = capture.get(cv::CAP_PROP_FRAME_HEIGHT);
 
-	std::cout << "Open camera(" << camera_id << "): " << video_width << "x" << video_height << std::endl;
+	std::cout << "Open camera(" << camera_id << ")" << std::endl;
 
 	cv::Mat frame;
 	while (capture.isOpened())
