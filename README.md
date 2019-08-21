@@ -85,6 +85,7 @@ SeetaFace2 是面向于人脸识别商业落地的里程碑版本，其中人脸
 
 ### 2.2 linux和windows平台编译说明
 1. 编译参数
+  - PLATFORM: [STRING] 编译目标架构，x86/x86_64/amd64 不需要设置，ARM 架构需要设置为对应平台
   - BUILD_DETECOTOR: 是否编译人脸检测模块。ON：打开；OFF：关闭
   - BUILD_LANDMARKER: 是否编译面部关键点定位模块。ON：打开；OFF：关闭
   - BUILD_RECOGNIZER: 是否编译人脸特征提取与比对模块。ON：打开；OFF：关闭
@@ -105,6 +106,11 @@ SeetaFace2 是面向于人脸识别商业落地的里程碑版本，其中人脸
         cmake .. -DCMAKE_INSTALL_PREFIX=`pwd`/install
         cmake --build .
 
+    + ARM 架构编译需要制定平台
+        ```
+        cmake .. -DCMAKE_INSTALL_PREFIX=`pwd`/install -DPLATFORM=arm
+        cmake --build .
+        ```
   - 安装
 
         cmake --build . --target install
