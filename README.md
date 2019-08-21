@@ -77,11 +77,17 @@ SeetaFace2 是面向于人脸识别商业落地的里程碑版本，其中人脸
 
 ## 2. 编译
 ### 2.1 编译依赖
-- GNU Make 工具<br>
-- GCC 或者 Clang 编译器<br>
-- CMake<br>
-- CPU 支持 SSE2 和 FMA（x86）或 NENO（ARM）支持
-- [可选] OpenCV 2 或 3（调用示例中使用）。
++ 编译工具
+  + For linux
+    - GNU Make 工具
+    - GCC 或者 Clang 编译器
+  + For windows
+    - [MSVC](http://msdn.microsoft.com/zh-cn/vstudio) 或者 MinGW. 
+  - [CMake](http://www.cmake.org/)
++ 依赖库
+  - [可选] [OpneCV](http://opencv.org/) 仅编译例子时需要
++ 依赖架构
+  - CPU 支持 SSE2 和 FMA（x86）或 NENO（ARM）支持
 
 ### 2.2 linux和windows平台编译说明
 1. 编译参数
@@ -89,7 +95,7 @@ SeetaFace2 是面向于人脸识别商业落地的里程碑版本，其中人脸
   - BUILD_DETECOTOR: 是否编译人脸检测模块。ON：打开；OFF：关闭
   - BUILD_LANDMARKER: 是否编译面部关键点定位模块。ON：打开；OFF：关闭
   - BUILD_RECOGNIZER: 是否编译人脸特征提取与比对模块。ON：打开；OFF：关闭
-  - BUILD_EXAMPLE: 是否编译例子。ON：打开；OFF：关闭
+  - BUILD_EXAMPLE: 是否编译例子。ON：打开；OFF：关闭，打开需要预先安装 `OpneCV`
   - CMAKE_INSTALL_PREFIX: 安装前缀
 
 2. linux
@@ -103,7 +109,7 @@ SeetaFace2 是面向于人脸识别商业落地的里程碑版本，其中人脸
         cd SeetaFace2
         mkdir build
         cd build
-        cmake .. -DCMAKE_INSTALL_PREFIX=`pwd`/install
+        cmake .. -DCMAKE_INSTALL_PREFIX=`pwd`/install -DBUILD_EXAMPLE=OFF # 如果有 OpneCV，则设置为 ON
         cmake --build .
 
     + ARM 架构编译需要制定平台
@@ -145,7 +151,7 @@ SeetaFace2 是面向于人脸识别商业落地的里程碑版本，其中人脸
             cd SeetaFace2
             mkdir build
             cd build
-            cmake .. -DCMAKE_INSTALL_PREFIX=install
+            cmake .. -DCMAKE_INSTALL_PREFIX=install -DBUILD_EXAMPLE=OFF # 如果有 OpneCV，则设置为 ON
             cmake --build .
 
       - 安装
@@ -162,7 +168,7 @@ SeetaFace2 是面向于人脸识别商业落地的里程碑版本，其中人脸
                 cp fd_2_00.dat pd_2_00_pts5.dat pd_2_00_pts81.dat .
 
         + 执行 bin 目录下的程序
-          - point81
+          - points81
           - search
 
 ### 2.3 Android平台编译说明
