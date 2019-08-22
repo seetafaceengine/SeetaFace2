@@ -103,7 +103,7 @@ if ("${PLATFORM}" STREQUAL "")
             set(PLATFORM x86)
         endif()
     else()
-        set(PLATFORM ${CMAKE_ANDROID_ARCH})
+        set(PLATFORM ${CMAKE_SYSTEM_PROCESSOR})
     endif()
 endif()
 
