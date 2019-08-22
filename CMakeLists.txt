@@ -89,7 +89,7 @@ set(BUILD_PLATFORM "${CMAKE_SYSTEM_NAME}")
 option(SEETA_USE_FMA "Set to ON to use FMA" OFF)
 if (SEETA_USE_FMA) 
     add_definitions(-DSEETA_USE_FMA)
-endif
+endif ()
 
 # ----------------------------------------------------------------------------
 # Detect compiler and target platform architecture
