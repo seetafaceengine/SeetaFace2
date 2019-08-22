@@ -2,6 +2,8 @@
 
 [![License](https://img.shields.io/badge/license-BSD-blue.svg)](LICENSE)
 
+[中文](./README.md) [English](./README_en.md)
+
 ## 1 Introduction
 The `SeetaFace2` face recognition engine includes three core modules required to build a fully automated face recognition system: face detection module `FaceDetector`, facial key positioning module `FaceLandmarker` and face feature extraction and Compare the module `FaceRecognizer`. There will be additional auxiliary modules such as open source face tracking and closed eye detection.
 
