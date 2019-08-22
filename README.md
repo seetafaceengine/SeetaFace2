@@ -181,6 +181,30 @@ Android 版本的编译方法：
 
 编译依赖说明：人脸检测模块 `FaceDetector` ， 面部关键点定位模块 `FaceLandmarker` 以及人脸特征提取与比对模块 `FaceRecognizer` 均依赖前向计算框架 `SeetaNet` 模块，因此需优先编译前向计算框架 `SeetaNet` 模块。
 
+
+#### 2.4 IOS 平台编译说明
+> 以实体机为例
+
++ 环境准备
+  - 需要 MacOS 的 PC。
+  - git 下载源代码。
+
++ 命令行编译
+  + 使用 cmake 编译并安装项目，
+    ```
+    cd SeetaFace2
+    mkdir build
+    cd build
+    ../ios/cmake.sh -DCMAKE_INSTALL_PREFIX=`pwd`/install
+    make -j4
+    make install
+    ```
+
+    执行完毕后，生成好的静态库将安装到`SeetaFace2/build/install`
+
+  + 编译模拟器版本
+    修改 cmake 指令参数 `../ios/cmake.sh -DIOS_PLATFORM=SIMULATOR64 -DPLATFORM=x64`
+
 ## 3. 目录结构
 |-- SeetaFace2<br>
 &emsp;&emsp;|-- craft（linux 和 windows 平台的编译脚本）<br>
