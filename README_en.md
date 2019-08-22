@@ -84,10 +84,10 @@ Knowing people to understand everything, open source empowerment and development
     - GNU Make tool
     - GCC or Clang compiler
   + For windows
-    - [MSVC] (http://msdn.microsoft.com/en-us/vstudio) or MinGW. 
+    - [MSVC](http://msdn.microsoft.com/en-us/vstudio) or MinGW. 
   - [CMake](http://www.cmake.org/)
 + dependent library
-  - [Optional] [OpneCV] (http://opencv.org/) Required only when compiling examples
+  - [Optional] [OpneCV](http://opencv.org/) Required only when compiling examples
 + dependency architecture
   - CPU supports SSE2 and FMA (x86) or NENO (ARM) support
 
@@ -104,37 +104,37 @@ Compile parameter
   - Dependence
     + opencv. Only need to compile the example
 
-        Sudo apt-get install libopencv-dev 
+        sudo apt-get install libopencv-dev 
 
   - Compile
 
-        Cd SeetaFace2
-        Mkdir build
-        Cd build
-        Cmake .. -DCMAKE_INSTALL_PREFIX=`pwd`/install -DBUILD_EXAMPLE=OFF # Set to ON if there is OpneCV
-        Cmake --build .
+        cd SeetaFace2
+        mkdir build
+        cd build
+        cmake .. -DCMAKE_INSTALL_PREFIX=`pwd`/install -DBUILD_EXAMPLE=OFF # Set to ON if there is OpneCV
+        cmake --build .
 
     + ARM architecture compilation requires a platform
         ```
-        Cmake .. -DCMAKE_INSTALL_PREFIX=`pwd`/install -DPLATFORM=arm
-        Cmake --build .
+        cmake .. -DCMAKE_INSTALL_PREFIX=`pwd`/install -DPLATFORM=arm
+        cmake --build .
         ```
   - Installation
 
-        Cmake --build . --target install
+        cmake --build . --target install
 
   - Run the example
     + Add the directory of the build library to the variable LD_LIBRARY_PATH
  
-            Export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:`pwd`/lib
+            export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:`pwd`/lib
 
     + Copy the model file to the model directory of the program execution directory
 
-            Cd SeetaFace2
-            Cd build
-            Cd bin
-            Mkdir model
-            Cp fd_2_00.dat pd_2_00_pts5.dat pd_2_00_pts81.dat .
+            cd SeetaFace2
+            cd build
+            cd bin
+            mkdir model
+            cp fd_2_00.dat pd_2_00_pts5.dat pd_2_00_pts81.dat .
 
     + Execute the program in the bin directory
       - point81
@@ -150,24 +150,24 @@ Compile parameter
 
       - Compile
 
-            Cd SeetaFace2
-            Mkdir build
-            Cd build
-            Cmake .. -DCMAKE_INSTALL_PREFIX=install -DBUILD_EXAMPLE=OFF # Set to ON if there is OpneCV
-            Cmake --build .
+            cd SeetaFace2
+            mkdir build
+            cd build
+            cmake .. -DCMAKE_INSTALL_PREFIX=install -DBUILD_EXAMPLE=OFF # Set to ON if there is OpneCV
+            cmake --build .
 
       - Installation
 
-            Cmake --build . --target install
+            cmake --build . --target install
 
       - Run the example
         + Copy the model file to the model directory of the program execution directory
 
-                Cd SeetaFace2
-                Cd build
-                Cd bin
-                Mkdir model
-                Cp fd_2_00.dat pd_2_00_pts5.dat pd_2_00_pts81.dat .
+                cd SeetaFace2
+                cd build
+                cd bin
+                mkdir model
+                cp fd_2_00.dat pd_2_00_pts5.dat pd_2_00_pts81.dat .
 
         + Execute the program in the bin directory
           - points81
@@ -180,6 +180,32 @@ Android version of the compilation method:
 2. `cd` to the `jni` directory of each module (such as SeetaNet's Android build script location is `SeetaNet/sources/jni`, FaceDetector's Android build script location is `FaceDetector/FaceDetector/jni`), execute `ndk Compile with the -build -j8` command. <br>
 
 Compilation dependency description: face detection module `FaceDetector`, facial key positioning module `FaceLandmarker` and face feature extraction and comparison module `FaceRecognizer` rely on forward computing framework `SeetaNet` module, so priority compilation compile forward calculation Framework `SeetaNet` module.
+
+### 2.4 IOS platfrom
+> example IOS device.
+
++ Dependence
+  - One PC within MacOS.
+  - Source code from `git`
+
++ Command lines
+  + Use `cmake` compile and install
+    ```
+    cd SeetaFace2
+    mkdir build
+    cd build
+    chmod +x ../ios/cmake.sh
+    ../ios/cmake.sh -DCMAKE_INSTALL_PREFIX=`pwd`/install
+    make -j4
+    make install
+    ```
+
+    After all commands above succeed, libraries would install into `SeetaFace2/build/install`.
+
+  + Compile for simlulator.
+    Change `cmake` parameters like: `../ios/cmake.sh -DIOS_PLATFORM=SIMULATOR64 -DPLATFORM=x64`
+
+  + See `<root>/ios/cmake.sh` and `<root>/ios/iOS.cmake` for more compilation controls.
 
 ## 3. Directory structure
 |-- SeetaFace2<br>
