@@ -60,7 +60,7 @@ public:
     }
 
 
-#define LOOP_HEAD(n) constexpr size_t size = (n); auto weight_it = m_weights.end() - size + 1; T index = 0;
+#define LOOP_HEAD(n) const size_t size = (n); auto weight_it = m_weights.end() - size + 1; T index = 0;
 #define LOOP_ON(i) index += *weight_it * arg##i; ++weight_it;
 #define LOOP_END(i) index += arg##i; return index;
 
