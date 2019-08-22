@@ -87,7 +87,7 @@ int main()
             // similarity greater than threshold, means recognized
             if( similarity > threshold )
             {
-                cv::putText( frame, GalleryIndexMap[index], cv::Point( face.pos.x, face.pos.y - 5 ), CV_FONT_HERSHEY_COMPLEX, 1, CV_RGB( 255, 128, 128 ) );
+                cv::putText( frame, GalleryIndexMap[index], cv::Point( face.pos.x, face.pos.y - 5 ), 3, 1, CV_RGB( 255, 128, 128 ) );
             }
         }
 

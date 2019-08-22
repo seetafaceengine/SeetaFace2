@@ -2,6 +2,8 @@
 
 [![License](https://img.shields.io/badge/license-BSD-blue.svg)](LICENSE)
 
+[中文](./README.md) [English](./README_en.md)
+
 ## 1. 简介
 `SeetaFace2` 人脸识别引擎包括了搭建一套全自动人脸识别系统所需的三个核心模块，即：人脸检测模块 `FaceDetector`、面部关键点定位模块 `FaceLandmarker` 以及人脸特征提取与比对模块 `FaceRecognizer`。还将陆续开源人脸跟踪、闭眼检测等辅助模块。
 
@@ -77,17 +79,27 @@ SeetaFace2 是面向于人脸识别商业落地的里程碑版本，其中人脸
 
 ## 2. 编译
 ### 2.1 编译依赖
-- GNU Make 工具<br>
-- GCC 或者 Clang 编译器<br>
-- CMake<br>
++ 编译工具
+  + For linux
+    - GNU Make 工具
+    - GCC 或者 Clang 编译器
+  + For windows
+    - [MSVC](http://msdn.microsoft.com/zh-cn/vstudio) 或者 MinGW. 
+  - [CMake](http://www.cmake.org/)
++ 依赖库
+  - [可选] [OpneCV](http://opencv.org/) 仅编译例子时需要
++ 依赖架构
+  - CPU 支持 SSE2 和 FMA [可选]（x86）或 NENO（ARM）支持
 
 ### 2.2 linux和windows平台编译说明
 1. 编译参数
+  - PLATFORM: [STRING] 编译目标架构，x86/x86_64/amd64 不需要设置，ARM 架构需要设置为对应平台
   - BUILD_DETECOTOR: 是否编译人脸检测模块。ON：打开；OFF：关闭
   - BUILD_LANDMARKER: 是否编译面部关键点定位模块。ON：打开；OFF：关闭
   - BUILD_RECOGNIZER: 是否编译人脸特征提取与比对模块。ON：打开；OFF：关闭
-  - BUILD_EXAMPLE: 是否编译例子。ON：打开；OFF：关闭
+  - BUILD_EXAMPLE: 是否编译例子。ON：打开；OFF：关闭，打开需要预先安装 `OpneCV`
   - CMAKE_INSTALL_PREFIX: 安装前缀
+  - SEETA_USE_FMA: 是否启用 `FMA` 指令。默认关闭。只有目标是`x86`架构是起作用
 
 2. linux
   - 依赖
@@ -100,9 +112,14 @@ SeetaFace2 是面向于人脸识别商业落地的里程碑版本，其中人脸
         cd SeetaFace2
         mkdir build
         cd build
-        cmake .. -DCMAKE_INSTALL_PREFIX=`pwd`/install
+        cmake .. -DCMAKE_INSTALL_PREFIX=`pwd`/install -DBUILD_EXAMPLE=OFF # 如果有 OpneCV，则设置为 ON
         cmake --build .
 
+    + ARM 架构编译需要制定平台
+        ```
+        cmake .. -DCMAKE_INSTALL_PREFIX=`pwd`/install -DPLATFORM=arm
+        cmake --build .
+        ```
   - 安装
 
         cmake --build . --target install
@@ -121,7 +138,7 @@ SeetaFace2 是面向于人脸识别商业落地的里程碑版本，其中人脸
             cp fd_2_00.dat pd_2_00_pts5.dat pd_2_00_pts81.dat .
 
     + 执行 bin 目录下的程序
-      - point81
+      - points81
       - search
 
 3. windows
@@ -137,7 +154,7 @@ SeetaFace2 是面向于人脸识别商业落地的里程碑版本，其中人脸
             cd SeetaFace2
             mkdir build
             cd build
-            cmake .. -DCMAKE_INSTALL_PREFIX=install
+            cmake .. -DCMAKE_INSTALL_PREFIX=install -DBUILD_EXAMPLE=OFF # 如果有 OpneCV，则设置为 ON
             cmake --build .
 
       - 安装
@@ -154,7 +171,7 @@ SeetaFace2 是面向于人脸识别商业落地的里程碑版本，其中人脸
                 cp fd_2_00.dat pd_2_00_pts5.dat pd_2_00_pts81.dat .
 
         + 执行 bin 目录下的程序
-          - point81
+          - points81
           - search
 
 ### 2.3 Android平台编译说明
@@ -164,6 +181,33 @@ Android 版本的编译方法：
 2. `cd` 到各模块的 `jni` 目录下（如SeetaNet 的 Android 编译脚本位置为`SeetaNet/sources/jni`， FaceDetector 的 Android 编译脚本位置为`FaceDetector/FaceDetector/jni`），执行 `ndk-build -j8` 命令进行编译。<br>
 
 编译依赖说明：人脸检测模块 `FaceDetector` ， 面部关键点定位模块 `FaceLandmarker` 以及人脸特征提取与比对模块 `FaceRecognizer` 均依赖前向计算框架 `SeetaNet` 模块，因此需优先编译前向计算框架 `SeetaNet` 模块。
+
+
+### 2.4 IOS 平台编译说明
+> 以实体机为例
+
++ 环境准备
+  - 需要 MacOS 的 PC。
+  - git 下载源代码。
+
++ 命令行编译
+  + 使用 cmake 编译并安装项目，
+    ```
+    cd SeetaFace2
+    mkdir build
+    cd build
+    chmod +x ../ios/cmake.sh
+    ../ios/cmake.sh -DCMAKE_INSTALL_PREFIX=`pwd`/install
+    make -j4
+    make install
+    ```
+
+    执行完毕后，生成好的静态库将安装到`SeetaFace2/build/install`
+
+  + 编译模拟器版本
+    修改 cmake 指令参数 `../ios/cmake.sh -DIOS_PLATFORM=SIMULATOR64 -DPLATFORM=x64`
+
+  + 查看 `<root>/ios/cmake.sh` 和 `<root>/ios/iOS.cmake` 获取更多编译选项
 
 ## 3. 目录结构
 |-- SeetaFace2<br>
