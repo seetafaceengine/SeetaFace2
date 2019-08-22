@@ -89,7 +89,7 @@ SeetaFace2 是面向于人脸识别商业落地的里程碑版本，其中人脸
 + 依赖库
   - [可选] [OpneCV](http://opencv.org/) 仅编译例子时需要
 + 依赖架构
-  - CPU 支持 SSE2 和 FMA（x86）或 NENO（ARM）支持
+  - CPU 支持 SSE2 和 FMA [可选]（x86）或 NENO（ARM）支持
 
 ### 2.2 linux和windows平台编译说明
 1. 编译参数

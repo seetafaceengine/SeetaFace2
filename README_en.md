@@ -89,7 +89,7 @@ Knowing people to understand everything, open source empowerment and development
 + dependent library
   - [Optional] [OpneCV](http://opencv.org/) Required only when compiling examples
 + dependency architecture
-  - CPU supports SSE2 and FMA (x86) or NENO (ARM) support
+  - CPU supports SSE2 and FMA [optinal] (x86) or NENO (ARM) support
 
 ### 2.2 linux and windows platform compilation instructions
 Compile parameter

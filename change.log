@@ -1,5 +1,8 @@
-[2019-8-21]
-- Support ARM linux compilation, by adding PLATFORM option like `-DPLARTORM=ARM`
+[2019-8-22]
+- Remove FMA instructions by default. Use `-DSEETA_USE_FMA` to enable it.
 
 [2019-8-22]
 - Support IOS compilation, see `README.md` and `ios/cmake.sh` for more details.
+
+[2019-8-21]
+- Support ARM linux compilation, by adding PLATFORM option like `-DPLARTORM=ARM`
