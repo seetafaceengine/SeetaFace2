@@ -548,7 +548,7 @@ FaceDetectorPrivate::FaceDetectorPrivate( const char *model_path, SeetaDevice de
 }
 
 FaceDetectorPrivate::FaceDetectorPrivate( const char *model_path, const CoreSize &core_size )
-    : FaceDetectorPrivate( model_path, CoreSize( -1, -1 ), SEETA_DEVICE_AUTO, 0 )
+    : FaceDetectorPrivate( model_path, core_size, SEETA_DEVICE_AUTO, 0 )
 {
 }
 

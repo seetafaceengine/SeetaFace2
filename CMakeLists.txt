@@ -85,17 +85,26 @@ include(CheckFunctionExists)
 
 set(BUILD_PLATFORM "${CMAKE_SYSTEM_NAME}")
 
+# default not used FMA
+option(SEETA_USE_FMA "Set to ON to use FMA" OFF)
+if (SEETA_USE_FMA) 
+    add_definitions(-DSEETA_USE_FMA)
+endif ()
+
 # ----------------------------------------------------------------------------
 # Detect compiler and target platform architecture
 # ----------------------------------------------------------------------------
-if(NOT ANDROID)
-    if(X86_64 OR CMAKE_SIZEOF_VOID_P EQUAL 8)
-        set(PLATFORM x86_64)
-    elseif(X86 OR CMAKE_SIZEOF_VOID_P EQUAL 4)
-        set(PLATFORM x86)
+set(PLATFORM "" CACHE STRING "Set target platform, empty for x86/x86_64/amd64")
+if ("${PLATFORM}" STREQUAL "")
+    if(NOT ANDROID)
+        if(X86_64 OR CMAKE_SIZEOF_VOID_P EQUAL 8)
+            set(PLATFORM x86_64)
+        elseif(X86 OR CMAKE_SIZEOF_VOID_P EQUAL 4)
+            set(PLATFORM x86)
+        endif()
+    else()
+        set(PLATFORM ${CMAKE_ANDROID_ARCH})
     endif()
-else()
-    set(PLATFORM ${CMAKE_ANDROID_ARCH})
 endif()
 
 # For debug libs and exes, add "-d" postfix
