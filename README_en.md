@@ -99,6 +99,7 @@ Compile parameter
   - BUILD_RECOGNIZER: Whether to compile the face feature extraction and comparison module. ON: On; OFF: Off
   - BUILD_EXAMPLE: Whether to compile the example. ON: On; OFF: Off, open requires pre-installation of `OpneCV`
   - CMAKE_INSTALL_PREFIX: Installation prefix
+  - SEETA_USE_FMA: Whether use `FMA` instructions. Default off. Only works in `x86` architecture.
 
 2. linux
   - Dependence
@@ -137,7 +138,7 @@ Compile parameter
             cp fd_2_00.dat pd_2_00_pts5.dat pd_2_00_pts81.dat .
 
     + Execute the program in the bin directory
-      - point81
+      - points81
       - search
 
 3. windows
