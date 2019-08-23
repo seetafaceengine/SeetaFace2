@@ -131,7 +131,7 @@ if(BUILD_EXAMPLE)
 endif(BUILD_EXAMPLE)
 
 # 设置安装前缀
-SET(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/${PROJECT_NAME}/install CACHE STRING "Install path prefix.") 
+SET(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/install CACHE PATH "Install path prefix." FORCE)
 
 message(STATUS "== Build detector: ${BUILD_DETECOTOR}")
 message(STATUS "== Build landmarker: ${BUILD_LANDMARKER}")
