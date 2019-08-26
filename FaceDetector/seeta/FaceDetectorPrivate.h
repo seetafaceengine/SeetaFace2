@@ -66,6 +66,8 @@ public:
      */
     SeetaFaceInfoArray Detect( const SeetaImageData &img );
 
+	SeetaFaceInfoArray DetectMaxFace(const SeetaImageData &img);
+
     /**
      * \brief Set min face size
      * \param [in] size scale like sqrt(H * W)
