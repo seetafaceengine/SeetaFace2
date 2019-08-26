@@ -45,6 +45,8 @@ namespace seeta
              */
             SEETA_API SeetaFaceInfoArray detect( const SeetaImageData &image ) const;
 
+			SEETA_API SeetaFaceInfoArray detectMaxFace(const SeetaImageData &image) const;
+
             /**
              * \brief set property
              * \param [in] property face detector property to set
