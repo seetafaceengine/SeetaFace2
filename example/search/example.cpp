@@ -15,9 +15,9 @@ int main()
 {
     seeta::ModelSetting::Device device = seeta::ModelSetting::CPU;
     int id = 0;
-    seeta::ModelSetting FD_model( "./model/fd_2_00.dat", device, id );
-    seeta::ModelSetting PD_model( "./model/pd_2_00_pts5.dat", device, id );
-    seeta::ModelSetting FR_model( "./model/fr_2_10.dat", device, id );
+    seeta::ModelSetting FD_model( "../model/fd_2_00.dat", device, id );
+    seeta::ModelSetting PD_model( "../model/pd_2_00_pts5.dat", device, id );
+    seeta::ModelSetting FR_model( "../model/fr_2_10.dat", device, id );
     seeta::FaceEngine engine( FD_model, PD_model, FR_model, 2, 16 );
 
     // recognization threshold

@@ -50,8 +50,8 @@ int main()
 {
     seeta::ModelSetting::Device device = seeta::ModelSetting::CPU;
     int id = 0;
-    seeta::ModelSetting FD_model( "./model/fd_2_00.dat", device, id );
-    seeta::ModelSetting FL_model( "./model/pd_2_00_pts81.dat", device, id );
+    seeta::ModelSetting FD_model( "../model/fd_2_00.dat", device, id );
+    seeta::ModelSetting FL_model( "../model/pd_2_00_pts81.dat", device, id );
 
 	seeta::FaceDetector FD(FD_model);
 	seeta::FaceLandmarker FL(FL_model);
