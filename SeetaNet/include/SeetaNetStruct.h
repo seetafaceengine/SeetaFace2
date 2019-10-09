@@ -1,26 +1,6 @@
 #ifndef _SEETANET_STRUCT_H
 #define _SEETANET_STRUCT_H
 
-#if defined(SEETA_EXPORTS)
-    #define SEETANET_EXPORTS
-#endif
-
-#if defined(_MSC_VER)
-    #ifdef SEETANET_EXPORTS
-        #define SEETANET_API __declspec(dllexport)
-    #else
-        #define SEETANET_API __declspec(dllimport)
-    #endif
-#else
-    #define SEETANET_API
-#endif
-
-#ifdef __cplusplus
-    #define SEETANET_C_API extern "C" SEETANET_API
-#else
-    #define SEETANET_C_API SEETANET_API
-#endif
-
 /**
 * @brief The supported device.
 */

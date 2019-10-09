@@ -21,6 +21,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_SOURCE_DIR}/SeetaNet/include
     ${CMAKE_SOURCE_DIR}/FaceDetector/include
     ${CMAKE_SOURCE_DIR}/FaceLandmarker/include
+    ${CMAKE_BINARY_DIR}
     )
 target_include_directories(${PROJECT_NAME} PRIVATE
     ${OpenCV_INCLUDE_DIRS}
