@@ -123,7 +123,7 @@ SeetaFace2 是面向于人脸识别商业落地的里程碑版本，其中人脸
         ```
   - 安装
 
-        cmake --build . --target install
+        cmake --build .  --config Release --target install
 
   - 运行例子
     + 把生成库的目录加入到变量 LD_LIBRARY_PATH 中
@@ -169,7 +169,7 @@ SeetaFace2 是面向于人脸识别商业落地的里程碑版本，其中人脸
 
       - 安装
 
-            cmake --build . --target install
+            cmake --build . --config Release --target install
 
       - 运行例子
         + 拷贝模型文件到程序执行目录的 model 目录下
@@ -197,16 +197,16 @@ SeetaFace2 是面向于人脸识别商业落地的里程碑版本，其中人脸
         cd SeetaFace2
         mkdir build
         cd build
-        cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=${ANDROID_NDK}/build/cmake/android.toolchain.cmake -DANDROID_ABI="armeabi-v7a with NEON" -DANDROID_PLATFORM=android-18 -DBUILD_EXAMPLE=OFF # 如果有OpenCV，则设置为ON
-        cmake --build . --config Release 
+        cmake .. -DCMAKE_INSTALL_PREFIX=install -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=${ANDROID_NDK}/build/cmake/android.toolchain.cmake -DANDROID_ABI="armeabi-v7a with NEON" -DANDROID_PLATFORM=android-18 -DBUILD_EXAMPLE=OFF # 如果有OpenCV，则设置为ON
+        cmake --build . --config Release --target install
 
   - 主机是windows
 
         cd SeetaFace2
         mkdir build
         cd build
-        cmake .. -G"Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=${ANDROID_NDK}/build/cmake/android.toolchain.cmake  -DCMAKE_MAKE_PROGRAM=${ANDROID_NDK}/prebuilt/windows-x86_64/bin/make.exe -DANDROID_ABI=arm64-v8a -DANDROID_ARM_NEON=ON -DBUILD_EXAMPLE=OFF # 如果有 OpenCV，则设置为ON
-        cmake --build . --config Release 
+        cmake .. -DCMAKE_INSTALL_PREFIX=install -G"Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=${ANDROID_NDK}/build/cmake/android.toolchain.cmake  -DCMAKE_MAKE_PROGRAM=${ANDROID_NDK}/prebuilt/windows-x86_64/bin/make.exe -DANDROID_ABI=arm64-v8a -DANDROID_ARM_NEON=ON -DBUILD_EXAMPLE=OFF # 如果有 OpenCV，则设置为ON
+        cmake --build . --config Release --target install
 
   - 参数说明：https://developer.android.google.cn/ndk/guides/cmake
     + ANDROID_ABI: 可取下列值：

@@ -4,7 +4,7 @@
 #    In your CMakeLists.txt, add these lines:
 #
 #    find_package(SeetaFace)
-#    target_link_libraries(MY_TARGET_NAME ${SeetaFace_LIBS})
+#    target_link_libraries(MY_TARGET_NAME ${SeetaFace_LIBRARIES})
 #  
 #  This file will define the following variables:
 #    SeetaFace_FOUND: True if find SeetaFace, other false
