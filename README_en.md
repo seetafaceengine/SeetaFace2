@@ -91,8 +91,7 @@ Knowing people to understand everything, open source empowerment and development
 + dependency architecture
   - CPU supports SSE2 and FMA [optinal] (x86) or NENO (ARM) support
 
-### 2.2 linux and windows platform compilation instructions
-Compile parameter
+### 2.2 Compile parameter
   - PLATFORM: [STRING] Compile target architecture, x86/x86_64/amd64 does not need to be set, ARM architecture needs to be set to corresponding platform
   - BUILD_DETECOTOR: Whether to compile the face detection module. ON: On; OFF: Off
   - BUILD_LANDMARKER: Whether to compile the face key positioning module. ON: On; OFF: Off
@@ -101,7 +100,8 @@ Compile parameter
   - CMAKE_INSTALL_PREFIX: Installation prefix
   - SEETA_USE_FMA: Whether use `FMA` instructions. Default off. Only works in `x86` architecture.
 
-2. linux
+### 2.3 Platforms
+#### 2.3.1 linux
   - Dependence
     + opencv. Only need to compile the example
 
@@ -112,17 +112,19 @@ Compile parameter
         cd SeetaFace2
         mkdir build
         cd build
-        cmake .. -DCMAKE_INSTALL_PREFIX=`pwd`/install -DBUILD_EXAMPLE=OFF # Set to ON if there is OpneCV
-        cmake --build .
+        cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=`pwd`/install -DBUILD_EXAMPLE=OFF # Set to ON if there is OpneCV
+        cmake --build . --config Release
 
     + ARM architecture compilation requires a platform
+    
         ```
-        cmake .. -DCMAKE_INSTALL_PREFIX=`pwd`/install -DPLATFORM=arm
-        cmake --build .
+        cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=`pwd`/install -DPLATFORM=arm
+        cmake --build . --config Release
         ```
+        
   - Installation
 
-        cmake --build . --target install
+        cmake --build . --config Release --target install
 
   - Run the example
     + Add the directory of the build library to the variable LD_LIBRARY_PATH
@@ -139,9 +141,21 @@ Compile parameter
 
     + Execute the program in the bin directory
       - points81
+
+
+            cd SeetaFace2
+            cd build
+            cd bin
+            ./point81
+
       - search
 
-3. windows
+            cd SeetaFace2
+            cd build
+            cd bin
+            ./search
+
+#### 2.3.2 windows
   - Dependence
     + opencv. Only need to compile the example
   - Compile with the cmake-gui.exe tool. Open cmake-gui.exe
@@ -154,12 +168,12 @@ Compile parameter
             cd SeetaFace2
             mkdir build
             cd build
-            cmake .. -DCMAKE_INSTALL_PREFIX=install -DBUILD_EXAMPLE=OFF # Set to ON if there is OpneCV
-            cmake --build .
+            cmake .. -DCMAKE_INSTALL_PREFIX=install -DCMAKE_BUILD_TYPE=Release -DBUILD_EXAMPLE=OFF # Set to ON if there is OpneCV
+            cmake --build . --config Release
 
       - Installation
 
-            cmake --build . --target install
+            cmake --build . --config Release --target install
 
       - Run the example
         + Copy the model file to the model directory of the program execution directory
@@ -174,15 +188,47 @@ Compile parameter
           - points81
           - search
 
-### 2.3 Android platform compilation instructions
-Android version of the compilation method: 
-1. Install the ndk compilation tool;
-2. Export the ndk-build tool in the environment variable;
-2. `cd` to the `jni` directory of each module (such as SeetaNet's Android build script location is `SeetaNet/sources/jni`, FaceDetector's Android build script location is `FaceDetector/FaceDetector/jni`), execute `ndk Compile with the -build -j8` command. <br>
+#### 2.3.3 Android platform compilation instructions
++ Install ndk
+  - Download and install to /home/android-ndk from https://developer.android.com/ndk/downloads 
+  - Setting environment variables
 
-Compilation dependency description: face detection module `FaceDetector`, facial key positioning module `FaceLandmarker` and face feature extraction and comparison module `FaceRecognizer` rely on forward computing framework `SeetaNet` module, so priority compilation compile forward calculation Framework `SeetaNet` module.
+        export ANDROID_NDK=/home/android-ndk
 
-### 2.4 IOS platfrom
++ Complie
+  - The host is linux
+
+        cd SeetaFace2
+        mkdir build
+        cd build
+        cmake .. -DCMAKE_INSTALL_PREFIX=install -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=${ANDROID_NDK}/build/cmake/android.toolchain.cmake -DANDROID_ABI="armeabi-v7a with NEON" -DANDROID_PLATFORM=android-18 -DBUILD_EXAMPLE=OFF # 如果有OpenCV，则设置为ON
+        cmake --build . --config Release --target install
+
+  - The host is windows
+
+        cd SeetaFace2
+        mkdir build
+        cd build
+        cmake .. -DCMAKE_INSTALL_PREFIX=install -G"Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=${ANDROID_NDK}/build/cmake/android.toolchain.cmake  -DCMAKE_MAKE_PROGRAM=${ANDROID_NDK}\prebuilt\windows-x86_64\bin\make.exe -DANDROID_ABI=arm64-v8a -DANDROID_ARM_NEON=ON -DBUILD_EXAMPLE=OFF # 如果有 OpenCV，则设置为ON
+        cmake --build . --config Release --target install
+
+  - Parameter Description: https://developer.android.google.cn/ndk/guides/cmake
+    + ANDROID_ABI: The following values can be taken:
+       Goal ABI. If the target ABI is not specified, CMake uses armeabi-v7a by default.
+       Valid ABI are:
+      - armeabi：CPU with software floating point arithmetic based on ARMv5TE
+      - armeabi-v7a：ARMv7-based device with hardware FPU instructions (VFP v3 D16)
+      - armeabi-v7a with NEON：Same as armeabi-v7a, but with NEON floating point instructions enabled. This is equivalent to setting -DANDROID_ABI=armeabi-v7a and -DANDROID_ARM_NEON=ON.
+      - arm64-v8a：ARMv8 AArch64 Instruction Set
+      - x86：IA-32 Instruction Set
+      - x86_64 - x86-64 Instruction Set
+    + ANDROID_NDK <path> The path of installed ndk in host
+    + ANDROID_PLATFORM: For a full list of platform names and corresponding Android system images, see the [Android NDK Native API] (https://developer.android.google.com/ndk/guides/stable_apis.html)
+    + ANDROID_ARM_MODE
+    + ANDROID_ARM_NEON
+    + ANDROID_STL:Specifies the STL that CMake should use. 
+
+#### 2.3.4 IOS platfrom
 > example IOS device.
 
 + Dependence
@@ -209,15 +255,17 @@ Compilation dependency description: face detection module `FaceDetector`, facial
   + See `<root>/ios/cmake.sh` and `<root>/ios/iOS.cmake` for more compilation controls.
 
 ## 3. Directory structure
-|-- SeetaFace2<br>
-|-- craft (compilation script for linux and windows platforms)<br>
-|--documents (SDK interface documentation)<br>
-|-- example(C++ version SDK sample code)<br>
-|-- FaceDetector<br><br>
-|-- FaceLandmarker(Feature Point Positioning Module)<br>
-|-- FaceRecognizer (Face Feature Extraction and Alignment Module)<br>
-|-- SeetaNet (forward computing framework module)<br>
 
+
+    |-- SeetaFace2  
+        |-- documents (SDK interface documentation)  
+        |-- example(C++ version SDK sample code)  
+        |-- FaceDetector  
+        |-- FaceLandmarker(Feature Point Positioning Module)  
+        |-- FaceRecognizer (Face Feature Extraction and Alignment Module)  
+        |-- SeetaNet (forward computing framework module)  
+
+    
 ## 4. Model download
 - Face Detection Module FaceDetector Model Download Link:  
 MD5 : E88669E5F1301CA56162DE8AEF1FD5D5  
@@ -239,10 +287,19 @@ MD5 : 2D637AAD8B1B7AE62154A877EC291C99
 Baidu network disk: https://pan.baidu.com/s/1y2vh_BHtYftR24V4xwAVWg Extraction code: pim2  
 Dropbox : https://www.dropbox.com/s/6aslqcokpljha5j/fr_2_10.dat?dl=0
 
-## 5. example Description
-The `example/search/example.cpp` example shows a simple and complete process for face recognition, including: 1. Pre-registered images in the face-to-face recognition base library (the default registration in the example is "1" .jpg "Face in the face"; 2. Turn on the camera to detect the face in the camera screen; 3. Identify the detected face and determine the identity of the face.
+## 5. example
+### 5.1 This project comes with examples
+
+The `example/search/example.cpp` example shows a simple and complete process for face recognition, including:  
+  1. Pre-registered images in the face-to-face recognition base library (the default registration in the example is "1" .jpg "Face in the face";
+  2. Turn on the camera to detect the face in the camera screen; 3. Identify the detected face and determine the identity of the face.
 
 If the tester wants to successfully identify his face in the bottom library, he needs to add the image named after his own name (name + .jpg) in the bottom register registration list of example.cpp, and copy the image file named by his own name. Go to the program's running directory, recompile example and run the program to test the recognition effect.
+
+
+### 5.2 Other projects that have used this project
+
+FaceRecognizer: https://github.com/KangLin/FaceRecognizer
 
 ## 6. Developer Community
 Developers are welcome to join the SeetaFace developer community, please add SeetaFace assistant helper WeChat, after review, invite to join the group.

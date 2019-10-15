@@ -9,7 +9,7 @@ project(SeetaFace)
 
 # Create uninstall files
 CONFIGURE_FILE(
-    "${CMAKE_SOURCE_DIR}/cmake_uninstall.cmake.in"
+    "${CMAKE_SOURCE_DIR}/cmake/cmake_uninstall.cmake.in"
     "${CMAKE_BINARY_DIR}/cmake_uninstall.cmake"
     IMMEDIATE @ONLY)
 # Create unistall target
@@ -91,22 +91,6 @@ if (SEETA_USE_FMA)
     add_definitions(-DSEETA_USE_FMA)
 endif ()
 
-# ----------------------------------------------------------------------------
-# Detect compiler and target platform architecture
-# ----------------------------------------------------------------------------
-set(PLATFORM "" CACHE STRING "Set target platform, empty for x86/x86_64/amd64")
-if ("${PLATFORM}" STREQUAL "")
-    if(NOT ANDROID)
-        if(X86_64 OR CMAKE_SIZEOF_VOID_P EQUAL 8)
-            set(PLATFORM x86_64)
-        elseif(X86 OR CMAKE_SIZEOF_VOID_P EQUAL 4)
-            set(PLATFORM x86)
-        endif()
-    else()
-        set(PLATFORM ${CMAKE_ANDROID_ARCH})
-    endif()
-endif()
-
 # For debug libs and exes, add "-d" postfix
 if(NOT DEFINED CMAKE_DEBUG_POSTFIX)
   set(CMAKE_DEBUG_POSTFIX "-d")
@@ -131,12 +115,18 @@ if(BUILD_EXAMPLE)
     add_subdirectory(example)
 endif(BUILD_EXAMPLE)
 
+# Install cmake configure files
+install(
+        FILES cmake/${PROJECT_NAME}Config.cmake
+        DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake"
+)
+
 # 设置安装前缀
-SET(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/${PROJECT_NAME}/install CACHE STRING "Install path prefix.") 
+SET(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/install CACHE PATH "Install path prefix." FORCE)
 
 message(STATUS "== Build detector: ${BUILD_DETECOTOR}")
 message(STATUS "== Build landmarker: ${BUILD_LANDMARKER}")
 message(STATUS "== Build recgnizer: ${BUILD_RECOGNIZER}")
 message(STATUS "== Build example: ${BUILD_EXAMPLE}")
 message(STATUS "== Build shared library: ${BUILD_SHARED_LIBS}")
-message(STATUS "== PLATFORM: ${PLATFORM}")
+message(STATUS "== CMAKE_SYSTEM_PROCESSOR: ${CMAKE_SYSTEM_PROCESSOR}")
