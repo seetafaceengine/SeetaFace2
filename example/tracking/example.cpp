@@ -14,7 +14,7 @@ int main()
 {
     seeta::ModelSetting::Device device = seeta::ModelSetting::CPU;
     int id = 0;
-    seeta::ModelSetting FD_model( "../model/fd_2_00.dat", device, id );
+    seeta::ModelSetting FD_model( "./model/fd_2_00.dat", device, id );
 
 	seeta::FaceTracker FD(FD_model);
 
