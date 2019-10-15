@@ -2,7 +2,6 @@
 #define SEETA_FACELANDMARKER_FACELANDMARKER_H
 
 #include "Struct.h"
-#include "SeetaLandmarkerExport.h"
 
 namespace seeta
 {
@@ -15,14 +14,14 @@ namespace seeta
              * \param [in] setting model file
              * \return
              */
-            SEETA_LANDMARKER_API explicit FaceLandmarker( const SeetaModelSetting &setting );
-            SEETA_LANDMARKER_API ~FaceLandmarker();
+            SEETA_API explicit FaceLandmarker( const SeetaModelSetting &setting );
+            SEETA_API ~FaceLandmarker();
 
             /**
              * \brief get face landmarks number
              * \return face landmarks number
              */
-            SEETA_LANDMARKER_API int number() const;
+            SEETA_API int number() const;
 
             /**
              * \brief detect face landmars of corresponding face
@@ -30,7 +29,7 @@ namespace seeta
              * \param [in] face face location
              * \param [out] points face landmarks
              */
-            SEETA_LANDMARKER_API void mark( const SeetaImageData &image, const SeetaRect &face, SeetaPointF *points ) const;
+            SEETA_API void mark( const SeetaImageData &image, const SeetaRect &face, SeetaPointF *points ) const;
 
             /**
              * \brief detect face landmars of corresponding face
