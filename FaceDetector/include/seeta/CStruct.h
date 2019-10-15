@@ -1,6 +1,16 @@
 #ifndef INC_SEETA_C_STRUCT_H
 #define INC_SEETA_C_STRUCT_H
 
+#ifdef _MSC_VER
+    #ifdef SEETA_EXPORTS
+        #define SEETA_API __declspec(dllexport)
+    #else
+        #define SEETA_API __declspec(dllimport)
+    #endif
+#else
+    #define SEETA_API __attribute__ ((visibility("default")))
+#endif
+
 #define INCLUDED_SEETA_CSTRUCT
 
 #ifdef __cplusplus
