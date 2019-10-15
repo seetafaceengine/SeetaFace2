@@ -40,6 +40,8 @@ elseif(MSVC)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP")
 endif()
 
+add_definitions(-DSEETA_EXPORTS)
+
 # search files
 FILE(GLOB_RECURSE INCLUDE_FILES
         ${PROJECT_SOURCE_DIR}/include/*.h
