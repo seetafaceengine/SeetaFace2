@@ -11,6 +11,8 @@
     #define SEETA_API __attribute__ ((visibility("default")))
 #endif
 
+#define SEETA_C_API extern "C" SEETA_API
+
 #define INCLUDED_SEETA_CSTRUCT
 
 #ifdef __cplusplus
