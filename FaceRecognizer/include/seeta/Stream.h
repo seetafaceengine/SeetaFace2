@@ -119,17 +119,17 @@ namespace seeta
         bool open( const std::string &path, int mode = Output ) {
             close();
             std::string mode_str;
-            if( mode | Input && mode | Output ) {
+            if( (mode & Input) && (mode & Output) ) {
                 mode_str += "a+";
             }
             else
-                if( mode | Input ) {
+                if( mode & Input ) {
                     mode_str += "r";
                 }
                 else {
                     mode_str += "w";
                 }
-            if( mode | Binary ) mode_str += "b";
+            if( mode & Binary ) mode_str += "b";
             #if _MSC_VER >= 1600
             fopen_s( &iofile, path.c_str(), mode_str.c_str() );
             #else
@@ -172,11 +172,11 @@ namespace seeta
 
         FileWriter() {}
         explicit FileWriter( const std::string &path, int mode = Output )
-            : FileStream( path, ( mode & ( !Input ) ) | Output ) {
+            : FileStream( path, ( mode & ( ~Input ) ) | Output ) {
         }
 
         bool open( const std::string &path, int mode = Output ) {
-            return supper::open( path, ( mode & ( !Input ) ) | Output );
+            return supper::open( path, ( mode & ( ~Input ) ) | Output );
         }
     };
     class FileReader : public FileStream {
@@ -186,11 +186,11 @@ namespace seeta
 
         FileReader() {}
         explicit FileReader( const std::string &path, int mode = Input )
-            : FileStream( path, ( mode & ( !Output ) ) | Input ) {
+            : FileStream( path, ( mode & ( ~Output ) ) | Input ) {
         }
 
         bool open( const std::string &path, int mode = Input ) {
-            return supper::open( path, ( mode & ( !Output ) ) | Input );
+            return supper::open( path, ( mode & ( ~Output ) ) | Input );
         }
     };
 }
