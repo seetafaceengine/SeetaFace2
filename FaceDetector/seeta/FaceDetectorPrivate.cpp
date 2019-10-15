@@ -471,7 +471,7 @@ bool Impl::ResizeImage( const unsigned char *src_im, int src_width, int src_heig
         float lf_x_s = lfx_scl * n_x_d + crop_x;
         nx[n_x_d] = int( lf_x_s );
         if( nx[n_x_d] == src_width - 1 )
-            ny[n_x_d] -= 1;
+            nx[n_x_d] -= 1;
         wx[n_x_d] = lf_x_s - nx[n_x_d];
     }
 
