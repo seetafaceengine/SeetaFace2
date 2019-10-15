@@ -12,6 +12,8 @@ if(UNIX)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -fPIC")
 endif()
 
+add_definitions(-DSEETA_EXPORTS)
+
 file(GLOB_RECURSE ROOT_SRC_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/*.c
     ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cc
