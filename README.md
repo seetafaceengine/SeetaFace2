@@ -298,6 +298,8 @@ Dropbox : https://www.dropbox.com/s/6aslqcokpljha5j/fr_2_10.dat?dl=0
 
 FaceRecognizer: https://github.com/KangLin/FaceRecognizer
 
+SeetaFace2AndroidDemo: https://github.com/xiaoxiaoazhang/SeetaFace2AndroidDemo
+
 ## 6. 开发者社区
 欢迎开发者加入 SeetaFace 开发者社区，请先加 SeetaFace 小助手微信，经过审核后邀请入群。
 
