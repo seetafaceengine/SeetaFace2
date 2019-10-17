@@ -12,6 +12,8 @@
 #
 # Author: Kang Lin <kl222@126.com>
 
+include(FindPackageHandleStandardArgs)
+
 if (NOT SeetaFace_FIND_COMPONENTS)
     set(SeetaFace_FIND_COMPONENTS
         SeetaNet
