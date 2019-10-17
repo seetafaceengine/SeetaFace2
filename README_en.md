@@ -299,9 +299,8 @@ If the tester wants to successfully identify his face in the bottom library, he 
 
 ### 5.2 Other projects that have used this project
 
-FaceRecognizer: https://github.com/KangLin/FaceRecognizer
-
-SeetaFace2AndroidDemo: https://github.com/xiaoxiaoazhang/SeetaFace2AndroidDemo
+- FaceRecognizer: https://github.com/KangLin/FaceRecognizer
+- SeetaFace2AndroidDemo: https://github.com/xiaoxiaoazhang/SeetaFace2AndroidDemo
 
 ## 6. Developer Community
 Developers are welcome to join the SeetaFace developer community, please add SeetaFace assistant helper WeChat, after review, invite to join the group.
