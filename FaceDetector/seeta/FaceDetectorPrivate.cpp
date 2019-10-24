@@ -118,7 +118,7 @@ public:
     bool stable_ = false;
     std::vector<Rect> preList_;
 
-    bool end2end_ = false;
+    bool end2end_ = true;
     struct
     {
         std::string version;
@@ -299,6 +299,12 @@ std::vector<Rect> Impl::RunNet( const SeetaImageData &img, SeetaNet_Net *&net, f
 
         float *reg_data = reg_res.data_point_float;
         float *cls_data = cls_res.data_point_float;
+
+		std::cout << "[" << std::endl;
+		for (int i = 0; i < n_cls; ++i) {
+			std::cout << "(" << cls_data[i * c_cls] << ", " << cls_data[i * c_cls + 1] << ")" << std::endl;
+		}
+		std::cout << "]" << std::endl;
 
         for( int i = 0; i < n_cls; i++ )
         {
