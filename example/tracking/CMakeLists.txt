@@ -5,7 +5,7 @@
 
 cmake_minimum_required(VERSION 2.8)
 
-project("points81")
+project("tracking")
 
 if(UNIX)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC")
@@ -19,16 +19,14 @@ add_executable(${PROJECT_NAME} example.cpp)
 target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_SOURCE_DIR}/SeetaNet/include
-    ${CMAKE_SOURCE_DIR}/FaceDetector/include
-    ${CMAKE_SOURCE_DIR}/FaceLandmarker/include
-    ${CMAKE_BINARY_DIR}
+    ${CMAKE_SOURCE_DIR}/FaceTracker/include
     )
 target_include_directories(${PROJECT_NAME} PRIVATE
     ${OpenCV_INCLUDE_DIRS}
     )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
-    SeetaNet SeetaFaceDetector SeetaFaceLandmarker)
+    SeetaNet SeetaFaceTracker)
 target_link_libraries(${PROJECT_NAME} PRIVATE ${OpenCV_LIBS})
 
 set_target_properties(${PROJECT_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)

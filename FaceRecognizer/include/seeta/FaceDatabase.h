@@ -6,7 +6,6 @@
 #include <string>
 #include <vector>
 
-
 namespace seeta
 {
     namespace v2

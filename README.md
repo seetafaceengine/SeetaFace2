@@ -1,3 +1,4 @@
+
 # **SeetaFace2**
 
 [![License](https://img.shields.io/badge/license-BSD-blue.svg)](LICENSE)
@@ -91,8 +92,7 @@ SeetaFace2 是面向于人脸识别商业落地的里程碑版本，其中人脸
 + 依赖架构
   - CPU 支持 SSE2 和 FMA [可选]（x86）或 NENO（ARM）支持
 
-### 2.2 linux和windows平台编译说明
-1. 编译参数
+### 2.2 编译参数
   - PLATFORM: [STRING] 编译目标架构，x86/x86_64/amd64 不需要设置，ARM 架构需要设置为对应平台
   - BUILD_DETECOTOR: 是否编译人脸检测模块。ON：打开；OFF：关闭
   - BUILD_LANDMARKER: 是否编译面部关键点定位模块。ON：打开；OFF：关闭
@@ -101,7 +101,8 @@ SeetaFace2 是面向于人脸识别商业落地的里程碑版本，其中人脸
   - CMAKE_INSTALL_PREFIX: 安装前缀
   - SEETA_USE_FMA: 是否启用 `FMA` 指令。默认关闭。只有目标是`x86`架构是起作用
 
-2. linux
+### 2.3 各平台编译
+#### 2.3.1 linux平台编译说明
   - 依赖
     + opencv。仅编译例子时需要
 
@@ -112,17 +113,17 @@ SeetaFace2 是面向于人脸识别商业落地的里程碑版本，其中人脸
         cd SeetaFace2
         mkdir build
         cd build
-        cmake .. -DCMAKE_INSTALL_PREFIX=`pwd`/install -DBUILD_EXAMPLE=OFF # 如果有 OpneCV，则设置为 ON
-        cmake --build .
+        cmake .. -DCMAKE_INSTALL_PREFIX=`pwd`/install -DCMAKE_BUILD_TYPE=Release -DBUILD_EXAMPLE=OFF # 如果有 OpneCV，则设置为 ON
+        cmake --build . --config Release 
 
     + ARM 架构编译需要制定平台
         ```
-        cmake .. -DCMAKE_INSTALL_PREFIX=`pwd`/install -DPLATFORM=arm
-        cmake --build .
+        cmake .. -DCMAKE_INSTALL_PREFIX=`pwd`/install -DCMAKE_BUILD_TYPE=Release -DPLATFORM=arm
+        cmake --build . --config Release 
         ```
   - 安装
 
-        cmake --build . --target install
+        cmake --build .  --config Release --target install
 
   - 运行例子
     + 把生成库的目录加入到变量 LD_LIBRARY_PATH 中
@@ -139,11 +140,20 @@ SeetaFace2 是面向于人脸识别商业落地的里程碑版本，其中人脸
 
     + 执行 bin 目录下的程序
       - points81
+
+            cd SeetaFace2
+            cd build
+            cd bin
+            ./points81
+
       - search
 
-3. windows
-  - 依赖
-    + opencv。仅编译例子时需要
+            cd SeetaFace2
+            cd build
+            cd bin
+            ./search
+
+#### 2.3.2 windows平台编译说明
   - 使用 cmake-gui.exe 工具编译。打开 cmake-gui.exe
   - 命令行编译
     + 把 cmake 命令所在目录加入到环境变量 PATH 中
@@ -154,12 +164,12 @@ SeetaFace2 是面向于人脸识别商业落地的里程碑版本，其中人脸
             cd SeetaFace2
             mkdir build
             cd build
-            cmake .. -DCMAKE_INSTALL_PREFIX=install -DBUILD_EXAMPLE=OFF # 如果有 OpneCV，则设置为 ON
-            cmake --build .
+            cmake .. -DCMAKE_INSTALL_PREFIX=install -DCMAKE_BUILD_TYPE=Release -DBUILD_EXAMPLE=OFF # 如果有 OpneCV，则设置为 ON
+            cmake --build . --config Release 
 
       - 安装
 
-            cmake --build . --target install
+            cmake --build . --config Release --target install
 
       - 运行例子
         + 拷贝模型文件到程序执行目录的 model 目录下
@@ -174,16 +184,47 @@ SeetaFace2 是面向于人脸识别商业落地的里程碑版本，其中人脸
           - points81
           - search
 
-### 2.3 Android平台编译说明
-Android 版本的编译方法： 
-1. 安装 ndk 编译工具；
-2. 环境变量中导出 ndk-build 工具；
-2. `cd` 到各模块的 `jni` 目录下（如SeetaNet 的 Android 编译脚本位置为`SeetaNet/sources/jni`， FaceDetector 的 Android 编译脚本位置为`FaceDetector/FaceDetector/jni`），执行 `ndk-build -j8` 命令进行编译。<br>
+#### 2.3.3 Android平台编译说明
++ 安装 ndk 编译工具
+  - 从  https://developer.android.com/ndk/downloads 下载 ndk，并安装到：/home/android-ndk
+  - 设置环境变量：
 
-编译依赖说明：人脸检测模块 `FaceDetector` ， 面部关键点定位模块 `FaceLandmarker` 以及人脸特征提取与比对模块 `FaceRecognizer` 均依赖前向计算框架 `SeetaNet` 模块，因此需优先编译前向计算框架 `SeetaNet` 模块。
+        export ANDROID_NDK=/home/android-ndk
 
++ 编译
+  - 主机是linux
 
-### 2.4 IOS 平台编译说明
+        cd SeetaFace2
+        mkdir build
+        cd build
+        cmake .. -DCMAKE_INSTALL_PREFIX=install -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=${ANDROID_NDK}/build/cmake/android.toolchain.cmake -DANDROID_ABI="armeabi-v7a with NEON" -DANDROID_PLATFORM=android-18 -DBUILD_EXAMPLE=OFF # 如果有OpenCV，则设置为ON
+        cmake --build . --config Release --target install
+
+  - 主机是windows
+
+        cd SeetaFace2
+        mkdir build
+        cd build
+        cmake .. -DCMAKE_INSTALL_PREFIX=install -G"Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=${ANDROID_NDK}/build/cmake/android.toolchain.cmake  -DCMAKE_MAKE_PROGRAM=${ANDROID_NDK}/prebuilt/windows-x86_64/bin/make.exe -DANDROID_ABI=arm64-v8a -DANDROID_ARM_NEON=ON -DBUILD_EXAMPLE=OFF # 如果有 OpenCV，则设置为ON
+        cmake --build . --config Release --target install
+
+  - 参数说明：https://developer.android.google.cn/ndk/guides/cmake
+    + ANDROID_ABI: 可取下列值：
+      目标 ABI。如果未指定目标 ABI，则 CMake 默认使用 armeabi-v7a。  
+      有效的目标名称为：
+      - armeabi：带软件浮点运算并基于 ARMv5TE 的 CPU。
+      - armeabi-v7a：带硬件 FPU 指令 (VFPv3_D16) 并基于 ARMv7 的设备。
+      - armeabi-v7a with NEON：与 armeabi-v7a 相同，但启用 NEON 浮点指令。这相当于设置 -DANDROID_ABI=armeabi-v7a 和 -DANDROID_ARM_NEON=ON。
+      - arm64-v8a：ARMv8 AArch64 指令集。
+      - x86：IA-32 指令集。
+      - x86_64 - 用于 x86-64 架构的指令集。
+    + ANDROID_NDK <path> 主机上安装的 NDK 根目录的绝对路径
+    + ANDROID_PLATFORM: 如需平台名称和对应 Android 系统映像的完整列表，请参阅 [Android NDK 原生 API](https://developer.android.google.cn/ndk/guides/stable_apis.html)
+    + ANDROID_ARM_MODE
+    + ANDROID_ARM_NEON
+    + ANDROID_STL:指定 CMake 应使用的 STL。 
+
+### 2.3.4 IOS 平台编译说明
 > 以实体机为例
 
 + 环境准备
@@ -209,16 +250,19 @@ Android 版本的编译方法：
 
   + 查看 `<root>/ios/cmake.sh` 和 `<root>/ios/iOS.cmake` 获取更多编译选项
 
-## 3. 目录结构
-|-- SeetaFace2<br>
-&emsp;&emsp;|-- craft（linux 和 windows 平台的编译脚本）<br>
-&emsp;&emsp;|-- documents（SDK 接口说明文档）<br>
-&emsp;&emsp;|-- example（C++ 版本 SDK 示例代码）<br>
-&emsp;&emsp;|-- FaceDetector（人脸检测模块）<br>
-&emsp;&emsp;|-- FaceLandmarker（特征点定位模块）<br>
-&emsp;&emsp;|-- FaceRecognizer（人脸特征提取和比对模块）<br>
-&emsp;&emsp;|-- SeetaNet（前向计算框架模块）<br>
 
+## 3. 目录结构
+
+
+    |-- SeetaFace2<br>
+        |-- documents（SDK 接口说明文档）  
+        |-- example（C++ 版本 SDK 示例代码）  
+        |-- FaceDetector（人脸检测模块）  
+        |-- FaceLandmarker（特征点定位模块）  
+        |-- FaceRecognizer（人脸特征提取和比对模块）  
+        |-- SeetaNet（前向计算框架模块）  
+
+    
 ## 4. 模型下载
 - 人脸检测模块 FaceDetector 模型下载链接：  
 MD5     ：E88669E5F1301CA56162DE8AEF1FD5D5  
@@ -240,10 +284,20 @@ MD5     ：2D637AAD8B1B7AE62154A877EC291C99
 百度网盘：https://pan.baidu.com/s/1y2vh_BHtYftR24V4xwAVWg 提取码：pim2  
 Dropbox : https://www.dropbox.com/s/6aslqcokpljha5j/fr_2_10.dat?dl=0
 
-## 5. example 说明
-`example/search/example.cpp` 示例展示了一套简单且完整的人脸识别的流程，包括：1. 预注册图像中的人脸到人脸识别底库中（example 中默认注册了"1.jpg"中的人脸）；2. 打开摄像头，检测摄像头画面中的人脸；3.对检测到人脸进行识别，确定所属人脸的身份。
+## 5. 示例 
+### 5.1 本项目自带示例
 
-测试者如果想在底库中成功识别出自己的人脸，需要在example.cpp的底库注册列表部分添加以自己名称命名的图片(名称 + .jpg)，并把自己名称命名的图片文件拷贝到程序的运行目录下，重新编译 example 并运行程序，测试识别效果即可。
+`example/search/example.cpp` 示例展示了一套简单且完整的人脸识别的流程，包括：  
+  1. 预注册图像中的人脸到人脸识别底库中（example 中默认注册了"1.jpg"中的人脸）；
+  2. 打开摄像头，检测摄像头画面中的人脸；3.对检测到人脸进行识别，确定所属人脸的身份。
+
+测试者如果想在底库中成功识别出自己的人脸，需要在example.cpp的底库注册列表部分添加以自己名称命名的图片(名称 + .jpg)，
+并把自己名称命名的图片文件拷贝到程序的运行目录下，重新编译 example 并运行程序，测试识别效果即可。
+
+### 5.2 已使用本项目的其它项目
+
+- FaceRecognizer: https://github.com/KangLin/FaceRecognizer
+- SeetaFace2AndroidDemo: https://github.com/xiaoxiaoazhang/SeetaFace2AndroidDemo
 
 ## 6. 开发者社区
 欢迎开发者加入 SeetaFace 开发者社区，请先加 SeetaFace 小助手微信，经过审核后邀请入群。
@@ -259,3 +313,4 @@ Dropbox : https://www.dropbox.com/s/6aslqcokpljha5j/fr_2_10.dat?dl=0
 ## 8. 开源协议
 
 `SeetaFace2` 依照 [BSD 2-Clause license](LICENSE) 开源.
+

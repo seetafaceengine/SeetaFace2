@@ -22,6 +22,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_SOURCE_DIR}/FaceDetector/include
     ${CMAKE_SOURCE_DIR}/FaceLandmarker/include
     ${CMAKE_SOURCE_DIR}/FaceRecognizer/include
+    ${CMAKE_BINARY_DIR}
     )
 target_include_directories(${PROJECT_NAME} PRIVATE
     ${OpenCV_INCLUDE_DIRS}

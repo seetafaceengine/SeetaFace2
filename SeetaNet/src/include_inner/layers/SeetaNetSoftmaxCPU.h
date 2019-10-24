@@ -141,7 +141,7 @@ int SeetaNetSoftMaxCPU<T>::Process( std::vector<SeetaNetFeatureMap<T>*> input_da
         {
             for( int k = 0; k < inner_num_; k++ )
             {
-                int step = i * channels * inner_num_ + j * inner_num_ + k;
+                int step = j * inner_num_ + k;
                 top_data[step] = exp( top_data[step] - scale_data[k] );
                 buffer[k] += top_data[step];
             }
