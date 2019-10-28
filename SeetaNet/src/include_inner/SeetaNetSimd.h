@@ -247,9 +247,8 @@ inline _simd_f32x4x2 _simd_broadcast2float32x4x2(const _simd_f32* src) {
 }
 
 #else
-#define SEETA_USE_SSE
 
-#ifdef SEETA_USE_SSE
+#ifdef SEETA_USE_SSE2
 #include <immintrin.h>
 
 typedef struct __m128x2
@@ -657,7 +656,7 @@ inline _simd_f32x4x2 _simd_broadcast2float32x4x2(const _simd_f32* src) {
     return{ val, val, val, val, val, val, val, val };
 }
 
-#endif //SEETA_USE_SSE
+#endif //SEETA_USE_SSE2
 #endif //defined(__ARM_NEON__) || defined(__ARM_NEON)
 
 namespace seeta {
