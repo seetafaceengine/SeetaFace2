@@ -1,3 +1,6 @@
+#ifndef __FACETRACKER_H_2019_10_17__
+#define __FACETRACKER_H_2019_10_17__
+
 #pragma once
 
 #include "Struct.h"
@@ -59,3 +62,4 @@ namespace seeta {
     using namespace v2;
 }
 
+#endif //__FACETRACKER_H_2019_10_17__
