@@ -68,6 +68,9 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     ${PROJECT_SOURCE_DIR}/src/include_inner/layers
     ${PROJECT_SOURCE_DIR}/src
     )
+if(ANDROID_ARM_NEON)
+    target_compile_definitions(${PROJECT_NAME} PUBLIC __ARM_NEON__)
+endif()
 
 GENERATE_EXPORT_HEADER(${PROJECT_NAME}
     EXPORT_MACRO_NAME SEETA_NET_API
