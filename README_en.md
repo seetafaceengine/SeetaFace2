@@ -99,7 +99,8 @@ Knowing people to understand everything, open source empowerment and development
   - BUILD_EXAMPLE: Whether to compile the example. ON: On; OFF: Off, open requires pre-installation of `OpneCV`
   - CMAKE_INSTALL_PREFIX: Installation prefix
   - SEETA_USE_FMA: Whether use `FMA` instructions. Default off. Only works in `x86` architecture.
-
+  - SEETA_USE_SSE2: Whether use SSE2 instructions。window and unix default ON，other default OFF。
+  
 ### 2.3 Platforms
 #### 2.3.1 linux
   - Dependence
@@ -114,13 +115,6 @@ Knowing people to understand everything, open source empowerment and development
         cd build
         cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=`pwd`/install -DBUILD_EXAMPLE=OFF # Set to ON if there is OpneCV
         cmake --build . --config Release
-
-    + ARM architecture compilation requires a platform
-    
-        ```
-        cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=`pwd`/install -DPLATFORM=arm
-        cmake --build . --config Release
-        ```
         
   - Installation
 

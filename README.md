@@ -100,6 +100,7 @@ SeetaFace2 是面向于人脸识别商业落地的里程碑版本，其中人脸
   - BUILD_EXAMPLE: 是否编译例子。ON：打开；OFF：关闭，打开需要预先安装 `OpneCV`
   - CMAKE_INSTALL_PREFIX: 安装前缀
   - SEETA_USE_FMA: 是否启用 `FMA` 指令。默认关闭。只有目标是`x86`架构是起作用
+  - SEETA_USE_SSE2: 是否启用 SSE2 指令。window 和 unix 默认为 ON，其它默认为 OFF。
 
 ### 2.3 各平台编译
 #### 2.3.1 linux平台编译说明
@@ -116,11 +117,6 @@ SeetaFace2 是面向于人脸识别商业落地的里程碑版本，其中人脸
         cmake .. -DCMAKE_INSTALL_PREFIX=`pwd`/install -DCMAKE_BUILD_TYPE=Release -DBUILD_EXAMPLE=OFF # 如果有 OpneCV，则设置为 ON
         cmake --build . --config Release 
 
-    + ARM 架构编译需要制定平台
-        ```
-        cmake .. -DCMAKE_INSTALL_PREFIX=`pwd`/install -DCMAKE_BUILD_TYPE=Release -DPLATFORM=arm
-        cmake --build . --config Release 
-        ```
   - 安装
 
         cmake --build .  --config Release --target install
