@@ -1,4 +1,5 @@
-#pragma once
+#ifndef INC_SEETA_C_TRACKING_FACEINFO_H
+#define INC_SEETA_C_TRACKING_FACEINFO_H
 
 #include "Struct.h"
 
@@ -24,3 +25,5 @@ struct SeetaTrackingFaceInfoArray
 #ifdef __cplusplus
 }
 #endif
+
+#endif // INC_SEETA_C_TRACKING_FACEINFO_H
