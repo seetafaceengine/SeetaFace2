@@ -49,7 +49,7 @@ namespace seeta {
         bool check_lightness(const SeetaImageData &image, const SeetaRect &face,
                 float low = 40, float high = 180) {
             auto score = evaluate_lightness(image, face);
-            std::cout << "lightness: " << score << std::endl;
+            // std::cout << "lightness: " << score << std::endl;
             return score > low && score < high;
         }
 
@@ -60,7 +60,7 @@ namespace seeta {
          * @return return true if face.width > size
          */
         bool check_face_size(const SeetaRect &face, int size = 80) {
-            std::cout << "face.width: " << face.width << std::endl;
+			// std::cout << "face.width: " << face.width << std::endl;
             return face.width > size;
         }
 
@@ -77,7 +77,7 @@ namespace seeta {
             static const float pitch0 = 0.5f;
             float roll, yaw, pitch;
             evaluate_pose(image, face, points, roll, yaw, pitch);
-            std::cout << "roll: " << roll << ", " << "yaw: " << yaw << ", " << "pitch: " << pitch << std::endl;
+			//  std::cout << "roll: " << roll << ", " << "yaw: " << yaw << ", " << "pitch: " << pitch << std::endl;
             return roll < roll0 && yaw < yaw0 && pitch < pitch0;
         }
 
@@ -91,13 +91,13 @@ namespace seeta {
         bool check_clarity(const SeetaImageData &image, const SeetaRect &face, float &score) {
             static const float thresh = 0.3f;
             score = evaluate_clarity(image, face);
-            std::cout << "clarity: " << score << std::endl;
+			// std::cout << "clarity: " << score << std::endl;
             return score > thresh;
         }
 
         float QualityAssessor::evaluate(const SeetaImageData &image, const SeetaRect &face,
                                         const SeetaPointF *points) const {
-            std::cout << "=============================" << std::endl;
+			// std::cout << "=============================" << std::endl;
             float clarity;
             if (check_lightness(image, face)
                 && check_face_size(face)

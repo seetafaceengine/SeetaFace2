@@ -20,7 +20,8 @@ if (NOT SeetaFace_FIND_COMPONENTS)
         SeetaFaceDetector
         SeetaFaceLandmarker
         SeetaFaceRecognizer
-	SeetaFaceTracker
+        SeetaFaceTracker
+        SeetaQualityAssessor
 	)
 endif()
 
