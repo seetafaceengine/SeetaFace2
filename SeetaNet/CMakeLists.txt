@@ -30,8 +30,10 @@ if(UNIX)
         set(CMAKE_C_FLAGS "-m64 ${CMAKE_C_FLAGS}")
         set(CMAKE_CXX_FLAGS "-m64 ${CMAKE_CXX_FLAGS}")
     endif()
-    set(CMAKE_C_FLAGS "-msse2 ${CMAKE_C_FLAGS}")
-    set(CMAKE_CXX_FLAGS "-msse2 ${CMAKE_CXX_FLAGS}")
+    if(SEETA_USE_SSE2)
+        set(CMAKE_C_FLAGS "-msse2 ${CMAKE_C_FLAGS}")
+        set(CMAKE_CXX_FLAGS "-msse2 ${CMAKE_CXX_FLAGS}")
+    endif()
     if(SEETA_USE_FMA)
         set(CMAKE_C_FLAGS "-mfma ${CMAKE_C_FLAGS}")
         set(CMAKE_CXX_FLAGS "-mfma ${CMAKE_CXX_FLAGS}")
@@ -66,6 +68,9 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     ${PROJECT_SOURCE_DIR}/src/include_inner/layers
     ${PROJECT_SOURCE_DIR}/src
     )
+if(ANDROID_ARM_NEON)
+    target_compile_definitions(${PROJECT_NAME} PUBLIC __ARM_NEON__)
+endif()
 
 GENERATE_EXPORT_HEADER(${PROJECT_NAME}
     EXPORT_MACRO_NAME SEETA_NET_API
@@ -98,7 +103,10 @@ set_property(
 
 # link library
 if (NOT ANDROID AND UNIX) 
-    target_link_libraries(${PROJECT_NAME} -lpthread)   
+    target_link_libraries(${PROJECT_NAME} pthread)   
+endif()
+if (WIN32) 
+    target_link_libraries(${PROJECT_NAME} Ws2_32)   
 endif()
 
 export(TARGETS ${PROJECT_NAME}

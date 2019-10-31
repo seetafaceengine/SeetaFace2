@@ -1,0 +1,48 @@
+sudo: required
+dist: xenial
+language: cpp
+
+cache:
+  - apt
+  - directories:
+
+compiler:
+  - g++
+
+os:
+  - unix
+
+addons:
+  ssh_known_hosts:
+    - github.com
+    - frs.sourceforge.net
+
+env:
+  global:
+    - SOURCE_DIR=$TRAVIS_BUILD_DIR
+    
+  matrix:
+    - BUILD_TARGERT="unix" BUILD_SHARED_LIBS=ON GENERATORS="Unix Makefiles"
+    - BUILD_TARGERT="unix" BUILD_SHARED_LIBS=OFF GENERATORS="Unix Makefiles"
+    
+    - BUILD_TARGERT="android" BUILD_ARCH="armeabi-v7a with NEON" ANDROID_API=android-24 GENERATORS="Unix Makefiles" BUILD_SHARED_LIBS=OFF
+    - BUILD_TARGERT="android" BUILD_ARCH="armeabi-v7a" ANDROID_API=android-18 ANDROID_ARM_NEON=ON GENERATORS="Unix Makefiles" BUILD_SHARED_LIBS=ON
+    - BUILD_TARGERT="android" BUILD_ARCH="x86" ANDROID_API=android-18 GENERATORS="Unix Makefiles" BUILD_SHARED_LIBS=ON
+
+before_install:
+  - echo "TRAVIS_OS_NAME=${TRAVIS_OS_NAME}"
+  - sudo apt-get install -y -qq xvfb xpra
+  - sudo Xvfb :99 -ac &
+  - export DISPLAY=:99.0
+  - mkdir ${SOURCE_DIR}/Tools
+  - export VERSION="v0.0.2"
+  
+install:
+  - cd ${SOURCE_DIR}
+  - bash ci/build-install-tools.sh > /dev/null
+
+before_script:
+  - cd ${SOURCE_DIR}
+
+script:
+  - bash ${SOURCE_DIR}/ci/build.sh ${SOURCE_DIR}

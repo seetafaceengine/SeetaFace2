@@ -85,11 +85,22 @@ include(CheckFunctionExists)
 
 set(BUILD_PLATFORM "${CMAKE_SYSTEM_NAME}")
 
-# default not used FMA
-option(SEETA_USE_FMA "Set to ON to use FMA" OFF)
-if (SEETA_USE_FMA) 
-    add_definitions(-DSEETA_USE_FMA)
-endif ()
+if(WIN32 OR UNIX)
+    # default used SSE2
+    if(ANDROID OR MINGW)
+	    option(SEETA_USE_SSE2 "Set to ON to use SSE2" OFF)
+    else()
+	    option(SEETA_USE_SSE2 "Set to ON to use SSE2" ON)
+    endif()
+    if (SEETA_USE_SSE2) 
+        add_definitions(-DSEETA_USE_SSE2)
+    endif ()
+    # default not used FMA
+    option(SEETA_USE_FMA "Set to ON to use FMA" OFF)
+    if (SEETA_USE_FMA) 
+        add_definitions(-DSEETA_USE_FMA)
+    endif ()
+endif()
 
 # For debug libs and exes, add "-d" postfix
 if(NOT DEFINED CMAKE_DEBUG_POSTFIX)

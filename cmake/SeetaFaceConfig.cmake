@@ -19,7 +19,9 @@ if (NOT SeetaFace_FIND_COMPONENTS)
         SeetaNet
         SeetaFaceDetector
         SeetaFaceLandmarker
-        SeetaFaceRecognizer)
+        SeetaFaceRecognizer
+	SeetaFaceTracker
+	)
 endif()
 
 get_filename_component(_SeetaFace_module_paths "${CMAKE_CURRENT_LIST_DIR}" ABSOLUTE)
