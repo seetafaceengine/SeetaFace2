@@ -22,6 +22,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_SOURCE_DIR}/FaceDetector/include
     ${CMAKE_SOURCE_DIR}/FaceLandmarker/include
     ${CMAKE_SOURCE_DIR}/FaceRecognizer/include
+    ${CMAKE_SOURCE_DIR}/QualityAssessor/include
     ${CMAKE_BINARY_DIR}
     )
 target_include_directories(${PROJECT_NAME} PRIVATE
@@ -29,7 +30,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
-    SeetaNet SeetaFaceDetector SeetaFaceLandmarker SeetaFaceRecognizer)
+    SeetaNet SeetaFaceDetector SeetaFaceLandmarker SeetaFaceRecognizer SeetaQualityAssessor)
 target_link_libraries(${PROJECT_NAME} PRIVATE ${OpenCV_LIBS})
 
 set_target_properties(${PROJECT_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)

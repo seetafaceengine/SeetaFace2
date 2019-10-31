@@ -11,6 +11,8 @@
 #include <map>
 #include <iostream>
 
+#include <seeta/QualityAssessor.h>
+
 int main()
 {
     seeta::ModelSetting::Device device = seeta::ModelSetting::CPU;
@@ -19,6 +21,8 @@ int main()
     seeta::ModelSetting PD_model( "./model/pd_2_00_pts5.dat", device, id );
     seeta::ModelSetting FR_model( "./model/fr_2_10.dat", device, id );
     seeta::FaceEngine engine( FD_model, PD_model, FR_model, 2, 16 );
+
+    seeta::QualityAssessor QA;
 
     // recognization threshold
     float threshold = 0.7f;
@@ -46,7 +50,7 @@ int main()
         if( GalleryIndex[i] < 0 ) continue;
         GalleryIndexMap.insert( std::make_pair( GalleryIndex[i], GalleryImageFilename[i] ) );
     }
-
+    
     std::cout << "----open camera----" << std::endl;
     // Open default USB camera
     cv::VideoCapture capture;
@@ -71,8 +75,6 @@ int main()
             float similarity = 0;
 
 			auto points = engine.DetectPoints(image, face);
-             
-            auto queried = engine.QueryTop( image, points.data(), 1, &index, &similarity );
 
             cv::rectangle( frame, cv::Rect( face.pos.x, face.pos.y, face.pos.width, face.pos.height ), CV_RGB( 128, 128, 255 ), 3 );
 			for (int i = 0; i < 5; ++i)
@@ -81,13 +83,25 @@ int main()
 				cv::circle(frame, cv::Point(int(point.x), int(point.y)), 2, CV_RGB(128, 255, 128), -1);
 			}
 
-			// no face queried from database
-			if (queried < 1) continue;
+			std::string name;
 
-            // similarity greater than threshold, means recognized
-            if( similarity > threshold )
+            auto score = QA.evaluate(image, face.pos, points.data());
+            if (score == 0) {
+                name = "ignored";
+            } else {
+                auto queried = engine.QueryTop( image, points.data(), 1, &index, &similarity );
+                // no face queried from database
+                if (queried < 1) continue;
+                // similarity greater than threshold, means recognized
+                if( similarity > threshold )
+                {
+                    name = GalleryIndexMap[index];
+                }
+            }
+
+            if( !name.empty() )
             {
-                cv::putText( frame, GalleryIndexMap[index], cv::Point( face.pos.x, face.pos.y - 5 ), 3, 1, CV_RGB( 255, 128, 128 ) );
+                cv::putText( frame, name, cv::Point( face.pos.x, face.pos.y - 5 ), 3, 1, CV_RGB( 255, 128, 128 ) );
             }
         }
 
