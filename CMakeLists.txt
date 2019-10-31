@@ -87,7 +87,11 @@ set(BUILD_PLATFORM "${CMAKE_SYSTEM_NAME}")
 
 if(WIN32 OR UNIX)
     # default used SSE2
-    option(SEETA_USE_SSE2 "Set to ON to use SSE2" ON)
+    if(ANDROID OR MINGW)
+	    option(SEETA_USE_SSE2 "Set to ON to use SSE2" OFF)
+    else()
+	    option(SEETA_USE_SSE2 "Set to ON to use SSE2" ON)
+    endif()
     if (SEETA_USE_SSE2) 
         add_definitions(-DSEETA_USE_SSE2)
     endif ()

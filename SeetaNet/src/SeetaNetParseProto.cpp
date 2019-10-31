@@ -8,12 +8,6 @@
 #include <iostream>
 #include <string.h>
 
-
-#ifdef _WIN32
-    #pragma comment(lib, "Ws2_32.lib")
-#endif
-
-
 int read( const char *buf, int len, int32_t &value )
 {
     if( len < sizeof( int32_t ) )

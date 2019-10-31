@@ -103,7 +103,10 @@ set_property(
 
 # link library
 if (NOT ANDROID AND UNIX) 
-    target_link_libraries(${PROJECT_NAME} -lpthread)   
+    target_link_libraries(${PROJECT_NAME} pthread)   
+endif()
+if (WIN32) 
+    target_link_libraries(${PROJECT_NAME} Ws2_32)   
 endif()
 
 export(TARGETS ${PROJECT_NAME}
