@@ -6,7 +6,8 @@
 [中文](./README.md) [English](./README_en.md)
 
 ## 1. 简介
-`SeetaFace2` 人脸识别引擎包括了搭建一套全自动人脸识别系统所需的三个核心模块，即：人脸检测模块 `FaceDetector`、面部关键点定位模块 `FaceLandmarker` 以及人脸特征提取与比对模块 `FaceRecognizer`。还将陆续开源人脸跟踪、闭眼检测等辅助模块。
+`SeetaFace2` 人脸识别引擎包括了搭建一套全自动人脸识别系统所需的三个核心模块，即：人脸检测模块 `FaceDetector`、面部关键点定位模块 `FaceLandmarker` 以及人脸特征提取与比对模块 `FaceRecognizer`。
+已经两个辅助模块 `FaceTracker` 和 `QualityAssessor` 用于人脸跟踪个质量评估。
 
 <div align=center>
 <img src="./asserts/pipeline.png" width="580" height="230" />
@@ -100,6 +101,7 @@ SeetaFace2 是面向于人脸识别商业落地的里程碑版本，其中人脸
   - BUILD_EXAMPLE: 是否编译例子。ON：打开；OFF：关闭，打开需要预先安装 `OpneCV`
   - CMAKE_INSTALL_PREFIX: 安装前缀
   - SEETA_USE_FMA: 是否启用 `FMA` 指令。默认关闭。只有目标是`x86`架构是起作用
+  - SEETA_USE_SSE2: 是否启用 SSE2 指令。window 和 unix 默认为 ON，其它默认为 OFF。
 
 ### 2.3 各平台编译
 #### 2.3.1 linux平台编译说明
@@ -116,11 +118,6 @@ SeetaFace2 是面向于人脸识别商业落地的里程碑版本，其中人脸
         cmake .. -DCMAKE_INSTALL_PREFIX=`pwd`/install -DCMAKE_BUILD_TYPE=Release -DBUILD_EXAMPLE=OFF # 如果有 OpneCV，则设置为 ON
         cmake --build . --config Release 
 
-    + ARM 架构编译需要制定平台
-        ```
-        cmake .. -DCMAKE_INSTALL_PREFIX=`pwd`/install -DCMAKE_BUILD_TYPE=Release -DPLATFORM=arm
-        cmake --build . --config Release 
-        ```
   - 安装
 
         cmake --build .  --config Release --target install

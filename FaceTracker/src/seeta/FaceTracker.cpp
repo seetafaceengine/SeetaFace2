@@ -2,8 +2,6 @@
 // Created by kier on 2019-09-16.
 //
 
-#pragma once
-
 #include <seeta/FaceDetector.h>
 #include <vector>
 
@@ -19,7 +17,7 @@ namespace seeta
 {
     namespace v2 {
         struct TrackedFace {
-            SeetaRect pos = {0, 0, 0, 0};
+            SeetaRect pos;
             int PID = 0;
             float conf = 0;
             int frame_no = 0;

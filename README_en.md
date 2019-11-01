@@ -5,7 +5,8 @@
 [中文](./README.md) [English](./README_en.md)
 
 ## 1 Introduction
-The `SeetaFace2` face recognition engine includes three core modules required to build a fully automated face recognition system: face detection module `FaceDetector`, facial key positioning module `FaceLandmarker` and face feature extraction and Compare the module `FaceRecognizer`. There will be additional auxiliary modules such as open source face tracking and closed eye detection.
+The `SeetaFace2` face recognition engine includes three core modules required to build a fully automated face recognition system: face detection module `FaceDetector`, facial key positioning module `FaceLandmarker` and face feature extraction and Compare the module `FaceRecognizer`.
+There are two additional auxiliary modules `FaceTracker` and `QualityAssessor` for face tracking and face quality assessment.
 
 <div align=center>
 <img src="./asserts/pipeline.png" width="580" height="230" />
@@ -99,7 +100,8 @@ Knowing people to understand everything, open source empowerment and development
   - BUILD_EXAMPLE: Whether to compile the example. ON: On; OFF: Off, open requires pre-installation of `OpneCV`
   - CMAKE_INSTALL_PREFIX: Installation prefix
   - SEETA_USE_FMA: Whether use `FMA` instructions. Default off. Only works in `x86` architecture.
-
+  - SEETA_USE_SSE2: Whether use SSE2 instructions。window and unix default ON，other default OFF。
+  
 ### 2.3 Platforms
 #### 2.3.1 linux
   - Dependence
@@ -114,13 +116,6 @@ Knowing people to understand everything, open source empowerment and development
         cd build
         cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=`pwd`/install -DBUILD_EXAMPLE=OFF # Set to ON if there is OpneCV
         cmake --build . --config Release
-
-    + ARM architecture compilation requires a platform
-    
-        ```
-        cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=`pwd`/install -DPLATFORM=arm
-        cmake --build . --config Release
-        ```
         
   - Installation
 

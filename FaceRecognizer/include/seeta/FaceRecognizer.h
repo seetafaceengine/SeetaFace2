@@ -6,6 +6,7 @@
 #define SEETA_FACERECOGNIZER_FACERECOGNIZER_H
 
 #include "CStruct.h"
+#include "Struct.h"
 
 namespace seeta
 {
@@ -46,6 +47,11 @@ namespace seeta
              */
             SEETA_API bool CropFace( const SeetaImageData &image, const SeetaPointF *points, SeetaImageData &face );
 
+			seeta::ImageData CropFace(const SeetaImageData &image, const SeetaPointF *points) {
+				seeta::ImageData face(this->GetCropFaceWidth(), this->GetCropFaceHeight(), this->GetCropFaceChannels());
+				CropFace(image, points, face);
+				return face;
+			}
 
             /**
              * \brief get extracted feature size
