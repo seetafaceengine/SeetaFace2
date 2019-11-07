@@ -26,7 +26,25 @@ namespace seeta
             SEETA_API float evaluate(const SeetaImageData &image,
                     const SeetaRect &face,
                     const SeetaPointF *points) const;
-
+            enum ERROR_CODE
+            {
+                ERROR_OK        =  0,
+                ERROR_LIGHTNESS =  0x01,
+                ERROR_FACE_SIZE =  0x02,
+                ERROR_FACE_POSE =  0x04,
+                ERROR_CLARITY   =  0x08
+            };
+            /**
+             * @brief evaluate score
+             * @param image original image
+             * @param face face position
+             * @param points 5 landmarks
+             * @param clarity 
+             * @return ERROR_OK if is ok. other reture ERROR_CODE combination.
+             */
+            SEETA_API int evaluate(const SeetaImageData &image,
+                                   const SeetaRect &face,
+                                   const SeetaPointF *points, float &score) const;
             SEETA_API int setFaceSize(int size);
             SEETA_API int getFaceSize() const;
 

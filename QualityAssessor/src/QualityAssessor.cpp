@@ -119,5 +119,22 @@ namespace seeta {
                 return 0;
             }
         }
+
+        int QualityAssessor::evaluate(const SeetaImageData &image,
+                                      const SeetaRect &face,
+                                      const SeetaPointF *points,
+                                      float &score) const
+        {
+            int ret = ERROR_OK;
+            if(!check_lightness(image, face))
+                ret |= ERROR_LIGHTNESS;
+            if(!check_face_size(face, getFaceSize()))
+                ret |= ERROR_FACE_SIZE;
+            if(!check_pose(image, face, points))
+                ret |= ERROR_FACE_POSE;
+            if(!check_clarity(image, face, score))
+                ret |= ERROR_CLARITY;
+            return ret;
+        }
     }
 }
