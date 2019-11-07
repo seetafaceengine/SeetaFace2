@@ -27,6 +27,9 @@ namespace seeta
                     const SeetaRect &face,
                     const SeetaPointF *points) const;
 
+            SEETA_API int setFaceSize(int size);
+            SEETA_API int getFaceSize() const;
+
         private:
             QualityAssessor( const QualityAssessor & ) = delete;
             const QualityAssessor &operator=( const QualityAssessor & ) = delete;
@@ -34,6 +37,7 @@ namespace seeta
         private:
             class Implement;
             Implement *m_impl;
+            int m_FaceSize;
         };
     }
     using namespace v2;
