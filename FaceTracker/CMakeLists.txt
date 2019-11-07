@@ -1,4 +1,7 @@
 #
+# Author: Kang Lin<kl222@126.com>
+# Date  : 2019-08-20
+#
 
 cmake_minimum_required(VERSION 2.8)
 
@@ -69,12 +72,7 @@ set_target_properties(${PROJECT_NAME} PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${CMAK
 
 set_target_properties(${PROJECT_NAME} PROPERTIES VERSION ${BUILD_VERSION})
 # Be will to install header files
-set_property(
-        TARGET
-        ${PROJECT_NAME}
-        PROPERTY
-        PUBLIC_HEADER ${INCLUDE_FILES}
-)
+set_property(TARGET ${PROJECT_NAME} PROPERTY PUBLIC_HEADER ${INCLUDE_FILES})
 
 INSTALL(TARGETS ${PROJECT_NAME}
         EXPORT ${PROJECT_NAME}Config
@@ -88,12 +86,11 @@ export(TARGETS ${PROJECT_NAME}
         APPEND FILE ${CMAKE_BINARY_DIR}/${PROJECT_NAME}Config.cmake
         )
 # Install cmake configure files
-install(
-        EXPORT ${PROJECT_NAME}Config
+install(EXPORT ${PROJECT_NAME}Config
         DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake"
         NAMESPACE
         SeetaFace::
-)
+        )
 write_basic_package_version_file(
         "${CMAKE_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
         VERSION ${BUILD_VERSION}
