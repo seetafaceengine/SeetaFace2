@@ -14,13 +14,24 @@
 namespace seeta {
     namespace v2 {
         QualityAssessor::QualityAssessor() {
-
+            setFaceSize(80);
         }
 
         QualityAssessor::~QualityAssessor() {
 
         }
 
+        int QualityAssessor::setFaceSize(int size)
+        {
+            m_FaceSize = size;
+            return 0;
+        }
+        
+        int QualityAssessor::getFaceSize() const
+        {
+            return m_FaceSize;
+        }
+        
         /**
          * evaluate lightness of image
          * @param image base image
@@ -100,13 +111,30 @@ namespace seeta {
 			// std::cout << "=============================" << std::endl;
             float clarity;
             if (check_lightness(image, face)
-                && check_face_size(face)
+                && check_face_size(face, getFaceSize())
                 && check_pose(image, face, points)
                 && check_clarity(image, face, clarity)) {
                 return clarity;
             } else {
                 return 0;
             }
+        }
+
+        int QualityAssessor::evaluate(const SeetaImageData &image,
+                                      const SeetaRect &face,
+                                      const SeetaPointF *points,
+                                      float &score) const
+        {
+            int ret = ERROR_OK;
+            if(!check_lightness(image, face))
+                ret |= ERROR_LIGHTNESS;
+            if(!check_face_size(face, getFaceSize()))
+                ret |= ERROR_FACE_SIZE;
+            if(!check_pose(image, face, points))
+                ret |= ERROR_FACE_POSE;
+            if(!check_clarity(image, face, score))
+                ret |= ERROR_CLARITY;
+            return ret;
         }
     }
 }
