@@ -162,7 +162,11 @@ Knowing people to understand everything, open source empowerment and development
             cd SeetaFace2
             mkdir build
             cd build
-            cmake .. -DCMAKE_INSTALL_PREFIX=install -DCMAKE_BUILD_TYPE=Release -DBUILD_EXAMPLE=OFF # Set to ON if there is OpneCV
+            cmake .. -G"Visual Studio 14 2015" \
+                  -DCMAKE_INSTALL_PREFIX=install \
+                  -DCMAKE_BUILD_TYPE=Release \
+                  -DBUILD_EXAMPLE=OFF # Set to ON if there is OpneCV
+            #Note: -G: Generators. The generators must match the msvc compiler.
             cmake --build . --config Release
 
       - Installation
