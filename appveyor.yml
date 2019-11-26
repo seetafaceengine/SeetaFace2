@@ -122,6 +122,7 @@ build_script:
 
 artifacts:
   - path: build_$(BUILD_TARGERT)\install
+    name: SeetaFace_$(BUILD_TARGERT)$(TOOLCHAIN_VERSION)_$(GENERATORS)_$(BUILD_ARCH)_$(appveyor_build_version)
     type: zip
 
 test: off
@@ -134,12 +135,9 @@ deploy:
     #token : https://github.com/settings/tokens
     #password encrypt: https://ci.appveyor.com/tools/encrypt
     auth_token:
-      secure: 
+      secure: OiAMIB7yqZ/SGuSgTU+N5LnPW2iUZcWCaQEyqDLmR/4ySc5A7zeUxkSh580cIO7F
     #artifact: Seeta$(BUILD_TARGERT)$(TOOLCHAIN_VERSION)_$(BUILD_ARCH)_$(QT_VERSION)_$(appveyor_build_version)
     #draft: true
     #prerelease: true
     on:
-      BUILD_TARGERT: windows_msvc
-      TOOLCHAIN_VERSION: 14
-      BUILD_ARCH: x86
       appveyor_repo_tag: true        # deploy on tag push only

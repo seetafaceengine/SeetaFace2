@@ -70,28 +70,38 @@ case ${BUILD_TARGERT} in
         ;;
 esac
 
-if [ -n "$GENERATORS" ]; then
-    if [ -n "${BUILD_SHARED_LIBS}" ]; then
-        CONFIG_PARA="${CONFIG_PARA} -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}"
-    fi
+if [ -n "${BUILD_SHARED_LIBS}" ]; then
+    CONFIG_PARA="${CONFIG_PARA} -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}"
+fi
 
-    if [ -n "${ANDROID_ARM_NEON}" ]; then
-        CONFIG_PARA="${CONFIG_PARA} -DANDROID_ARM_NEON=${ANDROID_ARM_NEON}"
-    fi
-    echo "PWD:`pwd`"
-    if [ "${BUILD_TARGERT}" = "android" ]; then
-        cmake -G"${GENERATORS}" ${SOURCE_DIR} ${CONFIG_PARA} \
-            -DBUILD_EXAMPLE=OFF \
-            -DCMAKE_INSTALL_PREFIX=`pwd`/install \
-            -DCMAKE_VERBOSE=ON \
-            -DCMAKE_BUILD_TYPE=Release \
-            -DANDROID_PLATFORM=${ANDROID_API} -DANDROID_ABI="${BUILD_ARCH}" \
-            -DCMAKE_TOOLCHAIN_FILE=${ANDROID_NDK}/build/cmake/android.toolchain.cmake 
-    else
-	    cmake -G"${GENERATORS}" ${SOURCE_DIR} ${CONFIG_PARA} \
-            -DCMAKE_INSTALL_PREFIX=`pwd`/install \
-            -DCMAKE_VERBOSE=ON \
-            -DCMAKE_BUILD_TYPE=Release
-    fi
-    cmake --build . --config Release --target install -- ${RABBIT_MAKE_JOB_PARA}
+if [ -n "${ANDROID_ARM_NEON}" ]; then
+    CONFIG_PARA="${CONFIG_PARA} -DANDROID_ARM_NEON=${ANDROID_ARM_NEON}"
+fi
+echo "PWD:`pwd`"
+if [ "${BUILD_TARGERT}" = "android" ]; then
+    TAR_FILE=SeetaFace_${BUILD_TARGERT}_${BUILD_ARCH}_${ANDROID_API}.tar.gz
+    cmake -G"${GENERATORS}" ${SOURCE_DIR} ${CONFIG_PARA} \
+        -DBUILD_EXAMPLE=OFF \
+        -DCMAKE_INSTALL_PREFIX=`pwd`/install \
+        -DCMAKE_VERBOSE=ON \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DANDROID_PLATFORM=${ANDROID_API} -DANDROID_ABI="${BUILD_ARCH}" \
+        -DCMAKE_TOOLCHAIN_FILE=${ANDROID_NDK}/build/cmake/android.toolchain.cmake
+    
+else
+    cmake -G"${GENERATORS}" ${SOURCE_DIR} ${CONFIG_PARA} \
+        -DCMAKE_INSTALL_PREFIX=`pwd`/install \
+        -DCMAKE_VERBOSE=ON \
+        -DCMAKE_BUILD_TYPE=Release
+fi
+cmake --build . --config Release --target install -- ${RABBIT_MAKE_JOB_PARA}
+
+if [ "${BUILD_TARGERT}" = "unix" -a "ON" = "${BUILD_SHARED_LIBS}"]; then
+    TAR_FILE=SeetaFace_${BUILD_TARGERT}.tar.gz
+fi
+if [ -n "${TAR_FILE}" -a "$TRAVIS_TAG" != "" ]; then
+    tar czvf ${TAR_FILE} `pwd`/install
+    wget -c https://github.com/probonopd/uploadtool/raw/master/upload.sh
+    chmod u+x upload.sh
+    ./upload.sh ${TAR_FILE}
 fi
