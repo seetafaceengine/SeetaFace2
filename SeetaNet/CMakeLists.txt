@@ -88,11 +88,11 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 
 # link library
 if (NOT ANDROID AND UNIX) 
-    target_link_libraries(${PROJECT_NAME} PRIVATE pthread)
+    target_link_libraries(${PROJECT_NAME} PUBLIC pthread)
     set(SeetaNet_LIBS "pthread ${SeetaNet_LIBS}")
 endif()
 if (WIN32) 
-    target_link_libraries(${PROJECT_NAME} PRIVATE Ws2_32)
+    target_link_libraries(${PROJECT_NAME} PUBLIC Ws2_32)
     set(SeetaNet_LIBS "Ws2_32 ${SeetaNet_LIBS}")
 endif()
 

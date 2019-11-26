@@ -35,7 +35,11 @@ before_install:
   - sudo Xvfb :99 -ac &
   - export DISPLAY=:99.0
   - mkdir ${SOURCE_DIR}/Tools
-  - export VERSION="v0.0.2"
+  - |
+    export VERSION=`git describe --tags`; \
+    if [ -z "$VERSION" ]; then \
+        export VERSION=`git rev-parse --short HEAD`
+    fi
   
 install:
   - cd ${SOURCE_DIR}

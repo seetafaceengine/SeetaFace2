@@ -9,6 +9,6 @@ Version: @BUILD_VERSION@
 Requires:
 Requires.private: 
 Conflicts:
-Libs: -L${libdir} @PROJECT_NAME@
-Libs.private: @SeetaNet_LIBS@
+Libs: -L${libdir} @PROJECT_NAME@ @SeetaNet_LIBS@
+Libs.private: 
 Cflags: -I${includedir} @SeetaNet_definitions@

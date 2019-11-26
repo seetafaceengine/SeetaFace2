@@ -79,7 +79,7 @@ if [ -n "${ANDROID_ARM_NEON}" ]; then
 fi
 echo "PWD:`pwd`"
 if [ "${BUILD_TARGERT}" = "android" ]; then
-    TAR_FILE=SeetaFace_${BUILD_TARGERT}_${BUILD_ARCH}_${ANDROID_API}.tar.gz
+    TAR_FILE="SeetaFace_${BUILD_TARGERT}_${BUILD_ARCH}_${ANDROID_API}.tar.gz"
     cmake -G"${GENERATORS}" ${SOURCE_DIR} ${CONFIG_PARA} \
         -DBUILD_EXAMPLE=OFF \
         -DCMAKE_INSTALL_PREFIX=`pwd`/install \
@@ -96,12 +96,13 @@ else
 fi
 cmake --build . --config Release --target install -- ${RABBIT_MAKE_JOB_PARA}
 
-if [ "${BUILD_TARGERT}" = "unix" -a "ON" = "${BUILD_SHARED_LIBS}"]; then
-    TAR_FILE=SeetaFace_${BUILD_TARGERT}.tar.gz
+if [ "${BUILD_TARGERT}" = "unix" -a "ON" = "${BUILD_SHARED_LIBS}" ]; then
+    TAR_FILE="SeetaFace_${BUILD_TARGERT}.tar.gz"
 fi
 if [ -n "${TAR_FILE}" -a "$TRAVIS_TAG" != "" ]; then
-    tar czvf ${TAR_FILE} `pwd`/install
+    TAR_FILE=`echo "${TAR_FILE}" | sed 's/[ ][ ]*/_/g'`
+    tar czvf "${TAR_FILE}" `pwd`/install
     wget -c https://github.com/probonopd/uploadtool/raw/master/upload.sh
     chmod u+x upload.sh
-    ./upload.sh ${TAR_FILE}
+    ./upload.sh "${TAR_FILE}"
 fi

@@ -1,5 +1,5 @@
 #TODO: Change version
-version: 'v0.0.2.{build}'
+version: 'v0.0.1.{build}'
 
 environment:
   matrix: 
@@ -7,38 +7,32 @@ environment:
   - BUILD_TARGERT: windows_msvc
     GENERATORS: "Visual Studio 12 2013"
     TOOLCHAIN_VERSION: 12
-    QT_ROOT: C:\Qt\5.6\msvc2013
     BUILD_ARCH: x86
     
   - BUILD_TARGERT: windows_msvc
     GENERATORS: "Visual Studio 12 2013 Win64"
     TOOLCHAIN_VERSION: 12
-    QT_ROOT: C:\Qt\5.6\msvc2013_64
     BUILD_ARCH: x64
 
   ##### msvc 2015 ########
   - BUILD_TARGERT: windows_msvc
     GENERATORS: "Visual Studio 14 2015"
     TOOLCHAIN_VERSION: 14
-    QT_ROOT: C:\Qt\5.10\msvc2015
     BUILD_ARCH: x86
 
   - BUILD_TARGERT: windows_msvc
     GENERATORS: "Visual Studio 14 2015 Win64"
     TOOLCHAIN_VERSION: 14
-    QT_ROOT: C:\Qt\5.10\msvc2015_64
     BUILD_ARCH: x64
   
   - BUILD_TARGERT: windows_msvc
     GENERATORS: "Visual Studio 14 2015"
     TOOLCHAIN_VERSION: 14
-    QT_ROOT: C:\Qt\5.6\msvc2015
     BUILD_ARCH: x86
 
   - BUILD_TARGERT: windows_msvc
     GENERATORS: "Visual Studio 14 2015 Win64"
     TOOLCHAIN_VERSION: 14
-    QT_ROOT: C:\Qt\5.6\msvc2015_64
     BUILD_ARCH: x64
 
   ##### msvc 2017 ########
@@ -46,7 +40,6 @@ environment:
     GENERATORS: "Visual Studio 14 2015"
     BUILD_TARGERT: windows_msvc
     TOOLCHAIN_VERSION: 15
-    QT_ROOT: C:\Qt\5.12\msvc2017
     BUILD_ARCH: x86
     BUILD_SHARED_LIBS: OFF
         
@@ -54,7 +47,6 @@ environment:
     GENERATORS: "Visual Studio 14 2015 Win64"
     BUILD_TARGERT: windows_msvc
     TOOLCHAIN_VERSION: 15
-    QT_ROOT: C:\Qt\5.12\msvc2017_64
     BUILD_ARCH: x64
     BUILD_SHARED_LIBS: OFF
     
@@ -62,33 +54,28 @@ environment:
     GENERATORS: "Visual Studio 14 2015 Win64"
     BUILD_TARGERT: windows_msvc
     TOOLCHAIN_VERSION: 15
-    QT_ROOT: C:\Qt\5.10\msvc2017_64
     BUILD_ARCH: x64
   
   - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
     GENERATORS: "Visual Studio 14 2015 Win64"
     BUILD_TARGERT: windows_msvc
     TOOLCHAIN_VERSION: 15
-    QT_ROOT: C:\Qt\5.9\msvc2017_64
     BUILD_ARCH: x64
   
   ##### mingw ########
   - BUILD_TARGERT: windows_mingw
     GENERATORS: "MSYS Makefiles"
     TOOLCHAIN_VERSION: 492_32
-    QT_ROOT: C:\Qt\5.6\mingw49_32
     BUILD_ARCH: x86
 
   - BUILD_TARGERT: windows_mingw
     GENERATORS: "MSYS Makefiles"
     TOOLCHAIN_VERSION: 530_32
-    QT_ROOT: C:\Qt\5.10\mingw53_32
     BUILD_ARCH: x86
     
   - BUILD_TARGERT: windows_mingw
     GENERATORS: "MSYS Makefiles"
     TOOLCHAIN_VERSION: 730_64
-    QT_ROOT: C:\Qt\5.12\mingw73_64
     BUILD_ARCH: x64
 
 matrix:
@@ -101,14 +88,10 @@ init:
   - if "%BUILD_TARGERT%" == "windows_msvc" if %TOOLCHAIN_VERSION% LSS 15 (call "C:\Program Files (x86)\Microsoft Visual Studio %TOOLCHAIN_VERSION%.0\VC\vcvarsall.bat" %varch%) else (call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat" %varch%)  
   - echo NUMBER_OF_PROCESSORS=%NUMBER_OF_PROCESSORS%
   - echo PROCESSOR_IDENTIFIER=%PROCESSOR_IDENTIFIER%
-  - if NOT "%QT_ROOT%" == "NO" for /f "delims=" %%i in ('%QT_ROOT%/bin/qmake -query QT_VERSION') do (set QT_VERSION=%%i) 
-  - echo QT_ROOT=%QT_ROOT%
-  - echo QT_VERSION=%QT_VERSION%
   - del C:\msys64\usr\bin\link.exe
-  
+
 install:
   - C:\msys64\autorebase.bat
-  #- if "%BUILD_TARGERT%"=="windows_mingw" set PATH=C:\Qt\Tools\mingw%TOOLCHAIN_VERSION%_32\bin;%PATH%
   - if "%BUILD_TARGERT%" == "windows_mingw" set MSYSTEM=MINGW32  #设置编译系统为MINGW32
 
 before_build:
@@ -122,7 +105,7 @@ build_script:
 
 artifacts:
   - path: build_$(BUILD_TARGERT)\install
-    name: SeetaFace_$(BUILD_TARGERT)$(TOOLCHAIN_VERSION)_$(GENERATORS)_$(BUILD_ARCH)_$(appveyor_build_version)
+    name: SeetaFace_$(BUILD_TARGERT)$(TOOLCHAIN_VERSION)_$(BUILD_ARCH)
     type: zip
 
 test: off
@@ -136,7 +119,6 @@ deploy:
     #password encrypt: https://ci.appveyor.com/tools/encrypt
     auth_token:
       secure: OiAMIB7yqZ/SGuSgTU+N5LnPW2iUZcWCaQEyqDLmR/4ySc5A7zeUxkSh580cIO7F
-    #artifact: Seeta$(BUILD_TARGERT)$(TOOLCHAIN_VERSION)_$(BUILD_ARCH)_$(QT_VERSION)_$(appveyor_build_version)
     #draft: true
     #prerelease: true
     on:
