@@ -47,7 +47,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
         ${CMAKE_SOURCE_DIR}/SeetaNet/include
         ${CMAKE_SOURCE_DIR}/FaceDetector/include
         )
-target_link_libraries(${PROJECT_NAME} PUBLIC SeetaNet)
+#target_link_libraries(${PROJECT_NAME} PUBLIC SeetaNet)
 target_link_libraries(${PROJECT_NAME} PUBLIC SeetaFaceDetector)
 
 GENERATE_EXPORT_HEADER(${PROJECT_NAME}
@@ -107,3 +107,8 @@ write_basic_package_version_file(
         VERSION ${BUILD_VERSION}
         COMPATIBILITY AnyNewerVersion)
 install(FILES "${CMAKE_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake" DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake")
+# Install configure file
+set(SeetaFace2_LIBS "${PROJECT_NAME} ${SeetaFace2_LIBS}" PARENT_SCOPE)
+configure_file(FaceTracker.pc.in ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.pc @ONLY)
+install(FILES ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.pc
+    DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig")

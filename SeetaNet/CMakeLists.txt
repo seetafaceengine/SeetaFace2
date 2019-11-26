@@ -67,6 +67,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     )
 if(ANDROID_ARM_NEON)
     target_compile_definitions(${PROJECT_NAME} PUBLIC __ARM_NEON__)
+    set(SeetaNet_definitions "-D__ARM_NEON__ ${SeetaNet_definitions}")
 endif()
 
 GENERATE_EXPORT_HEADER(${PROJECT_NAME}
@@ -87,10 +88,12 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 
 # link library
 if (NOT ANDROID AND UNIX) 
-    target_link_libraries(${PROJECT_NAME} pthread)   
+    target_link_libraries(${PROJECT_NAME} PRIVATE pthread)
+    set(SeetaNet_LIBS "pthread ${SeetaNet_LIBS}")
 endif()
 if (WIN32) 
-    target_link_libraries(${PROJECT_NAME} Ws2_32)   
+    target_link_libraries(${PROJECT_NAME} PRIVATE Ws2_32)
+    set(SeetaNet_LIBS "Ws2_32 ${SeetaNet_LIBS}")
 endif()
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
@@ -135,4 +138,9 @@ write_basic_package_version_file(
     VERSION ${BUILD_VERSION}
     COMPATIBILITY AnyNewerVersion)
 install(FILES "${CMAKE_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake" DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake")
+# Install configure file
+set(SeetaFace2_LIBS "${PROJECT_NAME} ${SeetaFace2_LIBS}" PARENT_SCOPE)
+configure_file(SeetaNet.pc.in ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.pc @ONLY)
+install(FILES ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.pc
+    DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig")
 

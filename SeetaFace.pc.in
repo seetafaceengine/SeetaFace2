@@ -1,0 +1,14 @@
+prefix=@CMAKE_INSTALL_PREFIX@
+exec_prefix=${prefix}
+libdir=${prefix}/lib
+includedir=${prefix}/include
+
+Name: SeetaFace2
+Description: SeetaFace2
+Version: @BUILD_VERSION@
+Requires: @SeetaFace2_LIBS@
+Requires.private: 
+Conflicts:
+Libs: -L${libdir}  
+Libs.private: 
+Cflags: -I${includedir}

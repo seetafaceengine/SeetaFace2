@@ -1,0 +1,14 @@
+prefix=@CMAKE_INSTALL_PREFIX@
+exec_prefix=${prefix}
+libdir=${prefix}/lib
+includedir=${prefix}/include
+
+Name: @PROJECT_NAME@
+Description: @PROJECT_NAME@ module
+Version: @BUILD_VERSION@
+Requires:
+Requires.private: 
+Conflicts:
+Libs: -L${libdir} @PROJECT_NAME@
+Libs.private: @SeetaNet_LIBS@
+Cflags: -I${includedir} @SeetaNet_definitions@

@@ -130,6 +130,11 @@ if(BUILD_EXAMPLE)
     add_subdirectory(example)
 endif(BUILD_EXAMPLE)
 
+# Install configure file
+configure_file(SeetaFace.pc.in ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.pc @ONLY)
+install(FILES ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.pc
+    DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig")
+
 # Install cmake configure files
 install(
         FILES cmake/${PROJECT_NAME}Config.cmake
