@@ -97,11 +97,18 @@ fi
 cmake --build . --config Release --target install -- ${RABBIT_MAKE_JOB_PARA}
 
 if [ "${BUILD_TARGERT}" = "unix" -a "ON" = "${BUILD_SHARED_LIBS}" ]; then
-    TAR_FILE="SeetaFace_${BUILD_TARGERT}.tar.gz"
+    # configure C compiler
+    export compiler=$(which gcc)
+    # get version code
+    MAJOR=$(echo __GNUC__ | $compiler -E -xc - | tail -n 1)
+    MINOR=$(echo __GNUC_MINOR__ | $compiler -E -xc - | tail -n 1)
+    PATCHLEVEL=$(echo __GNUC_PATCHLEVEL__ | $compiler -E -xc - | tail -n 1)
+    TAR_FILE="SeetaFace_${BUILD_TARGERT}_gcc${MAJOR}.${MINOR}.${PATCHLEVEL}.tar.gz"
 fi
 if [ -n "${TAR_FILE}" -a "$TRAVIS_TAG" != "" ]; then
     TAR_FILE=`echo "${TAR_FILE}" | sed 's/[ ][ ]*/_/g'`
-    tar czvf "${TAR_FILE}" `pwd`/install
+    cd `pwd`/install
+    tar czf "${TAR_FILE}" *
     wget -c https://github.com/probonopd/uploadtool/raw/master/upload.sh
     chmod u+x upload.sh
     ./upload.sh "${TAR_FILE}"
