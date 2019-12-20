@@ -227,7 +227,7 @@ const seeta::Image seeta::crop_resize( const Image &img, const Rect &_rect, cons
         float lf_x_s = lfx_scl * n_x_d + crop_x;
         nx[n_x_d] = int( lf_x_s );
         if( nx[n_x_d] == src_width - 1 )
-            ny[n_x_d] -= 1;
+            nx[n_x_d] -= 1;
         wx[n_x_d] = lf_x_s - nx[n_x_d];
     }
 
