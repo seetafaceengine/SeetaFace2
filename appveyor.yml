@@ -43,28 +43,28 @@ environment:
 
   ##### msvc 2017 ########
   - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-    GENERATORS: "Visual Studio 14 2015"
+    GENERATORS: "Visual Studio 15 2017"
     BUILD_TARGERT: windows_msvc
     TOOLCHAIN_VERSION: 15
     BUILD_ARCH: x86
     BUILD_SHARED_LIBS: OFF
         
   - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-    GENERATORS: "Visual Studio 14 2015 Win64"
+    GENERATORS: "Visual Studio 15 2017 Win64"
     BUILD_TARGERT: windows_msvc
     TOOLCHAIN_VERSION: 15
     BUILD_ARCH: x64
     BUILD_SHARED_LIBS: OFF
     
   - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-    GENERATORS: "Visual Studio 14 2015 Win64"
+    GENERATORS: "Visual Studio 15 2017 Win64"
     BUILD_TARGERT: windows_msvc
     TOOLCHAIN_VERSION: 15
     BUILD_ARCH: x86
     BUILD_SHARED_LIBS: ON
   
   - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-    GENERATORS: "Visual Studio 14 2015 Win64"
+    GENERATORS: "Visual Studio 15 2017 Win64"
     BUILD_TARGERT: windows_msvc
     TOOLCHAIN_VERSION: 15
     BUILD_ARCH: x64
