@@ -6,9 +6,6 @@
 cmake_minimum_required(VERSION 2.8)
 project(SeetaNet)
 
-# option for install
-#set(CMAKE_INSTALL_PREFIX ${PROJECT_BINARY_DIR}/install CACHE STRING "set install prefix" FORCE)
-
 # set flags
 if(UNIX)
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC -Wno-sign-compare -Wno-unused-parameter")
@@ -70,6 +67,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     )
 if(ANDROID_ARM_NEON)
     target_compile_definitions(${PROJECT_NAME} PUBLIC __ARM_NEON__)
+    set(SeetaNet_definitions "-D__ARM_NEON__ ${SeetaNet_definitions}")
 endif()
 
 GENERATE_EXPORT_HEADER(${PROJECT_NAME}
@@ -88,39 +86,46 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_BINARY_DIR}
     )
 
-set_target_properties(${PROJECT_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-set_target_properties(${PROJECT_NAME} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-set_target_properties(${PROJECT_NAME} PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-
-set_target_properties(${PROJECT_NAME} PROPERTIES VERSION ${BUILD_VERSION})
-# Be will to install header files
-set_property(
-    TARGET
-        ${PROJECT_NAME}
-    PROPERTY
-        PUBLIC_HEADER ${INCLUDE_FILES}
-)
-
 # link library
 if (NOT ANDROID AND UNIX) 
-    target_link_libraries(${PROJECT_NAME} pthread)   
+    target_link_libraries(${PROJECT_NAME} PUBLIC pthread)
+    set(SeetaNet_LIBS "pthread ${SeetaNet_LIBS}")
 endif()
 if (WIN32) 
-    target_link_libraries(${PROJECT_NAME} Ws2_32)   
+    target_link_libraries(${PROJECT_NAME} PUBLIC Ws2_32)
+    set(SeetaNet_LIBS "Ws2_32 ${SeetaNet_LIBS}")
 endif()
 
+set_target_properties(${PROJECT_NAME} PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
+    LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
+    ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
+    VERSION ${BUILD_VERSION})
+# Be will to install header files
+set_property(TARGET ${PROJECT_NAME} PROPERTY PUBLIC_HEADER ${INCLUDE_FILES})
+
+if(WIN32)
+    INSTALL(TARGETS ${PROJECT_NAME}
+        EXPORT ${PROJECT_NAME}Config
+        RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
+        LIBRARY DESTINATION "${CMAKE_INSTALL_BINDIR}"
+        ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+        PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/seeta
+        INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+        )
+else()
+    INSTALL(TARGETS ${PROJECT_NAME}
+        EXPORT ${PROJECT_NAME}Config
+        RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
+        LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+        ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+        PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/seeta
+        INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+        )
+endif()
 export(TARGETS ${PROJECT_NAME}
        APPEND FILE ${CMAKE_BINARY_DIR}/${PROJECT_NAME}Config.cmake
 )
-
-INSTALL(TARGETS ${PROJECT_NAME}
-    EXPORT ${PROJECT_NAME}Config
-    RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
-    ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-    LIBRARY DESTINATION "${CMAKE_INSTALL_BINDIR}"
-    PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/seeta
-    INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-    )
 # Install cmake configure files
 install(
         EXPORT ${PROJECT_NAME}Config
@@ -133,4 +138,9 @@ write_basic_package_version_file(
     VERSION ${BUILD_VERSION}
     COMPATIBILITY AnyNewerVersion)
 install(FILES "${CMAKE_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake" DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake")
+# Install configure file
+set(SeetaFace2_LIBS "${PROJECT_NAME} ${SeetaFace2_LIBS}" PARENT_SCOPE)
+configure_file(SeetaNet.pc.in ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.pc @ONLY)
+install(FILES ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.pc
+    DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig")
 
