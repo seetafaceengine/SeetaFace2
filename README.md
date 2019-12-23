@@ -220,7 +220,7 @@ SeetaFace2 是面向于人脸识别商业落地的里程碑版本，其中人脸
                   -DANDROID_ABI=arm64-v8a ^
                   -DANDROID_ARM_NEON=ON ^
                    -DANDROID_PLATFORM=android-24 ^
-                  -DBUILD_EXAMPLE=OFF # 如果有 OpenCV，则设置为ON
+                  -DBUILD_EXAMPLE=OFF : 如果有 OpenCV，则设置为ON
             cmake --build . --config Release --target install
 
     - msys2 或 cygwin
