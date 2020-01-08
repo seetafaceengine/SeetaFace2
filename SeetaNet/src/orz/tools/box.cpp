@@ -130,7 +130,7 @@ std::vector<std::pair<size_t, size_t>> lsplit_bins(size_t first, size_t second, 
 static struct tm time2tm(std::time_t from)
 {
     std::tm to = {0};
-#if defined(_MSC_VER)
+#if defined(_WIN32)
     localtime_s(&to, &from);
 #else
     localtime_r(&from, &to);
