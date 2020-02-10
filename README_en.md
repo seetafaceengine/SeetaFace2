@@ -199,16 +199,33 @@ Knowing people to understand everything, open source empowerment and development
         cd SeetaFace2
         mkdir build
         cd build
-        cmake .. -DCMAKE_INSTALL_PREFIX=install -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=${ANDROID_NDK}/build/cmake/android.toolchain.cmake -DANDROID_ABI="armeabi-v7a with NEON" -DANDROID_PLATFORM=android-18 -DBUILD_EXAMPLE=OFF # 如果有OpenCV，则设置为ON
+        cmake .. -DCMAKE_INSTALL_PREFIX=install -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=${ANDROID_NDK}/build/cmake/android.toolchain.cmake -DANDROID_ABI="armeabi-v7a with NEON" -DANDROID_PLATFORM=android-18 -DBUILD_EXAMPLE=OFF # set ON if OpenCV
         cmake --build . --config Release --target install
 
   - The host is windows
-
-        cd SeetaFace2
-        mkdir build
-        cd build
-        cmake .. -DCMAKE_INSTALL_PREFIX=install -G"Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=${ANDROID_NDK}/build/cmake/android.toolchain.cmake  -DCMAKE_MAKE_PROGRAM=${ANDROID_NDK}\prebuilt\windows-x86_64\bin\make.exe -DANDROID_ABI=arm64-v8a -DANDROID_ARM_NEON=ON -DBUILD_EXAMPLE=OFF # 如果有 OpenCV，则设置为ON
-        cmake --build . --config Release --target install
+    - cmd
+    
+            cd SeetaFace2
+            mkdir build
+            cd build
+            cmake .. -DCMAKE_INSTALL_PREFIX=%cd%\install ^
+                  -G"Unix Makefiles" ^
+                  -DCMAKE_BUILD_TYPE=Release ^
+                  -DCMAKE_TOOLCHAIN_FILE=%ANDROID_NDK%/build/cmake/android.toolchain.cmake ^
+                  -DCMAKE_MAKE_PROGRAM=%ANDROID_NDK%/prebuilt/windows-x86_64/bin/make.exe ^
+                  -DANDROID_ABI=arm64-v8a ^
+                  -DANDROID_ARM_NEON=ON ^
+                  -DANDROID_PLATFORM=android-24 ^
+                  -DBUILD_EXAMPLE=OFF : set ON if OpenCV
+            cmake --build . --config Release --target install
+    
+    - msys2 or cygwin
+    
+            cd SeetaFace2
+            mkdir build
+            cd build
+            cmake .. -DCMAKE_INSTALL_PREFIX=install -G"Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=${ANDROID_NDK}/build/cmake/android.toolchain.cmake  -DCMAKE_MAKE_PROGRAM=${ANDROID_NDK}\prebuilt\windows-x86_64\bin\make.exe -DANDROID_ABI=arm64-v8a -DANDROID_ARM_NEON=ON -DBUILD_EXAMPLE=OFF # set ON if OpenCV
+            cmake --build . --config Release --target install
 
   - Parameter Description: https://developer.android.google.cn/ndk/guides/cmake
     + ANDROID_ABI: The following values can be taken:
