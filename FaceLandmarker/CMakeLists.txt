@@ -7,11 +7,6 @@ cmake_minimum_required(VERSION 2.8)
 
 project(SeetaFaceLandmarker)
 
-if(UNIX)
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -fPIC")
-endif()
-
 add_definitions(-DSEETA_EXPORTS)
 
 file(GLOB_RECURSE ROOT_SRC_FILES

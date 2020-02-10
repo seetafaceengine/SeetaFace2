@@ -6,39 +6,6 @@
 cmake_minimum_required(VERSION 2.8)
 project(SeetaNet)
 
-# set flags
-if(UNIX)
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC -Wno-sign-compare -Wno-unused-parameter")
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -fpermissive -std=c++11 -Wno-sign-compare -Wno-unused-parameter")
-    if ("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
-        set(CMAKE_C_FLAGS "-O0 -g -ggdb ${CMAKE_C_FLAGS}")
-        set(CMAKE_CXX_FLAGS "-O0 -g -ggdb ${CMAKE_CXX_FLAGS}")
-    else()
-        set(CMAKE_C_FLAGS "-O2 ${CMAKE_C_FLAGS}")
-        set(CMAKE_CXX_FLAGS "-O2 ${CMAKE_CXX_FLAGS}")
-    endif()
-    if ("${CMAKE_SYSTEM_PROCESSOR}" STREQUAL "x86")
-        set(CMAKE_C_FLAGS "-m32 ${CMAKE_C_FLAGS}")
-        set(CMAKE_CXX_FLAGS "-m32 ${CMAKE_CXX_FLAGS}")
-    elseif ("${CMAKE_SYSTEM_PROCESSOR}" STREQUAL "x64")
-        set(CMAKE_C_FLAGS "-m64 ${CMAKE_C_FLAGS}")
-        set(CMAKE_CXX_FLAGS "-m64 ${CMAKE_CXX_FLAGS}")
-    elseif ("${CMAKE_SYSTEM_PROCESSOR}" STREQUAL "x86_64")
-        set(CMAKE_C_FLAGS "-m64 ${CMAKE_C_FLAGS}")
-        set(CMAKE_CXX_FLAGS "-m64 ${CMAKE_CXX_FLAGS}")
-    endif()
-    if(SEETA_USE_SSE2)
-        set(CMAKE_C_FLAGS "-msse2 ${CMAKE_C_FLAGS}")
-        set(CMAKE_CXX_FLAGS "-msse2 ${CMAKE_CXX_FLAGS}")
-    endif()
-    if(SEETA_USE_FMA)
-        set(CMAKE_C_FLAGS "-mfma ${CMAKE_C_FLAGS}")
-        set(CMAKE_CXX_FLAGS "-mfma ${CMAKE_CXX_FLAGS}")
-    endif()
-elseif(MSVC)
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP")
-endif()
-
 add_definitions(-DSEETA_EXPORTS)
 
 # search files
@@ -70,9 +37,16 @@ if(ANDROID_ARM_NEON)
     set(SeetaNet_definitions "-D__ARM_NEON__ ${SeetaNet_definitions}")
 endif()
 
+# Set flags
+if(ANDROID)
+    target_compile_options(${PROJECT_NAME} PRIVATE 
+        -frtti -fexceptions -funsafe-math-optimizations -ftree-vectorize -ffast-math)
+    target_link_options(${PROJECT_NAME} PUBLIC -fuse-ld=bfd)
+endif()
+
 GENERATE_EXPORT_HEADER(${PROJECT_NAME}
     EXPORT_MACRO_NAME SEETA_NET_API
-    EXPORT_FILE_NAME  SeetaNetExport.h
+    EXPORT_FILE_NAME SeetaNetExport.h
     )
 file(COPY ${CMAKE_CURRENT_BINARY_DIR}/SeetaNetExport.h
     DESTINATION ${CMAKE_BINARY_DIR})

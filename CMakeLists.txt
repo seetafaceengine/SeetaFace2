@@ -46,19 +46,60 @@ if(NOT BUILD_VERSION)
 endif()
 message(STATUS "== BUILD_VERSION: ${BUILD_VERSION}")
 
+if(WIN32 OR UNIX)
+    # default used SSE2
+    if(ANDROID OR MINGW)
+	    option(SEETA_USE_SSE2 "Set to ON to use SSE2" OFF)
+    else()
+	    option(SEETA_USE_SSE2 "Set to ON to use SSE2" ON)
+    endif()
+    if (SEETA_USE_SSE2) 
+        add_definitions(-DSEETA_USE_SSE2)
+    endif ()
+    # default not used FMA
+    option(SEETA_USE_FMA "Set to ON to use FMA" OFF)
+    if (SEETA_USE_FMA) 
+        add_definitions(-DSEETA_USE_FMA)
+    endif ()
+endif()
+
 IF(MSVC)
     # This option is to enable the /MP switch for Visual Studio 2005 and above compilers
     OPTION(WIN32_USE_MP "Set to ON to build with the /MP option (Visual Studio 2005 and above)." ON)
     MARK_AS_ADVANCED(WIN32_USE_MP)
     IF(WIN32_USE_MP)
-        #SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP")
         add_compile_options(/MP)
     ENDIF(WIN32_USE_MP)
     add_compile_options(/utf-8)
 ENDIF(MSVC)
-IF(MINGW)
-    add_compile_options("-std=c++0x")
+IF(CMAKE_CXX_COMPILER_ID STREQUAL "GNU"
+    OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+
+    add_compile_options(-std=c++0x -Wno-sign-compare -Wno-unused-parameter)
+    
+#    if ("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
+#        add_compile_options(-g -ggdb)
+#    else()
+#        add_compile_options(-O3 -Os)
+#    endif()
+    
+#    if ("${CMAKE_SYSTEM_PROCESSOR}" STREQUAL "x86")
+#        add_compile_options(-m32)
+#    elseif ("${CMAKE_SYSTEM_PROCESSOR}" STREQUAL "x64")
+#        add_compile_options(-m64)
+#    elseif ("${CMAKE_SYSTEM_PROCESSOR}" STREQUAL "x86_64")
+#        add_compile_options(-m64)
+#    endif()
+
+    if(SEETA_USE_SSE2)
+        add_compile_options(-msse2)
+    endif()
+    if(SEETA_USE_FMA)
+        add_compile_options(-mfma)
+    endif()
+
 ENDIF()
+
 SET(BUILD_SHARED_LIBS ON CACHE BOOL "Build shared libs")
 if (BUILD_SHARED_LIBS)
 	add_definitions(-DBUILD_SHARED_LIBS)
@@ -84,23 +125,6 @@ include(CheckFunctionExists)
 #check_function_exists("fabs" HAVE_FABS)
 
 set(BUILD_PLATFORM "${CMAKE_SYSTEM_NAME}")
-
-if(WIN32 OR UNIX)
-    # default used SSE2
-    if(ANDROID OR MINGW)
-	    option(SEETA_USE_SSE2 "Set to ON to use SSE2" OFF)
-    else()
-	    option(SEETA_USE_SSE2 "Set to ON to use SSE2" ON)
-    endif()
-    if (SEETA_USE_SSE2) 
-        add_definitions(-DSEETA_USE_SSE2)
-    endif ()
-    # default not used FMA
-    option(SEETA_USE_FMA "Set to ON to use FMA" OFF)
-    if (SEETA_USE_FMA) 
-        add_definitions(-DSEETA_USE_FMA)
-    endif ()
-endif()
 
 # For debug libs and exes, add "-d" postfix
 if(NOT DEFINED CMAKE_DEBUG_POSTFIX)
@@ -141,10 +165,11 @@ install(
         DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake"
 )
 
-message(STATUS "== Build detector: ${BUILD_DETECOTOR}")
+message(STATUS "== Build detector and tracker: ${BUILD_DETECOTOR}")
 message(STATUS "== Build landmarker: ${BUILD_LANDMARKER}")
 message(STATUS "== Build recgnizer: ${BUILD_RECOGNIZER}")
 message(STATUS "== Build quality assessor: ${BUILD_ASSESSOR}")
 message(STATUS "== Build example: ${BUILD_EXAMPLE}")
 message(STATUS "== Build shared library: ${BUILD_SHARED_LIBS}")
 message(STATUS "== CMAKE_SYSTEM_PROCESSOR: ${CMAKE_SYSTEM_PROCESSOR}")
+message(STATUS "== CMAKE_BUILD_TYPE: ${CMAKE_BUILD_TYPE}")
