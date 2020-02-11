@@ -119,12 +119,12 @@ SeetaFace2 是面向于人脸识别商业落地的里程碑版本，其中人脸
 
   - 安装
 
-        cmake --build .  --config Release --target install
+        cmake --build . --config Release --target install/strip
 
   - 运行例子
     + 把生成库的目录加入到变量 LD_LIBRARY_PATH 中
  
-            export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:`pwd`/lib
+            export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:`pwd`/bin
 
     + 拷贝模型文件到程序执行目录的 model 目录下
 
@@ -195,33 +195,44 @@ SeetaFace2 是面向于人脸识别商业落地的里程碑版本，其中人脸
 + 编译
   - 主机是 linux
 
-        cd SeetaFace2
-        mkdir build
-        cd build
-        cmake .. -DCMAKE_INSTALL_PREFIX=install \
-              -DCMAKE_BUILD_TYPE=Release \
-              -DCMAKE_TOOLCHAIN_FILE=${ANDROID_NDK}/build/cmake/android.toolchain.cmake \
-              -DANDROID_ABI="armeabi-v7a with NEON" \
-              -DANDROID_PLATFORM=android-24 \
-              -DBUILD_EXAMPLE=OFF # 如果有OpenCV，则设置为ON
-        cmake --build . --config Release --target install
+    - 编译
+
+            cd SeetaFace2
+            mkdir build
+            cd build
+            cmake .. -DCMAKE_INSTALL_PREFIX=install \
+                  -DCMAKE_BUILD_TYPE=MinSizeRel \
+                  -DCMAKE_TOOLCHAIN_FILE=${ANDROID_NDK}/build/cmake/android.toolchain.cmake \
+                  -DANDROID_ABI="armeabi-v7a with NEON" \
+                  -DANDROID_PLATFORM=android-24 \
+                  -DBUILD_EXAMPLE=OFF # 如果有OpenCV，则设置为ON
+            cmake --build . --config MinSizeRel
+
+    - 安装
+
+            cmake --build . --config MinSizeRel --target install/strip
 
   - 主机是 windows
     - windows控制台
-    
+      - 编译
+
             cd SeetaFace2
             mkdir build
             cd build
             cmake .. -DCMAKE_INSTALL_PREFIX=%cd%\install ^
                   -G"Unix Makefiles" ^
-                  -DCMAKE_BUILD_TYPE=Release ^
+                  -DCMAKE_BUILD_TYPE=MinSizeRel ^
                   -DCMAKE_TOOLCHAIN_FILE=%ANDROID_NDK%/build/cmake/android.toolchain.cmake ^
                   -DCMAKE_MAKE_PROGRAM=%ANDROID_NDK%/prebuilt/windows-x86_64/bin/make.exe ^
                   -DANDROID_ABI=arm64-v8a ^
                   -DANDROID_ARM_NEON=ON ^
                    -DANDROID_PLATFORM=android-24 ^
                   -DBUILD_EXAMPLE=OFF : 如果有 OpenCV，则设置为ON
-            cmake --build . --config Release --target install
+            cmake --build . --config MinSizeRel
+
+      - 安装
+
+            cmake --build . --config MinSizeRel --target install/strip
 
     - msys2 或 cygwin
     
@@ -230,14 +241,18 @@ SeetaFace2 是面向于人脸识别商业落地的里程碑版本，其中人脸
             cd build
             cmake .. -DCMAKE_INSTALL_PREFIX=install \
                   -G"Unix Makefiles" \
-                  -DCMAKE_BUILD_TYPE=Release \
+                  -DCMAKE_BUILD_TYPE=MinSizeRel \
                   -DCMAKE_TOOLCHAIN_FILE=${ANDROID_NDK}/build/cmake/android.toolchain.cmake \
                   -DCMAKE_MAKE_PROGRAM=${ANDROID_NDK}/prebuilt/windows-x86_64/bin/make.exe \
                   -DANDROID_ABI=arm64-v8a \
                   -DANDROID_ARM_NEON=ON \
-                   -DANDROID_PLATFORM=android-24 \
+                  -DANDROID_PLATFORM=android-24 \
                   -DBUILD_EXAMPLE=OFF # 如果有 OpenCV，则设置为ON
-            cmake --build . --config Release --target install
+            cmake --build . --config MinSizeRel
+
+       - 安装
+
+            cmake --build . --config MinSizeRel --target install/strip
 
   - 参数说明：https://developer.android.google.cn/ndk/guides/cmake
     + ANDROID_ABI: 可取下列值：
@@ -253,7 +268,11 @@ SeetaFace2 是面向于人脸识别商业落地的里程碑版本，其中人脸
     + ANDROID_PLATFORM: 如需平台名称和对应 Android 系统映像的完整列表，请参阅 [Android NDK 原生 API](https://developer.android.google.cn/ndk/guides/stable_apis.html)
     + ANDROID_ARM_MODE
     + ANDROID_ARM_NEON
-    + ANDROID_STL:指定 CMake 应使用的 STL。 
+    + ANDROID_STL: 指定 CMake 应使用的 STL。默认情况下，CMake 使用 c++_static。 
+      - c++_shared: 使用 libc++ 动态库
+      - c++_static: 使用 libc++ 静态库
+      - none: 没有 C++ 库支持
+      - system: 用系统的 STL 
 
 ### 2.3.4 IOS 平台编译说明
 > 以实体机为例
