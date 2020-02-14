@@ -126,9 +126,9 @@ include(CheckFunctionExists)
 
 set(BUILD_PLATFORM "${CMAKE_SYSTEM_NAME}")
 
-# For debug libs and exes, add "-d" postfix
+# For debug libs and exes, add "_d" postfix
 if(NOT DEFINED CMAKE_DEBUG_POSTFIX)
-  set(CMAKE_DEBUG_POSTFIX "-d")
+  set(CMAKE_DEBUG_POSTFIX "_d")
 endif()
 
 add_subdirectory(SeetaNet)
