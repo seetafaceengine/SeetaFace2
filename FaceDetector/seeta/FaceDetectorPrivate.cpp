@@ -62,7 +62,8 @@ public:
                           int64_t buffer_lenght48, SeetaDevice device, int gpuid );
 
     inline bool IsLegalImage( const SeetaImageData &image ) {
-        return ( image.channels == 3 && image.width > 0 && image.height > 0 &&
+        return ( ( image.channels == 3 || image.channels == 1 )
+                 && image.width > 0 && image.height > 0 &&
                  image.data != nullptr );
     }
 
