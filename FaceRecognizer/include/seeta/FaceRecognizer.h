@@ -17,8 +17,15 @@ namespace seeta
             /**
              * \brief load model
              * \param [in] setting model file
+             * \note if setting contains no model, construct as FaceRecognizer::FaceRecognizer().
              */
             SEETA_API explicit FaceRecognizer( const SeetaModelSetting &setting );
+
+            /**
+             * \brief default construct FR, only CropFace supported to crop 256x256 faces.
+             */
+            SEETA_API explicit FaceRecognizer();
+
             SEETA_API ~FaceRecognizer();
 
             /**

@@ -12,7 +12,13 @@ namespace seeta
     {
 
         FaceRecognizer::FaceRecognizer( const SeetaModelSetting &setting )
-            : m_impl( new FaceRecognizerPrivate( setting.model[0], setting.device, setting.id ) )
+                : m_impl( new FaceRecognizerPrivate( setting.model[0], setting.device, setting.id ) )
+        {
+
+        }
+
+        FaceRecognizer::FaceRecognizer()
+                : m_impl( new FaceRecognizerPrivate() )
         {
 
         }
