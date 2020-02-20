@@ -11,45 +11,44 @@
 
 namespace seeta
 {
+	namespace orz
+	{
+		class Pot
+		{
+		public:
+			using allocator = std::function<std::shared_ptr<void>(size_t)>;
 
-    namespace orz
-    {
+			Pot();
+			Pot(const allocator &ator);
 
-        class Pot {
-        public:
-            using allocator = std::function<std::shared_ptr<void>( size_t )>;
+			void *malloc(size_t _size);
+			void *relloc(size_t _size);
 
-            Pot();
-            Pot( const allocator &ator );
+			template<typename T>
+			T *calloc(size_t _count, bool copy = false)
+			{
+				if (copy)
+					return reinterpret_cast<T *>(this->relloc(sizeof(T) * _count));
+				else
+					return reinterpret_cast<T *>(this->malloc(sizeof(T) * _count));
+			}
 
-            void *malloc( size_t _size );
+			void *data() const;
 
-            void *relloc( size_t _size );
+			size_t capacity() const;
 
-            template<typename T>
-            T *calloc( size_t _count, bool copy = false ) {
-                if( copy )
-                    return reinterpret_cast<T *>( this->relloc( sizeof( T ) * _count ) );
-                else
-                    return reinterpret_cast<T *>( this->malloc( sizeof( T ) * _count ) );
-            }
+			void dispose();
 
-            void *data() const;
+		private:
+			allocator m_allocator;
 
-            size_t capacity() const;
-
-            void dispose();
-
-        private:
-            allocator m_allocator;
-
-        private:
-            size_t m_capacity;
-            std::shared_ptr<void> m_data;
-        };
-    }
-
+		private:
+			size_t m_capacity;
+			std::shared_ptr<void> m_data;
+		};
+	}
 }
+
 using namespace seeta;
 
 #endif //ORZ_MEM_POT_H

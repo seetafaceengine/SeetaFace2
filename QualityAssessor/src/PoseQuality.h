@@ -17,7 +17,6 @@
  * @param pitch
  */
 void evaluate_pose(const SeetaImageData &image, const SeetaRect &face, const SeetaPointF *points,
-        float &roll, float &yaw, float &pitch);
-
+	float &roll, float &yaw, float &pitch);
 
 #endif //SEETAFACE_POSEQUALITY_H

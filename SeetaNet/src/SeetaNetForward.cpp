@@ -4,119 +4,113 @@
 #include "include_inner/SeetaNetMacro.h"
 #include "SeetaNetProto.h"
 
-
 #include "orz/sync/shotgun.h"
 #include "orz/tools/ctxmgr_lite.h"
 
-
 struct SeetaNet_Model
 {
-
 };
 
 struct SeetaNet_Net
 {
-
 };
 
 struct SeetaNet_SharedParam
 {
-
 };
 
-int SeetaReadModelFromBuffer( const char *buffer, size_t buffer_length, struct SeetaNet_Model **pmodel )
+int SeetaReadModelFromBuffer(const char *buffer, size_t buffer_length, struct SeetaNet_Model **pmodel)
 {
-    return SeetaNetReadModelFromBuffer( buffer, buffer_length, ( void ** )pmodel );
-}
-int SeetaReadAllContentFromFile( const char *file_name, char **pbuffer, int64_t *file_length )
-{
-    return ReadAllContentFromFile( file_name, pbuffer, *file_length );
+	return SeetaNetReadModelFromBuffer(buffer, buffer_length, (void **)pmodel);
 }
 
-void SeetaFreeBuffer( char *buffer )
+int SeetaReadAllContentFromFile(const char *file_name, char **pbuffer, int64_t *file_length)
 {
-    delete[] buffer;
+	return ReadAllContentFromFile(file_name, pbuffer, *file_length);
 }
 
-
-int SeetaCreateNet( struct SeetaNet_Model *model, int max_batch_size, enum SeetaNet_DEVICE_TYPE process_device_type, struct SeetaNet_Net **pnet )
+void SeetaFreeBuffer(char *buffer)
 {
-    return CreateNet( model, max_batch_size, process_device_type, ( void ** )pnet );
+	delete[] buffer;
 }
 
-int SeetaCreateNetSharedParam( struct SeetaNet_Model *model, int max_batch_size, enum SeetaNet_DEVICE_TYPE process_device_type, struct SeetaNet_Net **pnet, struct SeetaNet_SharedParam **pparam )
+int SeetaCreateNet(struct SeetaNet_Model *model, int max_batch_size, enum SeetaNet_DEVICE_TYPE process_device_type, struct SeetaNet_Net **pnet)
 {
-    return CreateNetSharedParam( model, max_batch_size, process_device_type, ( void ** )pnet, ( void ** )pparam );
+	return CreateNet(model, max_batch_size, process_device_type, (void **)pnet);
 }
 
-
-void SeetaKeepBlob( struct SeetaNet_Net *net, const char *blob_name )
+int SeetaCreateNetSharedParam(struct SeetaNet_Model *model, int max_batch_size, enum SeetaNet_DEVICE_TYPE process_device_type, struct SeetaNet_Net **pnet, struct SeetaNet_SharedParam **pparam)
 {
-    SeetaNetKeepBlob( net, blob_name );
+	return CreateNetSharedParam(model, max_batch_size, process_device_type, (void **)pnet, (void **)pparam);
 }
 
-void SeetaKeepNoBlob( struct SeetaNet_Net *net )
+void SeetaKeepBlob(struct SeetaNet_Net *net, const char *blob_name)
 {
-    SeetaNetKeepNoBlob( net );
+	SeetaNetKeepBlob(net, blob_name);
 }
 
-void SeetaKeepAllBlob( struct SeetaNet_Net *net )
+void SeetaKeepNoBlob(struct SeetaNet_Net *net)
 {
-    SeetaNetKeepAllBlob( net );
+	SeetaNetKeepNoBlob(net);
 }
 
-int SeetaHasKeptBlob( struct SeetaNet_Net *net, const char *blob_name )
+void SeetaKeepAllBlob(struct SeetaNet_Net *net)
 {
-    return SeetaNetHasKeptBlob( net, blob_name );
+	SeetaNetKeepAllBlob(net);
 }
 
-struct SeetaNet_SharedParam *SeetaGetSharedParam( struct SeetaNet_Net *net )
+int SeetaHasKeptBlob(struct SeetaNet_Net *net, const char *blob_name)
 {
-    return reinterpret_cast<struct SeetaNet_SharedParam *>( GetNetSharedParam( net ) );
+	return SeetaNetHasKeptBlob(net, blob_name);
 }
 
-int SeetaRunNetChar( struct SeetaNet_Net *net, int counts, struct SeetaNet_InputOutputData *pinput_data )
+struct SeetaNet_SharedParam *SeetaGetSharedParam(struct SeetaNet_Net *net)
 {
-    return RunNetChar( net, counts, pinput_data );
+	return reinterpret_cast<struct SeetaNet_SharedParam *>(GetNetSharedParam(net));
 }
 
-int SeetaRunNetFloat( struct SeetaNet_Net *net, int counts, struct SeetaNet_InputOutputData *pinput_data )
+int SeetaRunNetChar(struct SeetaNet_Net *net, int counts, struct SeetaNet_InputOutputData *pinput_data)
 {
-    return RunNetFloat( net, counts, pinput_data );
+	return RunNetChar(net, counts, pinput_data);
 }
 
-int SeetaGetFeatureMap( struct SeetaNet_Net *net, const char *blob_name, struct SeetaNet_InputOutputData *poutput_data )
+int SeetaRunNetFloat(struct SeetaNet_Net *net, int counts, struct SeetaNet_InputOutputData *pinput_data)
 {
-    return SeetaNetGetFeatureMap( blob_name, net, poutput_data );
+	return RunNetFloat(net, counts, pinput_data);
 }
 
-int SeetaGetAllFeatureMap( struct SeetaNet_Net *net, int *number, struct SeetaNet_InputOutputData **poutput_data )
+int SeetaGetFeatureMap(struct SeetaNet_Net *net, const char *blob_name, struct SeetaNet_InputOutputData *poutput_data)
 {
-    return SeetaNetGetAllFeatureMap( net, number, poutput_data );
+	return SeetaNetGetFeatureMap(blob_name, net, poutput_data);
 }
 
-void SeetaFreeAllFeatureMap( struct SeetaNet_Net *net, const struct SeetaNet_InputOutputData *poutput_data )
+int SeetaGetAllFeatureMap(struct SeetaNet_Net *net, int *number, struct SeetaNet_InputOutputData **poutput_data)
 {
-    SeetaNetFreeAllFeatureMap( net, poutput_data );
+	return SeetaNetGetAllFeatureMap(net, number, poutput_data);
+}
+
+void SeetaFreeAllFeatureMap(struct SeetaNet_Net *net, const struct SeetaNet_InputOutputData *poutput_data)
+{
+	SeetaNetFreeAllFeatureMap(net, poutput_data);
 }
 
 void SeetaFinalizeLibrary()
 {
 }
 
-void SeetaReleaseNet( struct SeetaNet_Net *net )
+void SeetaReleaseNet(struct SeetaNet_Net *net)
 {
-    SeetaNetReleaseNet( ( void ** )&net );
+	SeetaNetReleaseNet((void **)&net);
 }
 
-void SeetaReleaseModel( struct SeetaNet_Model *model )
+void SeetaReleaseModel(struct SeetaNet_Model *model)
 {
-    SeetaNetReleaseModel( ( void ** )&model );
+	SeetaNetReleaseModel((void **)&model);
 }
 
 enum SeetaNet_DEVICE_TYPE SeetaDefaultDevice()
 {
-    return SEETANET_CPU_DEVICE;
+	return SEETANET_CPU_DEVICE;
 }
 
 #define VER_HEAD(x) #x "."
@@ -130,13 +124,11 @@ enum SeetaNet_DEVICE_TYPE SeetaDefaultDevice()
 
 const char *SeetaLibraryVersionString()
 {
-    return SEETANET_VERSION;
+	return SEETANET_VERSION;
 }
 
-
-
-int SeetaModelResetInput( struct SeetaNet_Model *model, int width, int height )
+int SeetaModelResetInput(struct SeetaNet_Model *model, int width, int height)
 {
-    return SeetaNetModelResetInput( model, width, height );
+	return SeetaNetModelResetInput(model, width, height);
 }
 

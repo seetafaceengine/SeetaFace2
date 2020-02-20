@@ -9,5 +9,4 @@
 
 float evaluate_clarity(const SeetaImageData &image, const SeetaRect &info);
 
-
 #endif //SEETAFACE_CLARITYQUALITY_H

@@ -9,14 +9,12 @@
 
 namespace seeta
 {
-
     namespace orz
     {
-
-        class Cartridge {
+        class Cartridge 
+		{
         public:
             Cartridge();
-
             ~Cartridge();
 
             using bullet_type = std::function<void( int )>;
@@ -31,7 +29,6 @@ namespace seeta
             void fire( int signet, const bullet_type &bullet, const shell_type &shell = nullptr );
 
             bool busy();
-
             void join();
 
         private:
@@ -49,12 +46,10 @@ namespace seeta
             shell_type shell = nullptr;        ///< side function call after `bullet` called
 
             std::thread powder;                 ///< working thread
-
         };
-
     }
-
 }
+
 using namespace seeta;
 
 #endif // ORZ_SYNC_BULLET_H

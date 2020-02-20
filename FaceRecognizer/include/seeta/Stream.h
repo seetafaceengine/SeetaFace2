@@ -6,193 +6,238 @@
 #include <cstdio>
 
 #ifndef __SEETA_NOEXCEPT
-    #if __cplusplus >= 201103L
-        #define __SEETA_NOEXCEPT noexcept
-    #else
-        #define __SEETA_NOEXCEPT
-    #endif
+#if __cplusplus >= 201103L
+#define __SEETA_NOEXCEPT noexcept
+#else
+#define __SEETA_NOEXCEPT
+#endif
 #endif
 
 namespace seeta
 {
+	class FileNotAccess : public std::exception
+	{
+	public:
+		using self = FileNotAccess;
+		using supper = std::exception;
 
-    class FileNotAccess : public std::exception {
-    public:
-        using self = FileNotAccess;
-        using supper = std::exception;
+		FileNotAccess(const std::string &filename)
+			: m_filename(filename)
+			, m_msg("Can not access \"" + filename + "\"")
+		{
+		}
 
-        FileNotAccess( const std::string &filename )
-            : m_filename( filename )
-            , m_msg( "Can not access \"" + filename + "\"" ) {
-        }
-        const char *what() const __SEETA_NOEXCEPT override {
-            return m_msg.c_str();
-        }
-        const std::string &filename() const {
-            return m_filename;
-        }
-    private:
-        std::string m_filename;
-        std::string m_msg;
-    };
+		const char *what() const __SEETA_NOEXCEPT override
+		{
+			return m_msg.c_str();
+		}
 
-    class StreamWriter {
-    public:
-        using self = StreamWriter;
-        virtual ~StreamWriter() = default;
-        virtual size_t write( const char *data, size_t length ) = 0;
-    };
+		const std::string &filename() const
+		{
+			return m_filename;
+		}
 
-    class StreamReader {
-    public:
-        using self = StreamReader;
-        virtual ~StreamReader() = default;
-        virtual size_t read( char *data, size_t length ) = 0;
-    };
+	private:
+		std::string m_filename;
+		std::string m_msg;
+	};
 
-    class CStreamWriter : public StreamWriter {
-    public:
-        using self = CStreamWriter;
-        using supper = StreamWriter;
+	class StreamWriter
+	{
+	public:
+		using self = StreamWriter;
+		virtual ~StreamWriter() = default;
+		virtual size_t write(const char *data, size_t length) = 0;
+	};
 
-        CStreamWriter( SeetaStreamWrite *writer, void *obj )
-            : m_writer( writer ), m_obj( obj ) {
-        }
+	class StreamReader
+	{
+	public:
+		using self = StreamReader;
+		virtual ~StreamReader() = default;
+		virtual size_t read(char *data, size_t length) = 0;
+	};
 
-        size_t write( const char *data, size_t length ) override {
-            if( !m_writer ) return 0;
-            return m_writer( m_obj, data, length );
-        }
+	class CStreamWriter : public StreamWriter
+	{
+	public:
+		using self = CStreamWriter;
+		using supper = StreamWriter;
 
-    private:
-        SeetaStreamWrite *m_writer = nullptr;
-        void *m_obj = nullptr;
-    };
+		CStreamWriter(SeetaStreamWrite *writer, void *obj) : m_writer(writer), m_obj(obj)
+		{
+		}
 
-    class CStreamReader : public StreamReader {
-    public:
-        using self = CStreamReader;
-        using supper = StreamReader;
+		size_t write(const char *data, size_t length) override
+		{
+			if (!m_writer)
+				return 0;
 
-        CStreamReader( SeetaStreamRead *reader, void *obj )
-            : m_reader( reader ), m_obj( obj ) {
-        }
+			return m_writer(m_obj, data, length);
+		}
 
-        size_t read( char *data, size_t length ) override {
-            if( !m_reader ) return 0;
-            return m_reader( m_obj, data, length );
-        }
-    private:
-        SeetaStreamRead *m_reader = nullptr;
-        void *m_obj = nullptr;
-    };
+	private:
+		SeetaStreamWrite *m_writer = nullptr;
+		void *m_obj = nullptr;
+	};
 
-    class FileStream : public StreamWriter, public StreamReader {
-    public:
-        using self = FileStream;
+	class CStreamReader : public StreamReader
+	{
+	public:
+		using self = CStreamReader;
+		using supper = StreamReader;
 
-        enum Mode
-        {
-            Input   = 0x1,
-            Output  = 0x1 << 1,
-            Binary  = 0x1 << 2,
-        };
+		CStreamReader(SeetaStreamRead *reader, void *obj) : m_reader(reader), m_obj(obj)
+		{
+		}
 
-        FileStream();
-        explicit FileStream( const std::string &path, int mode = Output ) {
-            open( path, mode );
-        }
+		size_t read(char *data, size_t length) override
+		{
+			if (!m_reader)
+				return 0;
 
-        FileStream( FileStream &&other ) {
-            std::swap( iofile, other.iofile );
-        }
+			return m_reader(m_obj, data, length);
+		}
 
-        const FileStream &operator=( FileStream &&other ) {
-            std::swap( iofile, other.iofile );
-            return *this;
-        }
+	private:
+		SeetaStreamRead *m_reader = nullptr;
+		void *m_obj = nullptr;
+	};
 
-        virtual ~FileStream() {
-            close();
-        }
+	class FileStream : public StreamWriter, public StreamReader
+	{
+	public:
+		using self = FileStream;
 
-        bool open( const std::string &path, int mode = Output ) {
-            close();
-            std::string mode_str;
-            if( (mode & Input) && (mode & Output) ) {
-                mode_str += "a+";
-            }
-            else
-                if( mode & Input ) {
-                    mode_str += "r";
-                }
-                else {
-                    mode_str += "w";
-                }
-            if( mode & Binary ) mode_str += "b";
-            #if _MSC_VER >= 1600
-            fopen_s( &iofile, path.c_str(), mode_str.c_str() );
-            #else
-            iofile = std::fopen( path.c_str(), mode_str.c_str() );
-            #endif
-            return iofile != nullptr;
-        }
+		enum Mode
+		{
+			Input = 0x1,
+			Output = 0x1 << 1,
+			Binary = 0x1 << 2,
+		};
 
-        void close() {
-            if( iofile != nullptr ) std::fclose( iofile );
-        }
+		FileStream();
 
-        bool is_opened() const {
-            return iofile != nullptr;
-        }
+		explicit FileStream(const std::string &path, int mode = Output)
+		{
+			open(path, mode);
+		}
 
-        size_t write( const char *data, size_t length ) override {
-            if( iofile == nullptr ) return 0;
-            auto result = std::fwrite( data, 1, length, iofile );
-            return size_t( result );
-        }
+		FileStream(FileStream &&other)
+		{
+			std::swap(iofile, other.iofile);
+		}
 
-        size_t read( char *data, size_t length ) override {
-            if( iofile == nullptr ) return 0;
-            auto result = std::fread( data, 1, length, iofile );
-            return size_t( result );
-        }
+		const FileStream &operator=(FileStream &&other)
+		{
+			std::swap(iofile, other.iofile);
+			return *this;
+		}
 
-    private:
-        FileStream( const FileStream &other ) = delete;
-        const FileStream &operator=( const FileStream &other ) = delete;
+		virtual ~FileStream()
+		{
+			close();
+		}
 
-        FILE *iofile = nullptr;
-    };
+		bool open(const std::string &path, int mode = Output)
+		{
+			close();
+			std::string mode_str;
 
-    class FileWriter : public FileStream {
-    public:
-        using self = FileWriter;
-        using supper = FileStream;
+			if ((mode & Input) && (mode & Output))
+			{
+				mode_str += "a+";
+			}
+			else
+				if (mode & Input)
+				{
+					mode_str += "r";
+				}
+				else
+				{
+					mode_str += "w";
+				}
 
-        FileWriter() {}
-        explicit FileWriter( const std::string &path, int mode = Output )
-            : FileStream( path, ( mode & ( ~Input ) ) | Output ) {
-        }
+			if (mode & Binary)
+				mode_str += "b";
 
-        bool open( const std::string &path, int mode = Output ) {
-            return supper::open( path, ( mode & ( ~Input ) ) | Output );
-        }
-    };
-    class FileReader : public FileStream {
-    public:
-        using self = FileReader;
-        using supper = FileStream;
+#if _MSC_VER >= 1600
+			fopen_s(&iofile, path.c_str(), mode_str.c_str());
+#else
+			iofile = std::fopen(path.c_str(), mode_str.c_str());
+#endif
 
-        FileReader() {}
-        explicit FileReader( const std::string &path, int mode = Input )
-            : FileStream( path, ( mode & ( ~Output ) ) | Input ) {
-        }
+			return iofile != nullptr;
+		}
 
-        bool open( const std::string &path, int mode = Input ) {
-            return supper::open( path, ( mode & ( ~Output ) ) | Input );
-        }
-    };
+		void close()
+		{
+			if (iofile != nullptr) std::fclose(iofile);
+		}
+
+		bool is_opened() const
+		{
+			return iofile != nullptr;
+		}
+
+		size_t write(const char *data, size_t length) override
+		{
+			if (iofile == nullptr)
+				return 0;
+
+			auto result = std::fwrite(data, 1, length, iofile);
+			return size_t(result);
+		}
+
+		size_t read(char *data, size_t length) override
+		{
+			if (iofile == nullptr)
+				return 0;
+
+			auto result = std::fread(data, 1, length, iofile);
+			return size_t(result);
+		}
+
+	private:
+		FileStream(const FileStream &other) = delete;
+		const FileStream &operator=(const FileStream &other) = delete;
+
+		FILE *iofile = nullptr;
+	};
+
+	class FileWriter : public FileStream
+	{
+	public:
+		using self = FileWriter;
+		using supper = FileStream;
+
+		FileWriter() {}
+		explicit FileWriter(const std::string &path, int mode = Output) : FileStream(path, (mode & (~Input)) | Output)
+		{
+		}
+
+		bool open(const std::string &path, int mode = Output)
+		{
+			return supper::open(path, (mode & (~Input)) | Output);
+		}
+	};
+
+	class FileReader : public FileStream
+	{
+	public:
+		using self = FileReader;
+		using supper = FileStream;
+
+		FileReader() {}
+
+		explicit FileReader(const std::string &path, int mode = Input) : FileStream(path, (mode & (~Output)) | Input) {
+		}
+
+		bool open(const std::string &path, int mode = Input)
+		{
+			return supper::open(path, (mode & (~Output)) | Input);
+		}
+	};
 }
 
 #endif

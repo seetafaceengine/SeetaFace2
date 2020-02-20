@@ -11,7 +11,8 @@
 #include "orz/tools/box.h"
 
 template <class T>
-class SeetaNetMemoryDataLayerCPU : public SeetaNetBaseLayer<T> {
+class SeetaNetMemoryDataLayerCPU : public SeetaNetBaseLayer<T> 
+{
 public:
     SeetaNetMemoryDataLayerCPU() {};
     ~SeetaNetMemoryDataLayerCPU() {};
@@ -22,19 +23,20 @@ public:
     int CroppingImageNoMean( T *src, T *dest, T scale, int channel, int image_height, int image_width, int dest_height, int dest_width );
     int CroppingImageWithMeanValue( T *src, T *mean, T *dest, T scale, int channel, int image_height, int image_width, int dest_height, int dest_width );
     int ChannelSwap( T *data, int number, int channels, int height, int width );
-public:
 
+public:
     T data_scale;
     int32_t m_mean_type;
     int m_dest_height;
     int m_dest_width;
     int crop_height;
     int crop_width;
+
     SeetaNetBlobCpu<T> m_mean_blob;
 
     std::vector<T> m_mean_value;
-
     std::vector<int> m_channel_swaps;
+
     size_t m_swap_space_size;
     std::shared_ptr<T> m_swap_space;
 
@@ -57,22 +59,25 @@ int SeetaNetMemoryDataLayerCPU<T>::CroppingImageWithMean( T *src, T *mean, T *de
     int src_single_image_element = image_height * image_width;
 
     auto gun = orz::ctx::lite::ptr<orz::Shotgun>();
-    if( gun == nullptr || gun->size() <= 1 )
+
+    if ( gun == nullptr || gun->size() <= 1 )
     {
-        for( int c = 0; c < channel; c++ )
+        for ( int c = 0; c < channel; c++ )
         {
             T *src_start = src + c * src_single_image_element + crop_height * image_width + crop_width;
             T *mean_start = mean + c * src_single_image_element + crop_height * image_width + crop_width;
             T *dest_start = dest + c * dest_single_image_element;
-            for( int i = 0; i < dest_height; i++ )
+
+            for ( int i = 0; i < dest_height; i++ )
             {
-                for( int j = 0; j < dest_width; j++ )
+                for ( int j = 0; j < dest_width; j++ )
                 {
                     T tmp_src_value = src_start[j];
                     *dest_start = tmp_src_value - mean_start[j];
                     *dest_start *= scale;
                     dest_start++;
                 }
+
                 src_start += image_width;
                 mean_start += image_width;
             }
@@ -81,30 +86,34 @@ int SeetaNetMemoryDataLayerCPU<T>::CroppingImageWithMean( T *src, T *mean, T *de
     else
     {
         auto bins = orz::lsplit_bins( 0, channel, gun->size() );
-        for( auto &bin : bins )
+
+        for ( auto &bin : bins )
         {
             gun->fire( [ &, bin]( int )
             {
-                for( size_t c = bin.first; c < bin.second; c++ )
+                for ( size_t c = bin.first; c < bin.second; c++ )
                 {
                     T *src_start = src + c * src_single_image_element + crop_height * image_width + crop_width;
                     T *mean_start = mean + c * src_single_image_element + crop_height * image_width + crop_width;
                     T *dest_start = dest + c * dest_single_image_element;
-                    for( int i = 0; i < dest_height; i++ )
+
+                    for ( int i = 0; i < dest_height; i++ )
                     {
-                        for( int j = 0; j < dest_width; j++ )
+                        for ( int j = 0; j < dest_width; j++ )
                         {
                             T tmp_src_value = src_start[j];
                             *dest_start = tmp_src_value - mean_start[j];
                             *dest_start *= scale;
                             dest_start++;
                         }
+
                         src_start += image_width;
                         mean_start += image_width;
                     }
                 }
             } );
         }
+
         gun->join();
     }
 
@@ -119,52 +128,57 @@ int SeetaNetMemoryDataLayerCPU<T>::CroppingImageWithMeanValue( T *src, T *mean, 
     int src_single_image_element = image_height * image_width;
 
     auto gun = orz::ctx::lite::ptr<orz::Shotgun>();
-    if( gun == nullptr || gun->size() <= 1 )
+
+    if ( gun == nullptr || gun->size() <= 1 )
     {
-        for( int c = 0; c < channel; c++ )
+        for ( int c = 0; c < channel; c++ )
         {
             T *src_start = src + c * src_single_image_element + crop_height * image_width + crop_width;
             T *dest_start = dest + c * dest_single_image_element;
-            for( int i = 0; i < dest_height; i++ )
+
+            for ( int i = 0; i < dest_height; i++ )
             {
-                for( int j = 0; j < dest_width; j++ )
+                for ( int j = 0; j < dest_width; j++ )
                 {
                     T tmp_src_value = src_start[j];
                     *dest_start = tmp_src_value - mean[c];
                     *dest_start *= scale;
                     dest_start++;
                 }
-                src_start += image_width;
 
+                src_start += image_width;
             }
         }
     }
     else
     {
         auto bins = orz::lsplit_bins( 0, channel, gun->size() );
-        for( auto &bin : bins )
+
+        for ( auto &bin : bins )
         {
             gun->fire( [ &, bin]( int )
             {
-                for( size_t c = bin.first; c < bin.second; c++ )
+                for ( size_t c = bin.first; c < bin.second; c++ )
                 {
                     T *src_start = src + c * src_single_image_element + crop_height * image_width + crop_width;
                     T *dest_start = dest + c * dest_single_image_element;
-                    for( int i = 0; i < dest_height; i++ )
+
+                    for ( int i = 0; i < dest_height; i++ )
                     {
-                        for( int j = 0; j < dest_width; j++ )
+                        for ( int j = 0; j < dest_width; j++ )
                         {
                             T tmp_src_value = src_start[j];
                             *dest_start = tmp_src_value - mean[c];
                             *dest_start *= scale;
                             dest_start++;
                         }
-                        src_start += image_width;
 
+                        src_start += image_width;
                     }
                 }
             } );
         }
+
         gun->join();
     }
 
@@ -184,11 +198,12 @@ static void CopyData( T *dst, const T *src, size_t _count )
 template <class T>
 int SeetaNetMemoryDataLayerCPU<T>::ChannelSwap( T *data, int number, int channels, int height, int width )
 {
-    if( m_channel_swaps.size() != channels ) return 1;
+    if ( m_channel_swaps.size() != channels ) 
+		return 1;
 
     size_t data_size = number * channels * height * width;
 
-    if( m_swap_space_size < data_size )
+    if ( m_swap_space_size < data_size )
     {
         m_swap_space_size = data_size;
         m_swap_space.reset( new T[m_swap_space_size], std::default_delete<T[]>() );
@@ -197,13 +212,13 @@ int SeetaNetMemoryDataLayerCPU<T>::ChannelSwap( T *data, int number, int channel
     size_t block_size = height * width;
     size_t step = block_size * channels;
 
-
     auto gun = orz::ctx::lite::ptr<orz::Shotgun>();
-    if( gun == nullptr || gun->size() <= 1 )
+
+    if ( gun == nullptr || gun->size() <= 1 )
     {
-        for( int n = 0; n < number; ++n )
+        for ( int n = 0; n < number; ++n )
         {
-            for( int c = 0; c < channels; ++c )
+            for ( int c = 0; c < channels; ++c )
             {
                 const T *src = &data[n * step + m_channel_swaps[c] * block_size];
                 T *dst = &m_swap_space.get()[n * step + c * block_size];
@@ -213,14 +228,15 @@ int SeetaNetMemoryDataLayerCPU<T>::ChannelSwap( T *data, int number, int channel
     }
     else
     {
-        for( int n = 0; n < number; ++n )
+        for ( int n = 0; n < number; ++n )
         {
             auto bins = orz::lsplit_bins( 0, channels, gun->size() );
-            for( auto &bin : bins )
+
+            for ( auto &bin : bins )
             {
                 gun->fire( [ &, n, bin]( int )
                 {
-                    for( size_t c = bin.first; c < bin.second; ++c )
+                    for ( size_t c = bin.first; c < bin.second; ++c )
                     {
                         const T *src = &data[n * step + m_channel_swaps[c] * block_size];
                         T *dst = &m_swap_space.get()[n * step + c * block_size];
@@ -229,6 +245,7 @@ int SeetaNetMemoryDataLayerCPU<T>::ChannelSwap( T *data, int number, int channel
                 } );
             }
         }
+
         gun->join();
     }
 
@@ -244,19 +261,22 @@ int SeetaNetMemoryDataLayerCPU<T>::CroppingImageNoMean( T *src, T *dest, T scale
     int src_single_image_element = image_height * image_width;
 
     auto gun = orz::ctx::lite::ptr<orz::Shotgun>();
-    if( gun == nullptr || gun->size() <= 1 )
+
+    if ( gun == nullptr || gun->size() <= 1 )
     {
-        for( int c = 0; c < channel; c++ )
+        for ( int c = 0; c < channel; c++ )
         {
             T *src_start = src + c * src_single_image_element + crop_height * image_width + crop_width;
             T *dest_start = dest + c * dest_single_image_element;
-            for( int i = 0; i < dest_height; i++ )
+
+            for ( int i = 0; i < dest_height; i++ )
             {
-                for( int j = 0; j < dest_width; j++ )
+                for ( int j = 0; j < dest_width; j++ )
                 {
                     T tmp_src_value = src_start[j];
                     dest_start[j] = tmp_src_value * scale;
                 }
+
                 src_start += image_width;
                 dest_start += dest_width;
             }
@@ -265,27 +285,31 @@ int SeetaNetMemoryDataLayerCPU<T>::CroppingImageNoMean( T *src, T *dest, T scale
     else
     {
         auto bins = orz::lsplit_bins( 0, channel, gun->size() );
-        for( auto &bin : bins )
+
+        for ( auto &bin : bins )
         {
             gun->fire( [ &, bin]( int )
             {
-                for( size_t c = bin.first; c < bin.second; c++ )
+                for ( size_t c = bin.first; c < bin.second; c++ )
                 {
                     T *src_start = src + c * src_single_image_element + crop_height * image_width + crop_width;
                     T *dest_start = dest + c * dest_single_image_element;
-                    for( int i = 0; i < dest_height; i++ )
+
+                    for ( int i = 0; i < dest_height; i++ )
                     {
-                        for( int j = 0; j < dest_width; j++ )
+                        for ( int j = 0; j < dest_width; j++ )
                         {
                             T tmp_src_value = src_start[j];
                             dest_start[j] = tmp_src_value * scale;
                         }
+
                         src_start += image_width;
                         dest_start += dest_width;
                     }
                 }
             } );
         }
+
         gun->join();
     }
 
@@ -297,14 +321,19 @@ void prewhiten( T *data, size_t len )
 {
     double mean = 0;
     double std_dev = 0;
+
     T *at = nullptr;
-
     at = data;
-    for( size_t i = 0; i < len; ++i, ++at ) mean += *at;
+
+    for ( size_t i = 0; i < len; ++i, ++at ) 
+		mean += *at;
+
     mean /= len;
-
     at = data;
-    for( size_t i = 0; i < len; ++i, ++at ) std_dev += ( *at - mean ) * ( *at - mean );
+
+    for ( size_t i = 0; i < len; ++i, ++at ) 
+		std_dev += ( *at - mean ) * ( *at - mean );
+
     std_dev = std::sqrt( std_dev / len );
     std_dev = std::max<double>( std_dev, 1 / std::sqrt( len ) );
     double std_dev_rec = 1 / std_dev;
@@ -313,13 +342,13 @@ void prewhiten( T *data, size_t len )
 	auto fstd_dev = float(std_dev_rec);
 
     at = data;
-    for( size_t i = 0; i < len; ++i, ++at )
+
+    for ( size_t i = 0; i < len; ++i, ++at )
     {
         *at -= fmean;
         *at *= fstd_dev;
     }
 }
-
 
 template <class T>
 int SeetaNetMemoryDataLayerCPU<T>::Process( std::vector<SeetaNetFeatureMap<T>*> input_data_map, std::vector<SeetaNetFeatureMap<T>*> &output_data_map )
@@ -334,7 +363,8 @@ int SeetaNetMemoryDataLayerCPU<T>::Process( std::vector<SeetaNetFeatureMap<T>*> 
 
     int tmp_dest_height = 0;
     int tmp_dest_width = 0;
-    if( edge_height < 0 || edge_width < 0 )
+
+    if ( edge_height < 0 || edge_width < 0 )
     {
         crop_height = 0;
         crop_width = 0;
@@ -362,22 +392,22 @@ int SeetaNetMemoryDataLayerCPU<T>::Process( std::vector<SeetaNetFeatureMap<T>*> 
 
     int n_single_image_size_src = input_data_map[0]->data_shape[1] * input_data_map[0]->data_shape[2] * input_data_map[0]->data_shape[3];
     int n_single_image_size_dest = output_data_map[0]->data_shape[1] * output_data_map[0]->data_shape[2] * output_data_map[0]->data_shape[3];
-    if( SeetaNetMeanFile == m_mean_type )
+
+    if ( SeetaNetMeanFile == m_mean_type )
     {
-        for( int in_number = 0; in_number < input_data_map[0]->data_shape[0]; in_number++ )
+        for ( int in_number = 0; in_number < input_data_map[0]->data_shape[0]; in_number++ )
         {
             T *src = src_base + in_number * n_single_image_size_src;
             T *dest = dest_base + in_number * n_single_image_size_dest;
-
             T *mean_point = m_mean_blob.dataMemoryPtr();
 
             CroppingImageWithMean( src, mean_point, dest, data_scale, channel, image_height, image_width, tmp_dest_height, tmp_dest_width );
         }
     }
     else
-        if( SeetaNetNoMean == m_mean_type )
+        if ( SeetaNetNoMean == m_mean_type )
         {
-            for( int in_number = 0; in_number < input_data_map[0]->data_shape[0]; in_number++ )
+            for ( int in_number = 0; in_number < input_data_map[0]->data_shape[0]; in_number++ )
             {
                 T *src = src_base + in_number * n_single_image_size_src;
                 T *dest = dest_base + in_number * n_single_image_size_dest;
@@ -386,9 +416,9 @@ int SeetaNetMemoryDataLayerCPU<T>::Process( std::vector<SeetaNetFeatureMap<T>*> 
             }
         }
         else
-            if( SeetaNetMeanValue == m_mean_type )
+            if ( SeetaNetMeanValue == m_mean_type )
             {
-                for( int in_number = 0; in_number < input_data_map[0]->data_shape[0]; in_number++ )
+                for ( int in_number = 0; in_number < input_data_map[0]->data_shape[0]; in_number++ )
                 {
                     T *src = src_base + in_number * n_single_image_size_src;
                     T *dest = dest_base + in_number * n_single_image_size_dest;
@@ -398,23 +428,21 @@ int SeetaNetMemoryDataLayerCPU<T>::Process( std::vector<SeetaNetFeatureMap<T>*> 
             }
             else
             {
-
             }
 
-    if( m_channel_swaps.size() )
+    if ( m_channel_swaps.size() )
     {
         ChannelSwap( dest_base, input_data_map[0]->data_shape[0], channel, tmp_dest_height, tmp_dest_width );
     }
 
     output_data_map[0]->dwStorageType = DATA_CPU_WIDTH;
-
     output_data_map[0]->data_shape[0] = input_data_map[0]->data_shape[0];
     output_data_map[0]->data_shape[1] = input_data_map[0]->data_shape[1];
     output_data_map[0]->data_shape[2] = tmp_dest_height;
     output_data_map[0]->data_shape[3] = tmp_dest_width;
 
     // do prewhiten
-    if( this->m_prewhiten )
+    if ( this->m_prewhiten )
     {
         int img_size = output_data_map[0]->data_shape[1] *
                        output_data_map[0]->data_shape[2] *
@@ -423,7 +451,7 @@ int SeetaNetMemoryDataLayerCPU<T>::Process( std::vector<SeetaNetFeatureMap<T>*> 
 
         T *img_data = output_data_map[0]->m_cpu.dataMemoryPtr();
 
-        for( int i = 0; i < img_num; ++i, img_data += img_size )
+        for ( int i = 0; i < img_num; ++i, img_data += img_size )
         {
             prewhiten( img_data, img_size );
         }
@@ -436,12 +464,14 @@ void memset( void *dst, size_t dst_size, const void *src, size_t src_size )
 {
     std::memcpy( dst, src, std::min( dst_size, src_size ) );
     size_t copy_anchor = src_size;
-    while( copy_anchor <= dst_size >> 1 )
+
+    while ( copy_anchor <= dst_size >> 1 )
     {
         std::memcpy( reinterpret_cast<char *>( dst ) + copy_anchor, dst, copy_anchor );
         copy_anchor <<= 1;
     }
-    if( dst_size > copy_anchor )
+
+    if ( dst_size > copy_anchor )
     {
         std::memcpy( reinterpret_cast<char *>( dst ) + copy_anchor, dst, dst_size - copy_anchor );
     }
@@ -450,7 +480,6 @@ void memset( void *dst, size_t dst_size, const void *src, size_t src_size )
 template <class T>
 int SeetaNetMemoryDataLayerCPU<T>::Init( seeta::SeetaNet_LayerParameter &inputparam, SeetaNetResource<T> *pNetResource )
 {
-
     seeta::SeetaNet_MemoryDataParameterProcess *msg = ( seeta::SeetaNet_MemoryDataParameterProcess * )inputparam.msg.get();
     this->bottom_data_size.resize( 1 );
     this->bottom_data_size[0].data_dim.resize( 4 );
@@ -469,19 +498,19 @@ int SeetaNetMemoryDataLayerCPU<T>::Init( seeta::SeetaNet_LayerParameter &inputpa
 
 
 
-    if( msg->has_crop_size_height() && msg->has_crop_size_width() )
+    if ( msg->has_crop_size_height() && msg->has_crop_size_width() )
     {
         m_dest_height = msg->crop_size_height;
         m_dest_width = msg->crop_size_width;
     }
     else
-        if( msg->has_crop_size_height() )
+        if ( msg->has_crop_size_height() )
         {
             m_dest_height = msg->crop_size_height;
             m_dest_width = this->bottom_data_size[0].data_dim[3];
         }
         else
-            if( msg->has_crop_size_width() )
+            if ( msg->has_crop_size_width() )
             {
                 m_dest_width = msg->crop_size_width;
                 m_dest_height = this->bottom_data_size[0].data_dim[2];
@@ -503,8 +532,7 @@ int SeetaNetMemoryDataLayerCPU<T>::Init( seeta::SeetaNet_LayerParameter &inputpa
 
     data_scale = msg->scale;
 
-
-    if( msg->mean_file.data.size() > 0 )
+    if ( msg->mean_file.data.size() > 0 )
     {
         m_mean_type = SeetaNetMeanFile;
         std::vector<int> index;
@@ -514,13 +542,16 @@ int SeetaNetMemoryDataLayerCPU<T>::Init( seeta::SeetaNet_LayerParameter &inputpa
         index[2] = 0;
         index[3] = 0;
         int index_input = 0;
-        for( int i = 0; i < this->bottom_data_size[0].data_dim[1]; i++ )
+
+        for ( int i = 0; i < this->bottom_data_size[0].data_dim[1]; i++ )
         {
             index[1] = i;
-            for( int j = 0; j < this->bottom_data_size[0].data_dim[2]; j++ )
+
+            for ( int j = 0; j < this->bottom_data_size[0].data_dim[2]; j++ )
             {
                 index[2] = j;
-                for( int k = 0; k < this->bottom_data_size[0].data_dim[3]; k++ )
+
+                for ( int k = 0; k < this->bottom_data_size[0].data_dim[3]; k++ )
                 {
                     index[3] = k;
                     index_input++;
@@ -530,7 +561,7 @@ int SeetaNetMemoryDataLayerCPU<T>::Init( seeta::SeetaNet_LayerParameter &inputpa
         }
     }
     else
-        if( msg->mean_value.size() > 0 )
+        if ( msg->mean_value.size() > 0 )
         {
             m_mean_type = SeetaNetMeanValue;
             std::vector<int> index;
@@ -539,15 +570,19 @@ int SeetaNetMemoryDataLayerCPU<T>::Init( seeta::SeetaNet_LayerParameter &inputpa
             index[1] = 0;
             index[2] = 0;
             index[3] = 0;
+
             auto block_size = this->bottom_data_size[0].data_dim[2] * this->bottom_data_size[0].data_dim[3];
-            for( int i = 0; i < this->bottom_data_size[0].data_dim[1]; i++ )
+
+            for ( int i = 0; i < this->bottom_data_size[0].data_dim[1]; i++ )
             {
                 index[1] = i;
                 float mean = msg->mean_value[i];
                 memset( &m_mean_blob.data_at( index ), block_size * sizeof( float ), &mean, sizeof( float ) );
             }
+
             m_mean_value.resize( this->bottom_data_size[0].data_dim[1] );
-            for( int i = 0; i < this->bottom_data_size[0].data_dim[1]; i++ )
+
+            for ( int i = 0; i < this->bottom_data_size[0].data_dim[1]; i++ )
             {
                 m_mean_value[i] = msg->mean_value[i];
             }
@@ -559,18 +594,24 @@ int SeetaNetMemoryDataLayerCPU<T>::Init( seeta::SeetaNet_LayerParameter &inputpa
 
     // for channel_swaps
     m_swap_space_size = 0;
-    if( msg->channel_swaps.size() == this->bottom_data_size[0].data_dim[1] )
+
+    if ( msg->channel_swaps.size() == this->bottom_data_size[0].data_dim[1] )
     {
         m_channel_swaps.reserve( msg->channel_swaps.size() );
         bool swapped = false;
-        for( int i = 0; i < msg->channel_swaps.size(); ++i )
+
+        for ( int i = 0; i < msg->channel_swaps.size(); ++i )
         {
             m_channel_swaps.emplace_back( msg->channel_swaps[i] );
-            if( msg->channel_swaps[i] != i ) swapped = true;
-            if( msg->channel_swaps[i] >= uint32_t(this->bottom_data_size[0].data_dim[1]) ||
-                    msg->channel_swaps[i] < 0 ) swapped = false;
+
+            if ( msg->channel_swaps[i] != i ) 
+				swapped = true;
+
+            if ( msg->channel_swaps[i] >= uint32_t(this->bottom_data_size[0].data_dim[1]) || msg->channel_swaps[i] < 0 )
+				swapped = false;
         }
-        if( swapped )
+
+        if ( swapped )
         {
             m_swap_space_size = pNetResource->max_batch_size * this->bottom_data_size[0].data_dim[1] * m_dest_height * m_dest_width;
             m_swap_space.reset( new T[m_swap_space_size], std::default_delete<T[]>() );
@@ -583,7 +624,7 @@ int SeetaNetMemoryDataLayerCPU<T>::Init( seeta::SeetaNet_LayerParameter &inputpa
         }
     }
     else
-        if( msg->channel_swaps.size() )
+        if ( msg->channel_swaps.size() )
         {
             std::cerr << "Error: ImageData layer: " << "channel_swaps size must match input channels, got "
                       << msg->channel_swaps.size() << "vs. "
@@ -591,10 +632,12 @@ int SeetaNetMemoryDataLayerCPU<T>::Init( seeta::SeetaNet_LayerParameter &inputpa
         }
 
     this->top_data_size.resize( 2 );
-    for( int i = 0; i < 2; i++ )
+
+    for ( int i = 0; i < 2; i++ )
     {
         this->top_data_size[i].data_dim.resize( 4 );
     }
+
     this->top_data_size[0].data_dim[0] = pNetResource->max_batch_size;
     this->top_data_size[0].data_dim[1] = this->bottom_data_size[0].data_dim[1];
     this->top_data_size[0].data_dim[2] = m_dest_height;
@@ -609,8 +652,5 @@ int SeetaNetMemoryDataLayerCPU<T>::Init( seeta::SeetaNet_LayerParameter &inputpa
 
     return 0;
 }
-
-
-
 
 #endif

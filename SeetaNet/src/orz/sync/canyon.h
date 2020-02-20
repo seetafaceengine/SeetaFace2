@@ -17,57 +17,57 @@
 
 namespace seeta
 {
+	namespace orz
+	{
+		class Canyon
+		{
+		public:
+			enum Action
+			{
+				DISCARD,
+				WAITING
+			};
 
-    namespace orz
-    {
+			explicit Canyon(int size = -1, Action act = WAITING);
 
-        class Canyon {
-        public:
-            enum Action
-            {
-                DISCARD,
-                WAITING
-            };
+			~Canyon();
 
-            explicit Canyon( int size = -1, Action act = WAITING );
+			template<typename FUNC>
+			void operator()(FUNC func) const
+			{
+				auto op = [=]() -> void { func(); };
+				this->push(void_bind(func));
+			}
 
-            ~Canyon();
+			template<typename FUNC, typename... Args>
+			void operator()(FUNC func, Args &&... args) const
+			{
+				this->push(void_bind(func, std::forward<Args>(args)...));
+			}
 
-            template<typename FUNC>
-            void operator()( FUNC func ) const {
-                auto op = [ = ]() -> void { func(); };
-                this->push( void_bind( func ) );
-            }
+			void join() const;
 
-            template<typename FUNC, typename... Args>
-            void operator()( FUNC func, Args &&... args ) const {
-                this->push( void_bind( func, std::forward<Args>( args )... ) );
-            }
+		private:
+			Canyon(const Canyon &that) = delete;
 
-            void join() const;
+			const Canyon &operator=(const Canyon &that) = delete;
 
-        private:
-            Canyon( const Canyon &that ) = delete;
+			void push(const VoidOperator &op) const;
 
-            const Canyon &operator=( const Canyon &that ) = delete;
+			void operating() const;
 
-            void push( const VoidOperator &op ) const;
+			mutable std::queue<VoidOperator> _task;
+			mutable std::mutex _mutex;
+			mutable std::condition_variable _cond;
+			std::atomic<bool> _work;
+			int _size;
+			Action _act;
 
-            void operating() const;
-
-            mutable std::queue<VoidOperator> _task;
-            mutable std::mutex _mutex;
-            mutable std::condition_variable _cond;
-            std::atomic<bool> _work;
-            int _size;
-            Action _act;
-
-            std::thread _core;
-        };
-
-    }
-
+			std::thread _core;
+		};
+	}
 }
+
 using namespace seeta;
 
 #endif //ORZ_SYNC_CANYON_H

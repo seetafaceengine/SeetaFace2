@@ -17,13 +17,18 @@ seeta::ImageData crop_face(
         const seeta::FaceDetector &FD,
         const seeta::FaceLandmarker &PD,
         seeta::FaceRecognizer &FR,
-        const SeetaImageData &original_image) {
+        const SeetaImageData &original_image) 
+{
     // detect face
     // detect points
     // crop face
+
     seeta::ImageData face(0, 0, 0);
     auto faces = FD.detect(original_image);
-    if (faces.size == 0) return face;
+
+    if (faces.size == 0) 
+		return face;
+
     auto points = PD.mark(original_image, faces.data[0].pos);
     face = FR.CropFace(original_image, points.data());
     return face;
@@ -33,6 +38,7 @@ int main()
 {
     seeta::ModelSetting::Device device = seeta::ModelSetting::CPU;
     int id = 0;
+
     seeta::ModelSetting FD_model( "./model/fd_2_00.dat", device, id );
     seeta::ModelSetting PD_model( "./model/pd_2_00_pts5.dat", device, id );
 
@@ -41,20 +47,24 @@ int main()
 
 	seeta::FaceDetector FD(FD_model);
 	seeta::FaceLandmarker PD(PD_model);
+
 	// construct FR with on model, only for crop face.
 	seeta::FaceRecognizer FR;
 
 	FD.set(seeta::FaceDetector::PROPERTY_MIN_FACE_SIZE, 80);
 
 	seeta::cv::ImageData image = cv::imread(test_image);
-	if (image.empty()) {
+
+	if (image.empty()) 
+	{
 	    std::cerr << "Can not open image: " << test_image << std::endl;
 	    return 1;
 	}
 
 	auto face = crop_face(FD, PD, FR, image);
 
-	if (face.width == 0 || face.height == 0) {
+	if (face.width == 0 || face.height == 0) 
+	{
 	    std::cerr << "Can not detect any faces in image: " << test_image << std::endl;
 	    return 2;
 	}

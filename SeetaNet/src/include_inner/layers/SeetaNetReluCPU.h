@@ -8,152 +8,161 @@
 #include "orz/tools/box.h"
 
 template <class T>
-class SeetaNetReluCPU : public SeetaNetBaseLayer<T> {
+class SeetaNetReluCPU : public SeetaNetBaseLayer<T>
+{
 public:
-    SeetaNetReluCPU();
-    ~SeetaNetReluCPU();
+	SeetaNetReluCPU();
+	~SeetaNetReluCPU();
 
-    int Init( seeta::SeetaNet_LayerParameter &inputparam, SeetaNetResource<T> *pdjNetResource );
+	int Init(seeta::SeetaNet_LayerParameter &inputparam, SeetaNetResource<T> *pdjNetResource);
+	int Process(std::vector<SeetaNetFeatureMap<T>*> input_data_map, std::vector<SeetaNetFeatureMap<T>*> &output_data_map);
 
-    int Process( std::vector<SeetaNetFeatureMap<T>*> input_data_map, std::vector<SeetaNetFeatureMap<T>*> &output_data_map );
 public:
-
-    T m_negetive_slope;
-    bool m_has_max = false;
-    T m_max;
-
+	T m_negetive_slope;
+	bool m_has_max = false;
+	T m_max;
 };
-
 
 template <class T>
 SeetaNetReluCPU<T>::SeetaNetReluCPU()
 {
-
 }
-
 
 template <class T>
 SeetaNetReluCPU<T>::~SeetaNetReluCPU()
 {
-
 }
 
-
 template <class T>
-int SeetaNetReluCPU<T>::Init( seeta::SeetaNet_LayerParameter &inputparam, SeetaNetResource<T> *pNetResource )
+int SeetaNetReluCPU<T>::Init(seeta::SeetaNet_LayerParameter &inputparam, SeetaNetResource<T> *pNetResource)
 {
-    int bottom_index = inputparam.bottom_index[0];
-    SeetaNetDataSize bottom_size = pNetResource->feature_vector_size[bottom_index];
-    this->bottom_data_size.resize( 1 );
-    this->bottom_data_size[0] = bottom_size;
-    seeta::SeetaNet_ReLUParameter *msg = ( seeta::SeetaNet_ReLUParameter * )inputparam.msg.get();
-    m_negetive_slope = msg->negative_slope;
+	int bottom_index = inputparam.bottom_index[0];
+	SeetaNetDataSize bottom_size = pNetResource->feature_vector_size[bottom_index];
 
-    m_has_max = msg->has_max();
-    if( m_has_max )
-    {
-        m_max = msg->max;
-    }
+	this->bottom_data_size.resize(1);
+	this->bottom_data_size[0] = bottom_size;
 
-    this->top_data_size.resize( 1 );
-    this->top_data_size[0] = this->bottom_data_size[0];
+	seeta::SeetaNet_ReLUParameter *msg = (seeta::SeetaNet_ReLUParameter *)inputparam.msg.get();
+	m_negetive_slope = msg->negative_slope;
 
-    return 0;
+	m_has_max = msg->has_max();
+
+	if (m_has_max)
+	{
+		m_max = msg->max;
+	}
+
+	this->top_data_size.resize(1);
+	this->top_data_size[0] = this->bottom_data_size[0];
+
+	return 0;
 }
 
-
 template <class T>
-int SeetaNetReluCPU<T>::Process( std::vector<SeetaNetFeatureMap<T>*> input_data_map, std::vector<SeetaNetFeatureMap<T>*> &output_data_map )
+int SeetaNetReluCPU<T>::Process(std::vector<SeetaNetFeatureMap<T>*> input_data_map, std::vector<SeetaNetFeatureMap<T>*> &output_data_map)
 {
-    input_data_map[0]->TransFormDataIn();
-    int all_size = 1;
-    for( int i = 0; i < 4; i++ )
-    {
-        all_size *= input_data_map[0]->data_shape[i];
-    }
+	input_data_map[0]->TransFormDataIn();
+	int all_size = 1;
 
-    if( this->bottom_index[0] != this->top_index[0] )
-    {
-        memcpy( output_data_map[0]->m_cpu.dataMemoryPtr(), input_data_map[0]->m_cpu.dataMemoryPtr(), sizeof( T )*all_size );
-    }
+	for (int i = 0; i < 4; i++)
+	{
+		all_size *= input_data_map[0]->data_shape[i];
+	}
 
-    auto gun = orz::ctx::lite::ptr<orz::Shotgun>();
+	if (this->bottom_index[0] != this->top_index[0])
+	{
+		memcpy(output_data_map[0]->m_cpu.dataMemoryPtr(), input_data_map[0]->m_cpu.dataMemoryPtr(), sizeof(T)*all_size);
+	}
 
-    if( m_has_max )
-    {
-        if( gun == nullptr || gun->size() <= 1 )
-        {
-            T *start_point = output_data_map[0]->m_cpu.dataMemoryPtr();
-            for( int i = 0; i < all_size; i++ )
-            {
-                T val = *start_point;
-                T result = std::max( val, T( 0.0 ) ) + m_negetive_slope * std::min( val, T( 0.0 ) );
-                *start_point = std::min<T>( result, m_max );
-                start_point++;
-            }
-        }
-        else
-        {
-            auto bins = orz::split_bins( 0, all_size, int( gun->size() ) );
-            for( auto &bin : bins )
-            {
-                gun->fire( [ &, bin]( int )
-                {
-                    auto start_point = output_data_map[0]->m_cpu.dataMemoryPtr() + bin.first;
-                    for( int i = bin.first; i < bin.second; ++i )
-                    {
-                        T val = *start_point;
-                        T result = std::max( val, T( 0.0 ) ) + m_negetive_slope * std::min( val, T( 0.0 ) );
-                        *start_point = std::min<T>( result, m_max );
-                        start_point++;
-                    }
-                } );
-            }
-            gun->join();
-        }
-    }
-    else
-    {
-        if( gun == nullptr || gun->size() <= 1 )
-        {
-            T *start_point = output_data_map[0]->m_cpu.dataMemoryPtr();
-            for( int i = 0; i < all_size; i++ )
-            {
-                T val = *start_point;
-                T result = std::max( val, T( 0.0 ) ) + m_negetive_slope * std::min( val, T( 0.0 ) );
-                *start_point = result;
-                start_point++;
-            }
-        }
-        else
-        {
-            auto bins = orz::split_bins( 0, all_size, int( gun->size() ) );
-            for( auto &bin : bins )
-            {
-                gun->fire( [ &, bin]( int )
-                {
-                    auto start_point = output_data_map[0]->m_cpu.dataMemoryPtr() + bin.first;
-                    for( int i = bin.first; i < bin.second; ++i )
-                    {
-                        T val = *start_point;
-                        T result = std::max( val, T( 0.0 ) ) + m_negetive_slope * std::min( val, T( 0.0 ) );
-                        *start_point = result;
-                        start_point++;
-                    }
-                } );
-            }
-            gun->join();
-        }
-    }
+	auto gun = orz::ctx::lite::ptr<orz::Shotgun>();
 
-    output_data_map[0]->dwStorageType = DATA_CPU_WIDTH;
+	if (m_has_max)
+	{
+		if (gun == nullptr || gun->size() <= 1)
+		{
+			T *start_point = output_data_map[0]->m_cpu.dataMemoryPtr();
 
-    output_data_map[0]->data_shape[0] = input_data_map[0]->data_shape[0];
-    output_data_map[0]->data_shape[1] = input_data_map[0]->data_shape[1];
-    output_data_map[0]->data_shape[2] = input_data_map[0]->data_shape[2];
-    output_data_map[0]->data_shape[3] = input_data_map[0]->data_shape[3];
+			for (int i = 0; i < all_size; i++)
+			{
+				T val = *start_point;
+				T result = std::max(val, T(0.0)) + m_negetive_slope * std::min(val, T(0.0));
 
-    return 0;
+				*start_point = std::min<T>(result, m_max);
+				start_point++;
+			}
+		}
+		else
+		{
+			auto bins = orz::split_bins(0, all_size, int(gun->size()));
+
+			for (auto &bin : bins)
+			{
+				gun->fire([&, bin](int)
+				{
+					auto start_point = output_data_map[0]->m_cpu.dataMemoryPtr() + bin.first;
+
+					for (int i = bin.first; i < bin.second; ++i)
+					{
+						T val = *start_point;
+						T result = std::max(val, T(0.0)) + m_negetive_slope * std::min(val, T(0.0));
+
+						*start_point = std::min<T>(result, m_max);
+						start_point++;
+					}
+				});
+			}
+
+			gun->join();
+		}
+	}
+	else
+	{
+		if (gun == nullptr || gun->size() <= 1)
+		{
+			T *start_point = output_data_map[0]->m_cpu.dataMemoryPtr();
+
+			for (int i = 0; i < all_size; i++)
+			{
+				T val = *start_point;
+				T result = std::max(val, T(0.0)) + m_negetive_slope * std::min(val, T(0.0));
+
+				*start_point = result;
+				start_point++;
+			}
+		}
+		else
+		{
+			auto bins = orz::split_bins(0, all_size, int(gun->size()));
+
+			for (auto &bin : bins)
+			{
+				gun->fire([&, bin](int)
+				{
+					auto start_point = output_data_map[0]->m_cpu.dataMemoryPtr() + bin.first;
+
+					for (int i = bin.first; i < bin.second; ++i)
+					{
+						T val = *start_point;
+						T result = std::max(val, T(0.0)) + m_negetive_slope * std::min(val, T(0.0));
+
+						*start_point = result;
+						start_point++;
+					}
+				});
+			}
+
+			gun->join();
+		}
+	}
+
+	output_data_map[0]->dwStorageType = DATA_CPU_WIDTH;
+
+	output_data_map[0]->data_shape[0] = input_data_map[0]->data_shape[0];
+	output_data_map[0]->data_shape[1] = input_data_map[0]->data_shape[1];
+	output_data_map[0]->data_shape[2] = input_data_map[0]->data_shape[2];
+	output_data_map[0]->data_shape[3] = input_data_map[0]->data_shape[3];
+
+	return 0;
 }
 
 #endif

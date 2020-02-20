@@ -9,170 +9,166 @@
 #include <sstream>
 
 #if defined(_MSC_VER) && _MSC_VER < 1900 // lower then VS2015
-    #define ORZ_LITE_THREAD_LOCAL __declspec(thread)
+#define ORZ_LITE_THREAD_LOCAL __declspec(thread)
 #else
-    #define ORZ_LITE_THREAD_LOCAL thread_local
+#define ORZ_LITE_THREAD_LOCAL thread_local
 #endif
 
 namespace seeta
 {
+	namespace orz
+	{
+		class NoLiteContextException : public std::logic_error
+		{
+		public:
+			NoLiteContextException() : NoLiteContextException(std::this_thread::get_id())
+			{
+			}
 
-    namespace orz
-    {
-        class NoLiteContextException : public std::logic_error {
-        public:
-            NoLiteContextException()
-                : NoLiteContextException( std::this_thread::get_id() ) {
-            }
+			explicit NoLiteContextException(const std::thread::id &id) : logic_error(build_message(id)), m_thread_id(id)
+			{
+			}
 
-            explicit NoLiteContextException( const std::thread::id &id )
-                : logic_error( build_message( id ) ), m_thread_id( id ) {
-            }
+		private:
+			std::string build_message(const std::thread::id &id)
+			{
+				std::ostringstream oss;
+				oss << "Empty context in thread: " << id;
+				return oss.str();
+			}
 
-        private:
-            std::string build_message( const std::thread::id &id ) {
-                std::ostringstream oss;
-                oss << "Empty context in thread: " << id;
-                return oss.str();
-            }
+			std::thread::id m_thread_id;
+		};
 
-            std::thread::id m_thread_id;
-        };
+		template<typename T>
+		class __thread_local_lite_context
+		{
+		public:
+			using self = __thread_local_lite_context;
 
-        template<typename T>
-        class __thread_local_lite_context {
-        public:
-            using self = __thread_local_lite_context;
+			using context = void *;
 
-            using context = void *;
+			static context swap(context ctx);
+			static void set(context ctx);
+			static const context get();
+			static const context try_get();
 
-            static context swap( context ctx );
+		private:
+			static ORZ_LITE_THREAD_LOCAL context m_ctx;
+		};
 
-            static void set( context ctx );
+		template<typename T>
+		class __lite_context
+		{
+		public:
+			using self = __lite_context;
+			using context = void *;
 
-            static const context get();
+			explicit __lite_context(context ctx);
 
-            static const context try_get();
+			~__lite_context();
 
-        private:
-            static ORZ_LITE_THREAD_LOCAL context m_ctx;
-        };
+			static void set(context ctx);
+			static context get();
+			static context try_get();
 
-        template<typename T>
-        class __lite_context {
-        public:
-            using self = __lite_context;
-            using context = void *;
+			__lite_context(const self &) = delete;
 
-            explicit __lite_context( context ctx );
+			self &operator=(const self &) = delete;
 
-            ~__lite_context();
+			context ctx();
 
-            static void set( context ctx );
+			const context ctx() const;
 
-            static context get();
+		private:
+			context m_pre_ctx = nullptr;
+			context m_now_ctx = nullptr;
+		};
 
-            static context try_get();
+		namespace ctx
+		{
+			namespace lite
+			{
+				template<typename T>
+				class bind
+				{
+				public:
+					using self = bind;
 
-            __lite_context( const self & ) = delete;
+					explicit bind(T *ctx) : m_ctx(ctx) {}
+					explicit bind(T &ctx_ref) : bind(&ctx_ref) {}
 
-            self &operator=( const self & ) = delete;
+					~bind() = default;
 
-            context ctx();
+					bind(const self &) = delete;
 
-            const context ctx() const;
+					self &operator=(const self &) = delete;
 
-        private:
-            context m_pre_ctx = nullptr;
-            context m_now_ctx = nullptr;
-        };
+				private:
+					__lite_context<T> m_ctx;
+				};
 
-        namespace ctx
-        {
-            namespace lite
-            {
-                template<typename T>
-                class bind {
-                public:
-                    using self = bind;
+				template<typename T>
+				inline T *get()
+				{
+					return reinterpret_cast<T *>(__lite_context<T>::try_get());
+				}
 
-                    explicit bind( T *ctx )
-                        : m_ctx( ctx ) {
-                    }
+				template<typename T>
+				inline T *ptr()
+				{
+					return reinterpret_cast<T *>(__lite_context<T>::try_get());
+				}
 
-                    explicit bind( T &ctx_ref )
-                        : bind( &ctx_ref ) {
-                    }
+				template<typename T>
+				inline T &ref()
+				{
+					return *reinterpret_cast<T *>(__lite_context<T>::get());
+				}
 
-                    ~bind() = default;
+				template<typename T, typename... Args>
+				inline void initialize(Args &&...args)
+				{
+					auto ctx = new T(std::forward<Args>(args)...);
+					__lite_context<T>::set(ctx);
+				}
 
-                    bind( const self & ) = delete;
+				template<typename T>
+				inline void finalize()
+				{
+					delete ptr<T>();
+				}
 
-                    self &operator=( const self & ) = delete;
+				template<typename T>
+				class bind_new
+				{
+				public:
+					using self = bind_new;
 
-                private:
-                    __lite_context<T> m_ctx;
-                };
+					template<typename... Args>
+					explicit bind_new(Args &&...args) : m_ctx(new T(std::forward<Args>(args)...))
+					{
+						m_object = m_ctx.ctx();
+					}
 
-                template<typename T>
-                inline T *get()
-                {
-                    return reinterpret_cast<T *>( __lite_context<T>::try_get() );
-                }
+					~bind_new()
+					{
+						delete m_object;
+					}
 
-                template<typename T>
-                inline T *ptr()
-                {
-                    return reinterpret_cast<T *>( __lite_context<T>::try_get() );
-                }
+					bind_new(const self &) = delete;
 
-                template<typename T>
-                inline T &ref()
-                {
-                    return *reinterpret_cast<T *>( __lite_context<T>::get() );
-                }
+					self &operator=(const self &) = delete;
 
-                template<typename T, typename... Args>
-                inline void initialize( Args &&...args )
-                {
-                    auto ctx = new T( std::forward<Args>( args )... );
-                    __lite_context<T>::set( ctx );
-                }
-
-                template<typename T>
-                inline void finalize()
-                {
-                    delete ptr<T>();
-                }
-
-                template<typename T>
-                class bind_new {
-                public:
-                    using self = bind_new;
-
-                    template<typename... Args>
-                    explicit bind_new( Args &&...args )
-                        : m_ctx( new T( std::forward<Args>( args )... ) ) {
-                        m_object = m_ctx.ctx();
-                    }
-
-                    ~bind_new() {
-                        delete m_object;
-                    }
-
-                    bind_new( const self & ) = delete;
-
-                    self &operator=( const self & ) = delete;
-
-                private:
-                    __lite_context<T> m_ctx;
-                    T *m_object;
-                };
-            }
-        }
-    }
-
+				private:
+					__lite_context<T> m_ctx;
+					T *m_object;
+				};
+			}
+		}
+	}
 }
+
 using namespace seeta;
 
 #endif //ORZ_TOOLS_CTXMGR_LITE_H

@@ -10,18 +10,19 @@
 #include <array>
 #include <map>
 #include <iostream>
+
 int main()
 {
     seeta::ModelSetting::Device device = seeta::ModelSetting::CPU;
+
     int id = 0;
     seeta::ModelSetting FD_model( "./model/fd_2_00.dat", device, id );
-
 	seeta::FaceTracker FD(FD_model);
-
 	FD.set(seeta::FaceTracker::PROPERTY_VIDEO_STABLE, 1);
 
-	int camera_id = 0;
+	int camera_id = 1;
 	cv::VideoCapture capture(camera_id);
+
 	if (!capture.isOpened())
 	{
 		std::cerr << "Can not open camera(" << camera_id << ")" << std::endl;
@@ -34,18 +35,21 @@ int main()
 	std::cout << "Open camera(" << camera_id << ")" << std::endl;
 
 	cv::Mat frame;
+
 	while (capture.isOpened())
 	{
 		capture.grab();
 		capture.retrieve(frame);
 
-		if (frame.empty()) break;
+		if (frame.empty()) 
+			break;
 
 		seeta::cv::ImageData simage = frame;
 
 		auto faces = FD.track(simage);
 
-		for (int i = 0; i < faces.size; ++i) {
+		for (int i = 0; i < faces.size; ++i) 
+		{
             auto &face = faces.data[i];
 
             cv::rectangle(frame, cv::Rect(face.pos.x, face.pos.y, face.pos.width, face.pos.height),
@@ -56,6 +60,7 @@ int main()
 
 		cv::imshow("Frame", frame);
 		auto key = cv::waitKey(20);
+
 		if (key == 27)
 		{
 			break;

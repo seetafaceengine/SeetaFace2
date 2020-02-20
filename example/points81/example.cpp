@@ -19,7 +19,8 @@ int test_image(seeta::FaceDetector &FD, seeta::FaceLandmarker &FL)
 	auto frame = cv::imread(image_path);
 	seeta::cv::ImageData simage = frame;
 
-	if (simage.empty()) {
+	if (simage.empty()) 
+	{
 		std::cerr << "Can not open image: " << image_path << std::endl;
 		return EXIT_FAILURE;
 	}
@@ -33,6 +34,7 @@ int test_image(seeta::FaceDetector &FD, seeta::FaceLandmarker &FL)
 		auto points = FL.mark(simage, face.pos);
 
 		cv::rectangle(frame, cv::Rect(face.pos.x, face.pos.y, face.pos.width, face.pos.height), CV_RGB(128, 128, 255), 3);
+		
 		for (auto &point : points)
 		{
 			cv::circle(frame, cv::Point(point.x, point.y), 3, CV_RGB(128, 255, 128), -1);
@@ -58,8 +60,9 @@ int main()
 
 	FD.set(seeta::FaceDetector::PROPERTY_VIDEO_STABLE, 1);
 
-	int camera_id = 0;
+	int camera_id = 1;
 	cv::VideoCapture capture(camera_id);
+
 	if (!capture.isOpened())
 	{
 		std::cerr << "Can not open camera(" << camera_id << "), testing image..." << std::endl;
@@ -72,12 +75,14 @@ int main()
 	std::cout << "Open camera(" << camera_id << ")" << std::endl;
 
 	cv::Mat frame;
+
 	while (capture.isOpened())
 	{
 		capture.grab();
 		capture.retrieve(frame);
 
-		if (frame.empty()) break;
+		if (frame.empty()) 
+			break;
 
 		seeta::cv::ImageData simage = frame;
 
@@ -89,6 +94,7 @@ int main()
 			auto points = FL.mark(simage, face.pos);
 
 			cv::rectangle(frame, cv::Rect(face.pos.x, face.pos.y, face.pos.width, face.pos.height), CV_RGB(128, 128, 255), 3);
+		
 			for (auto &point : points)
 			{
 				cv::circle(frame, cv::Point(point.x, point.y), 2, CV_RGB(128, 255, 128), -1);
@@ -97,6 +103,7 @@ int main()
 
 		cv::imshow("Frame", frame);
 		auto key = cv::waitKey(20);
+
 		if (key == 27)
 		{
 			break;

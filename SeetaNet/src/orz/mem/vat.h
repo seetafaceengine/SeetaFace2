@@ -11,56 +11,57 @@
 
 namespace seeta
 {
+	namespace orz
+	{
+		class Vat
+		{
+		public:
+			Vat();
 
-    namespace orz
-    {
+			void *malloc(size_t _size);
 
-        class Vat {
-        public:
-            Vat();
+			template<typename T>
+			T *calloc(size_t _count)
+			{
+				return reinterpret_cast<T *>(this->malloc(sizeof(T) * _count));
+			}
 
-            void *malloc( size_t _size );
+			template<typename T>
+			std::shared_ptr<T> calloc_shared(size_t _count)
+			{
+				return std::shared_ptr<T>(calloc<T>(_count), [this](T * ptr)
+				{
+					this->free(ptr);
+				});
+			}
 
-            template<typename T>
-            T *calloc( size_t _count ) {
-                return reinterpret_cast<T *>( this->malloc( sizeof( T ) * _count ) );
-            }
+			void free(const void *ptr);
 
-            template<typename T>
-            std::shared_ptr<T> calloc_shared( size_t _count ) {
-                return std::shared_ptr<T>( calloc<T>( _count ), [this]( T * ptr ) {
-                    this->free( ptr );
-                } );
-            }
+			/**
+			 * @brief doing like free all malloc ptrs
+			 */
+			void reset();
 
-            void free( const void *ptr );
+			void dispose();
 
-            /**
-             * @brief doing like free all malloc ptrs
-             */
-            void reset();
+			void swap(Vat &that);
 
-            void dispose();
+			Vat(Vat &&that);
 
-            void swap( Vat &that );
+			Vat &operator=(Vat &&that);
 
-            Vat( Vat &&that );
+		private:
+			Vat(const Vat &that) = delete;
 
-            Vat &operator=( Vat &&that );
+			Vat &operator=(const Vat &that) = delete;
 
-        private:
-            Vat( const Vat &that ) = delete;
-
-            Vat &operator=( const Vat &that ) = delete;
-
-            // std::vector<RopedPot> m_list;
-            std::map<void *, Pot> m_dict;   ///< save pair of pointer and index
-            std::vector<Pot> m_heap;    ///< save all free memory, small fisrt sort
-        };
-
-    }
-
+			// std::vector<RopedPot> m_list;
+			std::map<void *, Pot> m_dict;   ///< save pair of pointer and index
+			std::vector<Pot> m_heap;    ///< save all free memory, small fisrt sort
+		};
+	}
 }
+
 using namespace seeta;
 
 #endif //ORZ_MEM_VAT_H
