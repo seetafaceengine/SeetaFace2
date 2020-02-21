@@ -34,6 +34,12 @@ namespace seeta
             return ptr->Detect( image );
         }
 
+		SeetaFaceInfoArray FaceDetector::detectMaxFace(const SeetaImageData &image)  const
+		{
+			FaceDetectorPrivate *ptr = (FaceDetectorPrivate *)m_impl;
+			return ptr->DetectMaxFace(image);
+		}
+
         void FaceDetector::set( FaceDetector::Property property, double value )
         {
             FaceDetectorPrivate *ptr = ( FaceDetectorPrivate * )m_impl;

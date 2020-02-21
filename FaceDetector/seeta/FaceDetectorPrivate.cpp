@@ -99,6 +99,8 @@ public:
 
     std::vector<Rect> SlidingWindow( const SeetaImageData &img, const SeetaImageData &img_pad, SeetaNet_Net *&net, float thres, int local_min_face = -1, int local_max_face = -1 );
 
+	std::vector<Rect> SlidingWindow(float cur_scale, const SeetaImageData &img, const SeetaImageData &img_pad, SeetaNet_Net *&net, float thres, int local_min_face = -1, int local_max_face = -1);
+
     std::vector<Rect> RunNet( const SeetaImageData &img, SeetaNet_Net *&net, float thres, int dim, std::vector<Rect> &winList );
 
     void SetInput( const SeetaImageData &img, int dim, std::vector<Rect> &winList, uint8_t *tmp_data );
@@ -238,6 +240,106 @@ std::vector<Rect> Impl::SlidingWindow( const SeetaImageData &img, const SeetaIma
     }
     delete[] img_resized.data;
     return winList;
+}
+
+
+std::vector<Rect> Impl::SlidingWindow(float cur_scale,const SeetaImageData &img, const SeetaImageData &img_pad, SeetaNet_Net *&net, float thres, int local_min_face, int local_max_face)
+{
+
+	int height = (img_pad.height - img.height) / 2;
+	int width = (img_pad.width - img.width) / 2;
+	std::vector<Rect> winList;
+	int net_size = 12;
+
+	SeetaImageData img_resized;
+	img_resized.width = int(img.width / cur_scale);
+	img_resized.height = int(img.height / cur_scale);
+	img_resized.channels = img.channels;
+	img_resized.data = new uint8_t[img_resized.height * img_resized.width * img_resized.channels]; // malloc image buffer
+	
+
+	int count_scale = 0;
+
+	ResizeImage(img.data, img.width, img.height, img.channels,
+		img_resized.data, img_resized.width, img_resized.height, img_resized.channels);
+
+
+
+	SeetaNet_InputOutputData tmp_input;
+	tmp_input.number = 1;
+	tmp_input.channel = img_resized.channels;
+	tmp_input.height = img_resized.height;
+	tmp_input.width = img_resized.width;
+	tmp_input.buffer_type = SEETANET_BGR_IMGE_CHAR;
+	tmp_input.data_point_char = img_resized.data;
+
+
+	SeetaRunNetChar(net, 1, &tmp_input);
+
+
+	SeetaNet_InputOutputData reg_res, cls_res;
+	SeetaGetFeatureMap(net, "bbox_reg", &reg_res);
+	SeetaGetFeatureMap(net, "cls_prob", &cls_res);
+
+	int n_reg = reg_res.number;
+	int c_reg = reg_res.channel;
+	int h_reg = reg_res.height;
+	int w_reg = reg_res.width;
+	int n_cls = cls_res.number;
+	int c_cls = cls_res.channel;
+	int h_cls = cls_res.height;
+	int w_cls = cls_res.width;
+
+	(void)(n_reg);
+	(void)(c_reg);
+	(void)(n_cls);
+	(void)(c_cls);
+	(void)(h_cls);
+	(void)(w_cls);
+
+	float *reg_data = reg_res.data_point_float;
+	float *cls_data = cls_res.data_point_float;
+
+	float w = net_size * cur_scale;
+	for (int i = 0; i < h_reg; i++)
+	{
+		for (int j = 0; j < w_reg; j++)
+		{
+			if (cls_data[(1 * h_reg + i) * w_reg + j] > thres)
+			{
+				float sn = reg_data[(0 * h_reg + i) * w_reg + j];
+				float xn = reg_data[(1 * h_reg + i) * w_reg + j];
+				float yn = reg_data[(2 * h_reg + i) * w_reg + j];
+
+				int rx, ry, rw;
+
+				if (end2end_)
+				{
+					int crop_x = int(j * cur_scale * stride_);
+					int crop_y = int(i * cur_scale * stride_);
+					int crop_w = int(w);
+					rx = int(crop_x - 0.5 * sn * crop_w + crop_w * sn * xn + 0.5 * crop_w) + width;
+					ry = int(crop_y - 0.5 * sn * crop_w + crop_w * sn * yn + 0.5 * crop_w) + height;
+					rw = int(sn * crop_w);
+				}
+				else
+				{
+					rx = int(j * cur_scale * stride_ + xn * w) + width;
+					ry = int(i * cur_scale * stride_ + yn * w) + height;
+					rw = int(w * sn);
+				}
+
+				if (Legal(rx, ry, img_pad) && Legal(rx + rw - 1, ry + rw - 1, img_pad))
+				{
+					winList.push_back(Rect(rx, ry, rw, rw, count_scale, cls_data[(1 * h_reg + i) * w_reg + j]));
+				}
+			}
+		}
+		
+	}
+
+	delete[] img_resized.data;
+	return winList;
 }
 
 void Impl::SetInput( const SeetaImageData &img, int dim, std::vector<Rect> &winList, uint8_t *tmp_data )
@@ -834,6 +936,164 @@ SeetaFaceInfoArray FaceDetectorPrivate::Detect( const SeetaImageData &image )
     ret.size = int(m_pre_faces.size());
     ret.data = m_pre_faces.data();
     return ret;
+}
+
+static std::vector<Rect> extractMaxFace(std::vector<Rect> boundingBox_)
+{
+	if (boundingBox_.empty()) {
+		return std::vector<Rect>{};
+	}
+	/*
+	sort(boundingBox_.begin(), boundingBox_.end(), CompareBBox);
+	for (std::vector<FaceInfo>::iterator itx = boundingBox_.begin() + 1; itx != boundingBox_.end();) {
+	itx = boundingBox_.erase(itx);
+	}
+	*/
+	float max_area = 0;
+	int index = 0;
+	for (int i = 0; i < boundingBox_.size(); ++i) {
+		float area1 = static_cast<float>((boundingBox_[i].width) * (boundingBox_[i].height));
+		if (area1 > max_area) {
+			max_area = area1;
+			index = i;
+		}
+	}
+	return std::vector<Rect>{boundingBox_[index]};
+}
+
+SeetaFaceInfoArray FaceDetectorPrivate::DetectMaxFace(const SeetaImageData &image)
+{
+
+	SeetaFaceInfoArray  ret;
+	ret.size = 0;
+	ret.data = nullptr;
+	Impl *p = (Impl *)impl_;
+	if (!p->IsLegalImage(image))
+	{
+		return ret;
+	}
+
+	// sclae image
+	seeta::Image img = image;
+
+	float scale = 1;
+	seeta::Image scaled_img = ScaleImage(img, p->width_limit_, p->height_limit_, &scale);
+	img = scaled_img;
+
+	img = seeta::color(img);
+
+	int pad_h = std::min(int(p->max_pad_ratio * img.height()), p->max_pad_h);
+	int pad_w = std::min(int(p->max_pad_ratio * img.width()), p->max_pad_w);
+	SeetaImageData img_pad;
+	img_pad.width = img.width() + 2 * pad_w;
+	img_pad.height = img.height() + 2 * pad_h;
+	img_pad.channels = img.channels();
+	img_pad.data = new uint8_t[img_pad.channels * img_pad.height * img_pad.width];
+	p->PadImage(img.data(), img.width(), img.height(), img.channels(), img_pad.data, pad_w, pad_h);
+
+	auto local_min_face_size = std::max(12, int(p->min_face_ * scale));
+	auto local_max_face_size = p->max_face_;
+	if (local_max_face_size > 0) local_max_face_size = std::max(12, int(p->max_face_ * scale));
+
+	std::vector<Rect> winList;
+	int net_size = 12;
+	float cur_scale = local_min_face_size / 12.0f ;
+	float minWH = std::min(img.height(), img.width()) / cur_scale;
+	std::vector<float> scales;
+	while (minWH >= net_size)
+	{
+		scales.push_back(cur_scale);
+		minWH = int(minWH / p->scale_);
+		cur_scale = float(img.height()) / minWH;
+		//cur_scale *= p->scale_;
+	}
+
+	std::sort(scales.begin(), scales.end());
+	std::reverse(scales.begin(), scales.end());
+
+	/*
+	for (int i = 0; i < scales.size(); i++)
+	{
+		std::cout << scales[i] << std::endl;
+	}
+	*/
+
+	for (int i = 0; i < scales.size(); i++)
+	{
+		winList = p->SlidingWindow(scales[i], img, img_pad, p->net_[0], p->class_threshold_[0], local_min_face_size, local_max_face_size);
+		winList = p->NMS(winList, true, p->nms_threshold_[0]);
+
+		// std::cout << "Stage1 result: " << winList.size() << std::endl;
+
+		winList = p->RunNet(img_pad, p->net_[1], p->class_threshold_[1], 24, winList);
+		winList = p->NMS(winList, true, p->nms_threshold_[1]);
+
+		// std::cout << "Stage2 result: " << winList.size() << std::endl;
+
+		winList = p->RunNet(img_pad, p->net_[2], p->class_threshold_[2], 48, winList);
+		winList = p->NMS(winList, false, p->nms_threshold_[2]);
+
+		// std::cout << "Stage3 result: " << winList.size() << std::endl;
+
+		winList = extractMaxFace(winList);
+
+		// scale result
+		for (auto &info : winList)
+		{
+			info.x -= pad_w;
+			info.y -= pad_h;
+
+			info.x = int(info.x / scale);
+			info.y = int(info.y / scale);
+			info.width = int(info.width / scale);
+			info.height = int(info.height / scale);
+		}
+
+
+		if (winList.size() < 1)
+		{
+			continue;
+		}
+		else
+		{
+			std::vector<Rect> &preList = p->preList_;
+			if (p->stable_)
+			{
+				for (size_t i = 0; i < winList.size(); i++)
+				{
+					for (size_t j = 0; j < preList.size(); j++)
+					{
+						if (p->IoU(winList[i], preList[j]) > 0.85)
+							winList[i] = preList[j];
+						else
+							if (p->IoU(winList[i], preList[j]) > 0.6)
+							{
+								winList[i].x = (winList[i].x + preList[j].x) / 2;
+								winList[i].y = (winList[i].y + preList[j].y) / 2;
+								winList[i].width = (winList[i].width + preList[j].width) / 2;
+								winList[i].height = (winList[i].height + preList[j].height) / 2;
+							}
+					}
+				}
+				preList = winList;
+			}
+
+			delete[] img_pad.data;
+			m_pre_faces.clear();
+			m_pre_faces = p->TransWindow(image, image, winList);
+			ret.size = int(m_pre_faces.size());
+			ret.data = m_pre_faces.data();
+			return ret;
+
+		}
+	}
+
+	delete[] img_pad.data;
+	m_pre_faces.clear();
+	m_pre_faces = p->TransWindow(image, image, winList);
+	ret.size = int(m_pre_faces.size());
+	ret.data = m_pre_faces.data();
+	return ret;
 }
 
 void FaceDetectorPrivate::SetMinFaceSize( int32_t size )
