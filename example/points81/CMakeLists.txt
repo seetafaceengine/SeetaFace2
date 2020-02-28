@@ -28,9 +28,11 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
-    SeetaNet SeetaFaceDetector SeetaFaceLandmarker)
-target_link_libraries(${PROJECT_NAME} PRIVATE ${OpenCV_LIBS})
-
+    SeetaNet SeetaFaceDetector SeetaFaceLandmarker
+    ${OpenCV_LIBS})
+if(ANDROID)
+    target_link_libraries(${PROJECT_NAME} PRIVATE mediandk log)   
+endif(ANDROID)
 set_target_properties(${PROJECT_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set_target_properties(${PROJECT_NAME} PROPERTIES VERSION ${BUILD_VERSION})
 if(UNIX AND NOT ANDROID)

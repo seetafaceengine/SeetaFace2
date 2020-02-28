@@ -33,7 +33,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     ${PROJECT_SOURCE_DIR}/src
     )
 if(ANDROID_ARM_NEON)
-    target_compile_definitions(${PROJECT_NAME} PUBLIC __ARM_NEON__)
+    target_compile_definitions(${PROJECT_NAME} PRIVATE __ARM_NEON__)
     set(SeetaNet_definitions "-D__ARM_NEON__ ${SeetaNet_definitions}")
 endif()
 
@@ -41,7 +41,6 @@ endif()
 if(ANDROID)
     target_compile_options(${PROJECT_NAME} PRIVATE 
         -frtti -fexceptions -funsafe-math-optimizations -ftree-vectorize -ffast-math)
-    target_link_options(${PROJECT_NAME} PUBLIC -fuse-ld=bfd)
 endif()
 
 GENERATE_EXPORT_HEADER(${PROJECT_NAME}
@@ -63,7 +62,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 # link library
 if (NOT ANDROID AND UNIX) 
     target_link_libraries(${PROJECT_NAME} PUBLIC pthread)
-    set(SeetaNet_LIBS "pthread ${SeetaNet_LIBS}")
+    set(SeetaNet_LIBS "pthread ${SeetaNet_LIBS}")   
 endif()
 if (WIN32) 
     target_link_libraries(${PROJECT_NAME} PUBLIC Ws2_32)
