@@ -38,6 +38,16 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     ${PROJECT_SOURCE_DIR}/include/seeta
     ${PROJECT_SOURCE_DIR}/seeta
     )
+# Set flags
+if(ANDROID)
+    if(ANDROID_ARM_NEON)
+        target_compile_definitions(${PROJECT_NAME} PRIVATE __ARM_NEON__)
+        target_compile_options(${PROJECT_NAME} PUBLIC -mfpu=neon-vfpv4)
+    endif()
+    
+    target_compile_options(${PROJECT_NAME} PUBLIC 
+        -frtti -fexceptions -funsafe-math-optimizations -ftree-vectorize -ffast-math)
+endif()
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
