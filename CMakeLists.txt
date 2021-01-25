@@ -77,11 +77,11 @@ IF(CMAKE_CXX_COMPILER_ID STREQUAL "GNU"
 
     add_compile_options(-std=c++0x -Wno-sign-compare -Wno-unused-parameter)
     
-#    if ("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
-#        add_compile_options(-g -ggdb)
-#    else()
-#        add_compile_options(-O3 -Os)
-#    endif()
+    if ("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
+        add_compile_options(-g -ggdb)
+    else()
+        add_compile_options(-O3)
+    endif()
     
 #    if ("${CMAKE_SYSTEM_PROCESSOR}" STREQUAL "x86")
 #        add_compile_options(-m32)

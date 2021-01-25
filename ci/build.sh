@@ -83,7 +83,7 @@ if [ "${BUILD_TARGERT}" = "android" ]; then
     cmake -G"${GENERATORS}" ${SOURCE_DIR} ${CONFIG_PARA} \
         -DBUILD_EXAMPLE=OFF \
         -DCMAKE_INSTALL_PREFIX=`pwd`/install \
-        -DCMAKE_VERBOSE=ON \
+        -DCMAKE_VERBOSE_MAKEFILE=ON \
         -DCMAKE_BUILD_TYPE=Release \
         -DANDROID_PLATFORM=${ANDROID_API} -DANDROID_ABI="${BUILD_ARCH}" \
         -DCMAKE_TOOLCHAIN_FILE=${ANDROID_NDK}/build/cmake/android.toolchain.cmake
@@ -91,7 +91,7 @@ if [ "${BUILD_TARGERT}" = "android" ]; then
 else
     cmake -G"${GENERATORS}" ${SOURCE_DIR} ${CONFIG_PARA} \
         -DCMAKE_INSTALL_PREFIX=`pwd`/install \
-        -DCMAKE_VERBOSE=ON \
+        -DCMAKE_VERBOSE_MAKEFILE=ON \
         -DCMAKE_BUILD_TYPE=Release
 fi
 cmake --build . --config Release --target install -- ${RABBIT_MAKE_JOB_PARA}

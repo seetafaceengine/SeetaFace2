@@ -42,6 +42,16 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_SOURCE_DIR}/SeetaNet/include
     )
 target_link_libraries(${PROJECT_NAME} PUBLIC SeetaNet)
+# Set flags
+if(ANDROID)
+    if(ANDROID_ARM_NEON)
+        target_compile_definitions(${PROJECT_NAME} PRIVATE __ARM_NEON__)
+        target_compile_options(${PROJECT_NAME} PUBLIC -mfpu=neon-vfpv4)
+    endif()
+    
+    target_compile_options(${PROJECT_NAME} PUBLIC 
+        -frtti -fexceptions -funsafe-math-optimizations -ftree-vectorize -ffast-math)
+endif()
 
 GENERATE_EXPORT_HEADER(${PROJECT_NAME}
     EXPORT_MACRO_NAME SEETA_DETECTOR_API

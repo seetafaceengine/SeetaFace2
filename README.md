@@ -204,6 +204,7 @@ SeetaFace2 是面向于人脸识别商业落地的里程碑版本，其中人脸
                   -DCMAKE_BUILD_TYPE=MinSizeRel \
                   -DCMAKE_TOOLCHAIN_FILE=${ANDROID_NDK}/build/cmake/android.toolchain.cmake \
                   -DANDROID_ABI="armeabi-v7a with NEON" \
+                  -DANDROID_ARM_NEON=ON \
                   -DANDROID_PLATFORM=android-24 \
                   -DBUILD_EXAMPLE=OFF # 如果有OpenCV，则设置为ON
             cmake --build . --config MinSizeRel
