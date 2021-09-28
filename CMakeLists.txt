@@ -46,6 +46,11 @@ if(NOT BUILD_VERSION)
 endif()
 message(STATUS "== BUILD_VERSION: ${BUILD_VERSION}")
 
+if(NOT DEFINED CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE "Release")
+endif(NOT DEFINED CMAKE_BUILD_TYPE)
+string(TOLOWER "${CMAKE_BUILD_TYPE}" build_type)
+
 if(WIN32 OR UNIX)
     # default used SSE2
     if(ANDROID OR MINGW)
@@ -77,7 +82,7 @@ IF(CMAKE_CXX_COMPILER_ID STREQUAL "GNU"
 
     add_compile_options(-std=c++0x -Wno-sign-compare -Wno-unused-parameter)
     
-    if ("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
+    if("debug" STREQUAL build_type)
         add_compile_options(-g -ggdb)
     else()
         add_compile_options(-O3)
@@ -162,7 +167,7 @@ install(FILES ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.pc
 # Install cmake configure files
 install(
         FILES cmake/${PROJECT_NAME}Config.cmake
-        DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake"
+        DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/SeetaFace2"
 )
 
 message(STATUS "== Build detector and tracker: ${BUILD_DETECOTOR}")

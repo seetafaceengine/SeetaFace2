@@ -80,7 +80,7 @@ export(TARGETS ${PROJECT_NAME}
 )
 # Install cmake configure files
 install(EXPORT ${PROJECT_NAME}Config
-        DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake"
+        DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/SeetaFace2"
         NAMESPACE
         SeetaFace::
         )
@@ -88,7 +88,7 @@ write_basic_package_version_file(
     "${CMAKE_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
     VERSION ${BUILD_VERSION}
     COMPATIBILITY AnyNewerVersion)
-install(FILES "${CMAKE_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake" DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake")
+install(FILES "${CMAKE_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake" DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/SeetaFace2")
 # Install configure file
 set(SeetaFace2_LIBS "${PROJECT_NAME} ${SeetaFace2_LIBS}" PARENT_SCOPE)
 configure_file(QualityAssessor.pc.in ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.pc @ONLY)
