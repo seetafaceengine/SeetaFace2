@@ -70,12 +70,23 @@ install(
 target_include_directories(${PROJECT_NAME} PRIVATE
         ${CMAKE_BINARY_DIR}
         )
-
+  
 set_target_properties(${PROJECT_NAME} PROPERTIES
-        RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
+    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
+    ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
+    VERSION ${BUILD_VERSION}
+    INSTALL_RPATH
+        "$ORIGIN;$ORIGIN/../lib;$ORIGIN/../lib/${CMAKE_LIBRARY_ARCHITECTURE};lib;../lib;../lib/${CMAKE_LIBRARY_ARCHITECTURE}"
+    )
+if(WIN32)
+    set_target_properties(${PROJECT_NAME} PROPERTIES
         LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
-        ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
-        VERSION ${BUILD_VERSION})
+        )
+else()
+    set_target_properties(${PROJECT_NAME} PROPERTIES
+        LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
+        )
+endif()
 # Be will to install header files
 set_property(TARGET ${PROJECT_NAME} PROPERTY PUBLIC_HEADER ${INCLUDE_FILES})
 
