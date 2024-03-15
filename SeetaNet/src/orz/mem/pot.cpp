@@ -4,6 +4,7 @@
 
 #include "pot.h"
 #include <cstring>
+#include <stdlib.h>
 
 namespace seeta
 {

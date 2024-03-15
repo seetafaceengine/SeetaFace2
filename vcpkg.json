@@ -1,0 +1,22 @@
+{
+  "name": "seetaface",
+  "version-string": "2.0.0",
+  "description": "SeetaFace 2.0.0",
+  "homepage": "https://github.com/KangLin/seetaface2",
+  "license": "Apache-2.0",
+  "features": {
+    "opencv": {
+      "description": "opencv",
+      "dependencies": [
+        {
+          "name": "opencv",
+          "default-features": false,
+          "features": [
+            "contrib",
+            "ffmpeg"
+          ]
+        }
+      ]
+    }
+  }
+}
