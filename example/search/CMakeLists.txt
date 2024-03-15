@@ -32,9 +32,23 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 target_link_libraries(${PROJECT_NAME} PRIVATE
     SeetaNet SeetaFaceDetector SeetaFaceLandmarker SeetaFaceRecognizer SeetaQualityAssessor)
 target_link_libraries(${PROJECT_NAME} PRIVATE ${OpenCV_LIBS})
+# Set flags
+if(ANDROID)
+    if(ANDROID_ARM_NEON)
+        target_compile_definitions(${PROJECT_NAME} PRIVATE __ARM_NEON__)
+        target_compile_options(${PROJECT_NAME} PRIVATE -mfpu=neon-vfpv4)
+    endif()
+    
+    target_compile_options(${PROJECT_NAME} PRIVATE 
+        -frtti -fexceptions -funsafe-math-optimizations -ftree-vectorize -ffast-math)
+endif()
 
-set_target_properties(${PROJECT_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-set_target_properties(${PROJECT_NAME} PROPERTIES VERSION ${BUILD_VERSION})
+set_target_properties(${PROJECT_NAME} PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
+    VERSION ${BUILD_VERSION}
+    INSTALL_RPATH
+        "$ORIGIN;$ORIGIN/../lib;$ORIGIN/../lib/${CMAKE_LIBRARY_ARCHITECTURE};lib;../lib;../lib/${CMAKE_LIBRARY_ARCHITECTURE}"
+    )
 if(UNIX AND NOT ANDROID)
     set_target_properties(${PROJECT_NAME} PROPERTIES RUNTIME_OUTPUT_NAME ${PROJECT_NAME})
 endif()
