@@ -38,12 +38,32 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     ${PROJECT_SOURCE_DIR}/include/seeta
     ${PROJECT_SOURCE_DIR}/seeta
     )
-
+# Set flags
+if(ANDROID)
+    if(ANDROID_ARM_NEON)
+        target_compile_definitions(${PROJECT_NAME} PRIVATE __ARM_NEON__)
+        target_compile_options(${PROJECT_NAME} PUBLIC -mfpu=neon-vfpv4)
+    endif()
+    
+    target_compile_options(${PROJECT_NAME} PUBLIC 
+        -frtti -fexceptions -funsafe-math-optimizations -ftree-vectorize -ffast-math)
+endif()
 set_target_properties(${PROJECT_NAME} PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
-    LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
     ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
-    VERSION ${BUILD_VERSION})
+    VERSION ${BUILD_VERSION}
+    INSTALL_RPATH
+        "$ORIGIN;$ORIGIN/../lib;$ORIGIN/../lib/${CMAKE_LIBRARY_ARCHITECTURE};lib;../lib;../lib/${CMAKE_LIBRARY_ARCHITECTURE}"
+    )
+if(WIN32)
+    set_target_properties(${PROJECT_NAME} PROPERTIES
+        LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
+        )
+else()
+    set_target_properties(${PROJECT_NAME} PROPERTIES
+        LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
+        )
+endif()
 # Be will to install header files
 set_property(TARGET ${PROJECT_NAME} PROPERTY PUBLIC_HEADER ${INCLUDE_FILES})
 if(WIN32)
@@ -70,7 +90,7 @@ export(TARGETS ${PROJECT_NAME}
 )
 # Install cmake configure files
 install(EXPORT ${PROJECT_NAME}Config
-        DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake"
+        DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/SeetaFace2"
         NAMESPACE
         SeetaFace::
         )
@@ -78,7 +98,7 @@ write_basic_package_version_file(
     "${CMAKE_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
     VERSION ${BUILD_VERSION}
     COMPATIBILITY AnyNewerVersion)
-install(FILES "${CMAKE_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake" DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake")
+install(FILES "${CMAKE_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake" DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/SeetaFace2")
 # Install configure file
 set(SeetaFace2_LIBS "${PROJECT_NAME} ${SeetaFace2_LIBS}" PARENT_SCOPE)
 configure_file(QualityAssessor.pc.in ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.pc @ONLY)
